@@ -70,7 +70,7 @@ export default function DeckEditorPage() {
   
   // Filter cards by search and category
   const filteredCards = useMemo(() => {
-    return enrichedDeckCards.filter(item => {
+    return enrichedDeckCards.filter((item: any) => {
       if (!item || !item.card) return false
       
       const card = item.card
