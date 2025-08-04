@@ -562,7 +562,7 @@ function DeckSelector({ onDeckSelected }: { onDeckSelected: (deck: any) => void 
       
       {decks && decks.length > 0 ? (
         <div className="space-y-2">
-          {displayDecks?.map((deck) => (
+          {displayDecks?.map((deck: any) => (
             <button
               key={deck.id}
               onClick={() => onDeckSelected(deck)}
