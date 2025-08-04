@@ -1,25 +1,46 @@
 # Vercel Deployment Fix - January 4, 2025
 
-## Issues Fixed
+## Current Status
+Multiple attempts to fix deployment timeout during package installation. Latest approach uses the `root` directory setting to isolate the web app build.
+
+## Issues Encountered
 
 ### Issue 1: Deployment Stalling During `pnpm install`
-
-The deployment was failing with the following symptoms:
-- Build stalls at `pnpm install` while downloading packages
-- Progress shows 810 packages to install
+- Build consistently stalls while downloading packages
+- Shows 846+ packages to install (monorepo includes all workspace packages)
 - Process times out without completing
 
-### Issue 2: Invalid Functions Configuration
+### Issue 2: Invalid Functions Configuration (FIXED)
+- Error: The pattern "apps/web/app/api/trpc/[trpc]/route.ts" defined in `functions` doesn't match
+- Solution: Removed the functions configuration
 
-Error: The pattern "apps/web/app/api/trpc/[trpc]/route.ts" defined in `functions` doesn't match any Serverless Functions inside the `api` directory.
+## Root Causes
+1. **Monorepo complexity** - Vercel trying to install all workspace packages
+2. **Large dependency count** - 846+ packages across all workspaces
+3. **Network constraints** - Vercel build environment has limited concurrent downloads
+4. **Memory constraints** - Node.js running out of memory during install
 
-## Root Causes Identified
+## Attempted Solutions
 
-1. **Large dependency count** - 810 packages in monorepo
-2. **Network timeout** - Default timeout too short for large installs
-3. **Memory constraints** - Node.js running out of memory
-4. **Hoisting issues** - pnpm strict mode causing compatibility problems
-5. **Invalid functions path** - Vercel expects functions to be in the `api` directory for configuration
+### Attempt 1: Basic Optimizations
+- Added memory allocation (`NODE_OPTIONS`)
+- Used `--frozen-lockfile --prefer-offline`
+- Result: Still stalled at ~174 packages
+
+### Attempt 2: Workspace Filtering
+- Used `--filter=@moxmuse/web...` to limit packages
+- Result: Still installed all 846 packages
+
+### Attempt 3: Aggressive .npmrc Settings
+- Limited concurrency to 1
+- Increased timeouts to 10 minutes
+- Added retries and offline preferences
+- Result: Slight improvement but still stalling
+
+### Attempt 4: Root Directory Isolation (CURRENT)
+- Set `"root": "apps/web"` in vercel.json
+- Using `--no-frozen-lockfile --ignore-scripts`
+- This should limit the build to just the web app directory
 
 ## Fixes Applied
 

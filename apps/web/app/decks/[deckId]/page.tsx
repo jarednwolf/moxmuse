@@ -446,7 +446,7 @@ export default function DeckEditorPage() {
             </div>
           ) : (
             <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-              {filteredCards.map((item) => {
+              {filteredCards.map((item: any) => {
                 if (!item) return null
                 
                 return (
