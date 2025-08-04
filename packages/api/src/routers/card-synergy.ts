@@ -356,7 +356,7 @@ export const cardSynergyRouter = createTRPCRouter({
             recentAnalyses,
             totalFeedback: feedbackStats.reduce((sum: number, stat: any) => sum + stat._count.feedback, 0),
             acceptanceRate: feedbackSummary.accepted ? 
-              (feedbackSummary.accepted / Object.values(feedbackSummary).reduce((a: number, b: number) => a + b, 0)) * 100 : 0,
+              (feedbackSummary.accepted / Object.values(feedbackSummary as Record<string, number>).reduce((a: number, b: number) => a + b, 0)) * 100 : 0,
           },
         }
       } catch (error) {
