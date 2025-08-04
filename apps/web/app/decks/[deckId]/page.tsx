@@ -108,7 +108,7 @@ export default function DeckEditorPage() {
     
     // Mana curve
     const manaCurve: Record<number, number> = {}
-    filteredCards.forEach(item => {
+    filteredCards.forEach((item: any) => {
       if (item.card?.cmc !== undefined) {
         const cmc = Math.floor(item.card.cmc)
         manaCurve[cmc] = (manaCurve[cmc] || 0) + item.quantity
@@ -145,7 +145,7 @@ export default function DeckEditorPage() {
     
     // Group cards by category
     const cardsByCategory: Record<string, typeof enrichedDeckCards> = {}
-    enrichedDeckCards.forEach(item => {
+    enrichedDeckCards.forEach((item: any) => {
       if (!item) return
       
       const category = item.category || 'Other'
@@ -158,7 +158,7 @@ export default function DeckEditorPage() {
     // Export each category
     Object.entries(cardsByCategory).forEach(([category, cards]) => {
       exportText += `// ${category}\n`
-      cards.forEach(item => {
+      cards.forEach((item: any) => {
         if (item && item.card) {
           exportText += `${item.quantity} ${item.card.name}\n`
         }
@@ -251,7 +251,7 @@ export default function DeckEditorPage() {
 
   // Calculate mana curve
   const manaCurve: Record<number, number> = {}
-  filteredCards.forEach(item => {
+  filteredCards.forEach((item: any) => {
     if (item.card?.cmc !== undefined) {
       const cmc = Math.min(Math.floor(item.card.cmc), 7) // Cap at 7+
       manaCurve[cmc] = (manaCurve[cmc] || 0) + item.quantity
