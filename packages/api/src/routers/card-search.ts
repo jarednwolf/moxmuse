@@ -214,7 +214,7 @@ export const cardSearchRouter = createTRPCRouter({
         }
       })
 
-      return popularSearches.map(search => ({
+      return popularSearches.map((search: any) => ({
         id: search.id,
         name: search.name,
         description: search.description || undefined,
