@@ -53,7 +53,7 @@ export default function DeckEditorPage() {
   const enrichedDeckCards = useMemo(() => {
     if (!deck?.cards || !cardDetails) return []
     
-    return deck.cards.map(deckCard => {
+    return deck.cards.map((deckCard: any) => {
       // Try multiple ID fields to find a match
       const card = cardDetails.find((card: any) => 
         card.id === deckCard.cardId || 
@@ -91,7 +91,7 @@ export default function DeckEditorPage() {
   
   // Get unique categories
   const categories = useMemo(() => {
-    const cats = new Set(deck?.cards.map(c => c.category).filter(Boolean) || [])
+    const cats = new Set(deck?.cards.map((c: any) => c.category).filter(Boolean) || [])
     return ['all', ...Array.from(cats)] as string[]
   }, [deck?.cards])
   
@@ -515,7 +515,7 @@ function AddCardsModal({ deckId, onClose, onCardsAdded }: {
   // Fetch user's collection
   const { data: collection } = trpc.collection.get.useQuery()
   const { data: cardDetails } = trpc.collection.getCardDetails.useQuery(
-    { cardIds: collection?.map(c => c.cardId) || [] },
+    { cardIds: collection?.map((c: any) => c.cardId) || [] },
     { enabled: !!collection && collection.length > 0 }
   )
   
@@ -529,11 +529,11 @@ function AddCardsModal({ deckId, onClose, onCardsAdded }: {
     if (!collection || !cardDetails) return []
     
     return collection
-      .map(item => ({
+      .map((item: any) => ({
         ...item,
-        card: cardDetails.find(c => c?.id === item.cardId)
+        card: cardDetails.find((c: any) => c?.id === item.cardId)
       }))
-      .filter(item => {
+      .filter((item: any) => {
         if (!item.card) return false
         if (!searchQuery) return true
         
