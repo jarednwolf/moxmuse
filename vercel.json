@@ -1,13 +1,11 @@
 {
-  "buildCommand": "pnpm run build",
-  "installCommand": "pnpm install --no-frozen-lockfile --ignore-scripts",
+  "buildCommand": "cd apps/web && pnpm run build",
+  "installCommand": "cd apps/web && pnpm install --no-frozen-lockfile --ignore-scripts --config.dedupe-peer-dependents=false",
   "framework": null,
   "outputDirectory": "apps/web/.next",
-  "root": "apps/web",
   "ignoreCommand": "git diff HEAD^ HEAD --quiet .",
   "env": {
     "PNPM_VERSION": "8.14.0",
-    "NODE_OPTIONS": "--max-old-space-size=4096",
-    "VERCEL_BUILD_TIMEOUT": "45m"
+    "NODE_OPTIONS": "--max-old-space-size=4096"
   }
 }
