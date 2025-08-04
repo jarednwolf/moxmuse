@@ -10,7 +10,8 @@
     "type-check": "turbo run type-check",
     "db:push": "turbo run db:push",
     "db:migrate": "turbo run db:migrate",
-    "db:generate": "turbo run db:generate"
+    "db:generate": "turbo run db:generate",
+    "postinstall": "cd packages/db && pnpm run db:generate"
   },
   "devDependencies": {
     "@types/node": "^20.10.5",

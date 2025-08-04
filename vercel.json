@@ -1,6 +1,6 @@
 {
-  "buildCommand": "cd apps/web && pnpm run build",
-  "installCommand": "cd apps/web && pnpm install --no-frozen-lockfile --ignore-scripts --config.dedupe-peer-dependents=false",
+  "buildCommand": "cd packages/db && pnpm run db:generate && cd ../../apps/web && pnpm run build",
+  "installCommand": "pnpm install --no-frozen-lockfile --ignore-scripts --config.dedupe-peer-dependents=false",
   "framework": null,
   "outputDirectory": "apps/web/.next",
   "ignoreCommand": "git diff HEAD^ HEAD --quiet .",
