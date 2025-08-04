@@ -6,11 +6,14 @@
 1. **apps/web/app/decks/[deckId]/page.tsx** - Fixed 13 implicit any errors
 2. **apps/web/app/decks/page.tsx** - Fixed 1 implicit any error  
 3. **apps/web/app/tutor/page.tsx** - Fixed 1 implicit any error
-4. **packages/api/src/routers/card-search.ts** - Fixed 1 implicit any error (line 217)
+4. **packages/api/src/routers/card-search.ts** - Fixed 2 implicit any errors (lines 217, 260)
+5. **packages/api/src/routers/card-synergy.ts** - Fixed 1 Object type unknown error (line 359)
 
 ### Latest Commits Pushed:
 - `8018882` - Fix remaining TypeScript errors in tutor page - deployment ready
-- `b45255e` - Fix TypeScript errors in API package for Vercel deployment
+- `b45255e` - Fix TypeScript errors in API package for Vercel deployment  
+- `147ac77` - Fix additional TypeScript error in card-search router - line 260
+- `447cecf` - Fix TypeScript error in card-synergy router - Object type unknown
 
 ## Current Configuration
 

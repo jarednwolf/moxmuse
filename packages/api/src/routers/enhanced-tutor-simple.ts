@@ -438,7 +438,7 @@ export const enhancedTutorRouter = createTRPCRouter({
         console.log('🔧 Optimizing', userDecks.length, 'decks')
 
         // Mock optimization results
-        const optimizedDecks = userDecks.map(deck => ({
+        const optimizedDecks = userDecks.map((deck: any) => ({
           deckId: deck.id,
           changes: Math.floor(Math.random() * 5) + 1,
           improvements: {
