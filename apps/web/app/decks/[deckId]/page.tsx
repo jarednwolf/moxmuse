@@ -97,12 +97,12 @@ export default function DeckEditorPage() {
   
   // Calculate deck stats
   const deckStats = useMemo(() => {
-    const totalCards = filteredCards.reduce((sum, item) => sum + item.quantity, 0)
-    const totalValue = filteredCards.reduce((sum, item) => {
+    const totalCards = filteredCards.reduce((sum: number, item: any) => sum + item.quantity, 0)
+    const totalValue = filteredCards.reduce((sum: number, item: any) => {
       const price = parseFloat(item.card?.prices?.usd || '0')
       return sum + (price * item.quantity)
     }, 0)
-    const totalCmc = filteredCards.reduce((sum, item) => {
+    const totalCmc = filteredCards.reduce((sum: number, item: any) => {
       return sum + ((item.card?.cmc || 0) * item.quantity)
     }, 0)
     
@@ -549,7 +549,7 @@ function AddCardsModal({ deckId, onClose, onCardsAdded }: {
     await Promise.all(promises)
   }
   
-  const totalSelected = Object.values(selectedCards).reduce((sum, q) => sum + q, 0)
+  const totalSelected = Object.values(selectedCards).reduce((sum: number, q: number) => sum + q, 0)
   
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
