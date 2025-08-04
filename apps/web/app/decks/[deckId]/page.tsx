@@ -65,7 +65,7 @@ export default function DeckEditorPage() {
       )
       
       return card ? { ...deckCard, card } : null
-    }).filter((item): item is NonNullable<typeof item> => item !== null)
+    }).filter((item: any): item is NonNullable<typeof item> => item !== null)
   }, [deck?.cards, cardDetails])
   
   // Filter cards by search and category
