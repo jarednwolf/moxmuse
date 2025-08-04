@@ -225,7 +225,7 @@ export default function DecksPage() {
             </div>
           ) : decks && decks.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {decks.map((deck) => (
+              {decks.map((deck: any) => (
                 <div
                   key={deck.id}
                   className="group rounded-xl border border-zinc-700 bg-zinc-800/50 backdrop-blur-sm p-6 hover:border-zinc-600 transition-all"
@@ -303,4 +303,4 @@ export default function DecksPage() {
       </main>
     </div>
   )
-} 
+}
