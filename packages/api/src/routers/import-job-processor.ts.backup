@@ -1,0 +1,489 @@
+/**
+ * Import Job Processing Router
+ * 
+ * tRPC router for managing import jobs with progress tracking,
+ * conflict resolution, and rollback capabilities.
+ */
+
+import { z } from 'zod'
+import { createTRPCRouter, protectedProcedure } from '../trpc'
+import { TRPCError } from '@trpc/server'
+import { ImportJobProcessingService } from '../services/import-job-processor'
+import { AdapterRegistry } from '../services/platform-adapters/adapter-registry'
+import { BackgroundJobProcessor } from '../services/core/job-processor'
+import { DIContainer } from '../services/core/container'
+
+// Mock container for now - in a real implementation this would be properly initialized
+const container = {
+  get: <T>(serviceName: string): T => {
+    throw new Error(`Service ${serviceName} not found`)
+  }
+}
+
+// Input validation schemas
+const createImportJobSchema = z.object({
+  type: z.enum(['single', 'batch', 'bulk']).default('single'),
+  source: z.enum(['moxfield', 'archidekt', 'tappedout', 'edhrec', 'mtggoldfish', 'csv', 'text', 'custom']),
+  rawData: z.string().optional(),
+  sourceUrl: z.string().url().optional(),
+  fileName: z.string().optional(),
+  options: z.object({
+    validateCards: z.boolean().optional(),
+    resolveCardNames: z.boolean().optional(),
+    preserveCategories: z.boolean().optional(),
+    includeMetadata: z.boolean().optional(),
+    customFields: z.array(z.string()).optional(),
+    timeout: z.number().optional(),
+    batchSize: z.number().optional(),
+    concurrency: z.number().optional(),
+    continueOnError: z.boolean().optional(),
+    defaultConflictResolution: z.enum(['skip', 'overwrite', 'merge', 'rename', 'ask_user']).optional(),
+    autoResolveConflicts: z.boolean().optional(),
+    generatePreview: z.boolean().optional(),
+    previewTimeout: z.number().optional(),
+    enableRollback: z.boolean().optional(),
+    rollbackTimeout: z.number().optional()
+  }).optional(),
+  priority: z.number().min(0).max(10).optional()
+}).refine(data => data.rawData || data.sourceUrl, {
+  message: "Either rawData or sourceUrl must be provided"
+})
+
+const updateImportJobSchema = z.object({
+  jobId: z.string(),
+  status: z.enum(['pending', 'processing', 'completed', 'failed', 'cancelled']).optional(),
+  conflictResolution: z.enum(['skip', 'overwrite', 'merge', 'rename', 'ask_user']).optional(),
+  options: z.object({
+    validateCards: z.boolean().optional(),
+    resolveCardNames: z.boolean().optional(),
+    preserveCategories: z.boolean().optional(),
+    includeMetadata: z.boolean().optional(),
+    customFields: z.array(z.string()).optional(),
+    timeout: z.number().optional(),
+    batchSize: z.number().optional(),
+    concurrency: z.number().optional(),
+    continueOnError: z.boolean().optional(),
+    defaultConflictResolution: z.enum(['skip', 'overwrite', 'merge', 'rename', 'ask_user']).optional(),
+    autoResolveConflicts: z.boolean().optional(),
+    generatePreview: z.boolean().optional(),
+    previewTimeout: z.number().optional(),
+    enableRollback: z.boolean().optional(),
+    rollbackTimeout: z.number().optional()
+  }).optional(),
+  priority: z.number().min(0).max(10).optional()
+})
+
+const resolveConflictSchema = z.object({
+  conflictId: z.string(),
+  resolution: z.enum(['skip', 'overwrite', 'merge', 'rename', 'ask_user']),
+  customData: z.any().optional()
+})
+
+const approvePreviewSchema = z.object({
+  previewId: z.string(),
+  approved: z.boolean(),
+  conflictResolutions: z.record(z.enum(['skip', 'overwrite', 'merge', 'rename', 'ask_user'])).optional()
+})
+
+const batchImportSchema = z.object({
+  items: z.array(z.object({
+    source: z.enum(['moxfield', 'archidekt', 'tappedout', 'edhrec', 'mtggoldfish', 'csv', 'text', 'custom']),
+    rawData: z.string().optional(),
+    sourceUrl: z.string().url().optional(),
+    identifier: z.string().optional()
+  })),
+  options: z.object({
+    validateCards: z.boolean().optional(),
+    resolveCardNames: z.boolean().optional(),
+    preserveCategories: z.boolean().optional(),
+    includeMetadata: z.boolean().optional(),
+    customFields: z.array(z.string()).optional(),
+    timeout: z.number().optional(),
+    batchSize: z.number().optional(),
+    concurrency: z.number().optional(),
+    continueOnError: z.boolean().optional(),
+    defaultConflictResolution: z.enum(['skip', 'overwrite', 'merge', 'rename', 'ask_user']).optional(),
+    autoResolveConflicts: z.boolean().optional(),
+    generatePreview: z.boolean().optional(),
+    previewTimeout: z.number().optional(),
+    enableRollback: z.boolean().optional(),
+    rollbackTimeout: z.number().optional()
+  }).optional(),
+  priority: z.number().min(0).max(10).optional()
+})
+
+const rollbackSchema = z.object({
+  importJobId: z.string(),
+  reason: z.string().optional(),
+  selectiveRollback: z.object({
+    deckIds: z.array(z.string()).optional(),
+    itemIds: z.array(z.string()).optional()
+  }).optional()
+})
+
+const getUserJobsSchema = z.object({
+  status: z.enum(['pending', 'processing', 'completed', 'failed', 'cancelled']).optional(),
+  source: z.enum(['moxfield', 'archidekt', 'tappedout', 'edhrec', 'mtggoldfish', 'csv', 'text', 'custom']).optional(),
+  limit: z.number().min(1).max(100).default(50),
+  offset: z.number().min(0).default(0)
+})
+
+export const importJobProcessorRouter = createTRPCRouter({
+  /**
+   * Create a new import job
+   */
+  create: protectedProcedure
+    .input(createImportJobSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const service = container.get<ImportJobProcessingService>('ImportJobProcessingService')
+        
+        const job = await service.createImportJob({
+          ...input,
+          userId: ctx.session.user.id
+        })
+
+        return {
+          success: true,
+          job
+        }
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error instanceof Error ? error.message : 'Failed to create import job'
+        })
+      }
+    }),
+
+  /**
+   * Update an existing import job
+   */
+  update: protectedProcedure
+    .input(updateImportJobSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const service = container.get<ImportJobProcessingService>('ImportJobProcessingService')
+        
+        // Verify job ownership
+        const existingJob = await service.getImportJob(input.jobId)
+        if (!existingJob || existingJob.userId !== ctx.session.user.id) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Import job not found'
+          })
+        }
+
+        const job = await service.updateImportJob(input.jobId, input)
+
+        return {
+          success: true,
+          job
+        }
+      } catch (error) {
+        if (error instanceof TRPCError) throw error
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error instanceof Error ? error.message : 'Failed to update import job'
+        })
+      }
+    }),
+
+  /**
+   * Get import job by ID
+   */
+  get: protectedProcedure
+    .input(z.object({ jobId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      try {
+        const service = container.get<ImportJobProcessingService>('ImportJobProcessingService')
+        
+        const job = await service.getImportJob(input.jobId)
+        if (!job || job.userId !== ctx.session.user.id) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Import job not found'
+          })
+        }
+
+        return job
+      } catch (error) {
+        if (error instanceof TRPCError) throw error
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error instanceof Error ? error.message : 'Failed to get import job'
+        })
+      }
+    }),
+
+  /**
+   * Get user's import jobs
+   */
+  getUserJobs: protectedProcedure
+    .input(getUserJobsSchema)
+    .query(async ({ ctx, input }) => {
+      try {
+        const service = container.get<ImportJobProcessingService>('ImportJobProcessingService')
+        
+        const jobs = await service.getUserImportJobs(ctx.session.user.id, input)
+
+        return {
+          jobs,
+          total: jobs.length,
+          hasMore: jobs.length === input.limit
+        }
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error instanceof Error ? error.message : 'Failed to get import jobs'
+        })
+      }
+    }),
+
+  /**
+   * Cancel an import job
+   */
+  cancel: protectedProcedure
+    .input(z.object({ jobId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const service = container.get<ImportJobProcessingService>('ImportJobProcessingService')
+        
+        // Verify job ownership
+        const job = await service.getImportJob(input.jobId)
+        if (!job || job.userId !== ctx.session.user.id) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Import job not found'
+          })
+        }
+
+        const cancelled = await service.cancelImportJob(input.jobId)
+
+        return {
+          success: cancelled,
+          message: cancelled ? 'Job cancelled successfully' : 'Job could not be cancelled'
+        }
+      } catch (error) {
+        if (error instanceof TRPCError) throw error
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error instanceof Error ? error.message : 'Failed to cancel import job'
+        })
+      }
+    }),
+
+  /**
+   * Get import job progress
+   */
+  getProgress: protectedProcedure
+    .input(z.object({ jobId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      try {
+        const service = container.get<ImportJobProcessingService>('ImportJobProcessingService')
+        
+        // Verify job ownership
+        const job = await service.getImportJob(input.jobId)
+        if (!job || job.userId !== ctx.session.user.id) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Import job not found'
+          })
+        }
+
+        const progress = await service.getImportProgress(input.jobId)
+        return progress
+      } catch (error) {
+        if (error instanceof TRPCError) throw error
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error instanceof Error ? error.message : 'Failed to get import progress'
+        })
+      }
+    }),
+
+  /**
+   * Resolve a conflict
+   */
+  resolveConflict: protectedProcedure
+    .input(resolveConflictSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const service = container.get<ImportJobProcessingService>('ImportJobProcessingService')
+        
+        // TODO: Verify conflict ownership through job ownership
+        await service.resolveConflict(input)
+
+        return {
+          success: true,
+          message: 'Conflict resolved successfully'
+        }
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error instanceof Error ? error.message : 'Failed to resolve conflict'
+        })
+      }
+    }),
+
+  /**
+   * Generate preview for import job
+   */
+  generatePreview: protectedProcedure
+    .input(z.object({ jobId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const service = container.get<ImportJobProcessingService>('ImportJobProcessingService')
+        
+        // Verify job ownership
+        const job = await service.getImportJob(input.jobId)
+        if (!job || job.userId !== ctx.session.user.id) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Import job not found'
+          })
+        }
+
+        const preview = await service.generatePreview(input.jobId)
+
+        return {
+          success: true,
+          preview
+        }
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error instanceof Error ? error.message : 'Failed to generate preview'
+        })
+      }
+    }),
+
+  /**
+   * Approve preview and start processing
+   */
+  approvePreview: protectedProcedure
+    .input(approvePreviewSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const service = container.get<ImportJobProcessingService>('ImportJobProcessingService')
+        
+        // TODO: Verify preview ownership through job ownership
+        await service.approvePreview(input)
+
+        return {
+          success: true,
+          message: input.approved ? 'Preview approved, processing started' : 'Preview rejected'
+        }
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error instanceof Error ? error.message : 'Failed to approve preview'
+        })
+      }
+    }),
+
+  /**
+   * Create batch import job
+   */
+  createBatch: protectedProcedure
+    .input(batchImportSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const service = container.get<ImportJobProcessingService>('ImportJobProcessingService')
+        
+        const job = await service.createBatchImportJob({
+          ...input,
+          userId: ctx.session.user.id
+        })
+
+        return {
+          success: true,
+          job
+        }
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error instanceof Error ? error.message : 'Failed to create batch import job'
+        })
+      }
+    }),
+
+  /**
+   * Rollback import job
+   */
+  rollback: protectedProcedure
+    .input(rollbackSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const service = container.get<ImportJobProcessingService>('ImportJobProcessingService')
+        
+        // Verify job ownership
+        const job = await service.getImportJob(input.importJobId)
+        if (!job || job.userId !== ctx.session.user.id) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Import job not found'
+          })
+        }
+
+        await service.rollbackImportJob(input)
+
+        return {
+          success: true,
+          message: 'Rollback initiated successfully'
+        }
+      } catch (error) {
+        if (error instanceof TRPCError) throw error
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error instanceof Error ? error.message : 'Failed to rollback import job'
+        })
+      }
+    }),
+
+  /**
+   * Get queue statistics
+   */
+  getQueueStats: protectedProcedure
+    .query(async ({ ctx }) => {
+      try {
+        const service = container.get<ImportJobProcessingService>('ImportJobProcessingService')
+        
+        const stats = await service.getQueueStats()
+        return stats
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error instanceof Error ? error.message : 'Failed to get queue statistics'
+        })
+      }
+    }),
+
+  /**
+   * Get supported import sources
+   */
+  getSupportedSources: protectedProcedure
+    .query(async ({ ctx }) => {
+      try {
+        const adapterRegistry = container.get<AdapterRegistry>('AdapterRegistry')
+        
+        const adapters = adapterRegistry.getAllAdapters()
+        const sources = adapters.map((adapter: any) => ({
+          id: adapter.id,
+          name: adapter.name,
+          version: adapter.version,
+          supportedFormats: adapter.supportedFormats,
+          capabilities: adapter.capabilities
+        }))
+
+        return {
+          sources,
+          total: sources.length
+        }
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error instanceof Error ? error.message : 'Failed to get supported sources'
+        })
+      }
+    })
+})

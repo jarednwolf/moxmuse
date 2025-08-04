@@ -1,0 +1,2734 @@
+{
+  "config": {
+    "configFile": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/playwright.config.ts",
+    "rootDir": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/global-setup.ts",
+    "globalTeardown": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/global-teardown.ts",
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 7
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/playwright-results.json"
+        }
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "test-results/playwright-junit.xml"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "Mobile Chrome",
+        "name": "Mobile Chrome",
+        "testDir": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "Mobile Safari",
+        "name": "Mobile Safari",
+        "testDir": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "Microsoft Edge",
+        "name": "Microsoft Edge",
+        "testDir": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 7
+        },
+        "id": "Google Chrome",
+        "name": "Google Chrome",
+        "testDir": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.54.1",
+    "workers": 7,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:3000",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "deck-building-tutor.spec.ts",
+      "file": "deck-building-tutor.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "AI Deck Building Tutor E2E",
+          "file": "deck-building-tutor.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "complete deck building workflow - with known commander",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5568,
+                      "error": {
+                        "message": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin')) resolved to 4 elements:\n    1) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').first()\n    2) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').nth(1)\n    3) <svg width=\"24\" height=\"24\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\" class=\"lucide lucide-loader2 h-5 w-5 animate-spin text-zinc-300\">…</svg> aka locator('.lucide.lucide-loader2')\n    4) <span class=\"text-zinc-300\">Building your complete deck...</span> aka getByText('Building your complete deck...')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n",
+                        "stack": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin')) resolved to 4 elements:\n    1) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').first()\n    2) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').nth(1)\n    3) <svg width=\"24\" height=\"24\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\" class=\"lucide lucide-loader2 h-5 w-5 animate-spin text-zinc-300\">…</svg> aka locator('.lucide.lucide-loader2')\n    4) <span class=\"text-zinc-300\">Building your complete deck...</span> aka getByText('Building your complete deck...')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n\n    at /Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts:38:7",
+                        "location": {
+                          "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                          "column": 7,
+                          "line": 38
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 36 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mgetByText(\u001b[32m'Building your complete deck...'\u001b[39m))\n \u001b[90m 37 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.animate-spin'\u001b[39m))\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m     )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m   })\n \u001b[90m 40 |\u001b[39m\n \u001b[90m 41 |\u001b[39m   test(\u001b[32m'complete deck building workflow - need commander suggestions'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                            "column": 7,
+                            "line": 38
+                          },
+                          "message": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin')) resolved to 4 elements:\n    1) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').first()\n    2) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').nth(1)\n    3) <svg width=\"24\" height=\"24\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\" class=\"lucide lucide-loader2 h-5 w-5 animate-spin text-zinc-300\">…</svg> aka locator('.lucide.lucide-loader2')\n    4) <span class=\"text-zinc-300\">Building your complete deck...</span> aka getByText('Building your complete deck...')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n\n\n\u001b[0m \u001b[90m 36 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mgetByText(\u001b[32m'Building your complete deck...'\u001b[39m))\n \u001b[90m 37 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.animate-spin'\u001b[39m))\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m     )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m   })\n \u001b[90m 40 |\u001b[39m\n \u001b[90m 41 |\u001b[39m   test(\u001b[32m'complete deck building workflow - need commander suggestions'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts:38:7\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:10.357Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                        "column": 7,
+                        "line": 38
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-177b4d05f783a502ae9e",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "complete deck building workflow - need commander suggestions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 5956,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:10.353Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-084e0ad7c052f52c55b7",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 41,
+              "column": 7
+            },
+            {
+              "title": "card recommendations workflow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 5587,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:10.357Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-69b4bf2200fdae92bdb5",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 58,
+              "column": 7
+            },
+            {
+              "title": "wizard navigation through consultation flow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 8048,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:10.344Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-a19450692d07cebd7472",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 81,
+              "column": 7
+            },
+            {
+              "title": "existing deck selection",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 4495,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:10.345Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-53b6c9cf99ad7de1863a",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 112,
+              "column": 7
+            },
+            {
+              "title": "mobile responsiveness",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 5953,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:10.355Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-fb0cb0737ae900be4100",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 127,
+              "column": 7
+            },
+            {
+              "title": "error handling - network failure",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 6249,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:10.342Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-c129ea9561d36c4fadfc",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 151,
+              "column": 7
+            },
+            {
+              "title": "accessibility compliance",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 4733,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:15.997Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-5368c4dbdb15ee6db2b4",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 178,
+              "column": 7
+            },
+            {
+              "title": "performance benchmarks",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 3233,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:17.184Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-e99506b13aa1f23cdab9",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 221,
+              "column": 7
+            },
+            {
+              "title": "complete deck building workflow - with known commander",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 5,
+                      "status": "failed",
+                      "duration": 7149,
+                      "error": {
+                        "message": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin')) resolved to 4 elements:\n    1) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').first()\n    2) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').nth(1)\n    3) <svg width=\"24\" height=\"24\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\" class=\"lucide lucide-loader2 h-5 w-5 animate-spin text-zinc-300\">…</svg> aka locator('.lucide.lucide-loader2')\n    4) <span class=\"text-zinc-300\">Building your complete deck...</span> aka getByText('Building your complete deck...')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n",
+                        "stack": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin')) resolved to 4 elements:\n    1) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').first()\n    2) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').nth(1)\n    3) <svg width=\"24\" height=\"24\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\" class=\"lucide lucide-loader2 h-5 w-5 animate-spin text-zinc-300\">…</svg> aka locator('.lucide.lucide-loader2')\n    4) <span class=\"text-zinc-300\">Building your complete deck...</span> aka getByText('Building your complete deck...')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n\n    at /Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts:38:7",
+                        "location": {
+                          "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                          "column": 7,
+                          "line": 38
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 36 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mgetByText(\u001b[32m'Building your complete deck...'\u001b[39m))\n \u001b[90m 37 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.animate-spin'\u001b[39m))\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m     )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m   })\n \u001b[90m 40 |\u001b[39m\n \u001b[90m 41 |\u001b[39m   test(\u001b[32m'complete deck building workflow - need commander suggestions'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                            "column": 7,
+                            "line": 38
+                          },
+                          "message": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin')) resolved to 4 elements:\n    1) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').first()\n    2) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').nth(1)\n    3) <svg width=\"24\" height=\"24\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\" class=\"lucide lucide-loader2 h-5 w-5 animate-spin text-zinc-300\">…</svg> aka locator('.lucide.lucide-loader2')\n    4) <span class=\"text-zinc-300\">Building your complete deck...</span> aka getByText('Building your complete deck...')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n\n\n\u001b[0m \u001b[90m 36 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mgetByText(\u001b[32m'Building your complete deck...'\u001b[39m))\n \u001b[90m 37 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.animate-spin'\u001b[39m))\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m     )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m   })\n \u001b[90m 40 |\u001b[39m\n \u001b[90m 41 |\u001b[39m   test(\u001b[32m'complete deck building workflow - need commander suggestions'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts:38:7\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:19.151Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-firefox/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-firefox/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-firefox/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                        "column": 7,
+                        "line": 38
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-a67f65d735ba8f5ae012",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "complete deck building workflow - need commander suggestions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5686,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:18.391Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-25304b9842cd76a3a02c",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 41,
+              "column": 7
+            },
+            {
+              "title": "card recommendations workflow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 5635,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:19.027Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-f80004079a2334684b86",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 58,
+              "column": 7
+            },
+            {
+              "title": "wizard navigation through consultation flow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 6718,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:19.425Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-819a6182ac13087ac7fb",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 81,
+              "column": 7
+            },
+            {
+              "title": "existing deck selection",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 6090,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:20.457Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-d684d1223db1cf1baae4",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 112,
+              "column": 7
+            },
+            {
+              "title": "mobile responsiveness",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 6322,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:21.264Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-909e500efa97db7a5a78",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 127,
+              "column": 7
+            },
+            {
+              "title": "error handling - network failure",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 7175,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:22.170Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-2e72ad3b87133a573a4a",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 151,
+              "column": 7
+            },
+            {
+              "title": "accessibility compliance",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5422,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:25.037Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-ffe2956dde83dd0248da",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 178,
+              "column": 7
+            },
+            {
+              "title": "performance benchmarks",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 5737,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:25.508Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-af1957a44278ad70f91b",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 221,
+              "column": 7
+            },
+            {
+              "title": "complete deck building workflow - with known commander",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 6,
+                      "status": "failed",
+                      "duration": 2710,
+                      "error": {
+                        "message": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin')) resolved to 4 elements:\n    1) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').first()\n    2) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').nth(1)\n    3) <svg width=\"24\" height=\"24\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\" class=\"lucide lucide-loader2 h-5 w-5 animate-spin text-zinc-300\">…</svg> aka locator('.lucide.lucide-loader2')\n    4) <span class=\"text-zinc-300\">Building your complete deck...</span> aka getByText('Building your complete deck...')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n",
+                        "stack": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin')) resolved to 4 elements:\n    1) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').first()\n    2) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').nth(1)\n    3) <svg width=\"24\" height=\"24\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\" class=\"lucide lucide-loader2 h-5 w-5 animate-spin text-zinc-300\">…</svg> aka locator('.lucide.lucide-loader2')\n    4) <span class=\"text-zinc-300\">Building your complete deck...</span> aka getByText('Building your complete deck...')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n\n    at /Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts:38:7",
+                        "location": {
+                          "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                          "column": 7,
+                          "line": 38
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 36 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mgetByText(\u001b[32m'Building your complete deck...'\u001b[39m))\n \u001b[90m 37 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.animate-spin'\u001b[39m))\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m     )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m   })\n \u001b[90m 40 |\u001b[39m\n \u001b[90m 41 |\u001b[39m   test(\u001b[32m'complete deck building workflow - need commander suggestions'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                            "column": 7,
+                            "line": 38
+                          },
+                          "message": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin')) resolved to 4 elements:\n    1) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').first()\n    2) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').nth(1)\n    3) <svg width=\"24\" height=\"24\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\" class=\"lucide lucide-loader2 h-5 w-5 animate-spin text-zinc-300\">…</svg> aka locator('.lucide.lucide-loader2')\n    4) <span class=\"text-zinc-300\">Building your complete deck...</span> aka getByText('Building your complete deck...')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n\n\n\u001b[0m \u001b[90m 36 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mgetByText(\u001b[32m'Building your complete deck...'\u001b[39m))\n \u001b[90m 37 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.animate-spin'\u001b[39m))\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m     )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m   })\n \u001b[90m 40 |\u001b[39m\n \u001b[90m 41 |\u001b[39m   test(\u001b[32m'complete deck building workflow - need commander suggestions'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts:38:7\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:28.233Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-webkit/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-webkit/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-webkit/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                        "column": 7,
+                        "line": 38
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-6e31aae9893e6a7524f6",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "complete deck building workflow - need commander suggestions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 2060,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:28.604Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-d2b751dba291ffe7c8be",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 41,
+              "column": 7
+            },
+            {
+              "title": "card recommendations workflow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 17,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 2279,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:29.609Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-b4720086c49a98f8d9af",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 58,
+              "column": 7
+            },
+            {
+              "title": "wizard navigation through consultation flow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 16,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 2912,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:29.379Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-3a01912d33bad64dce24",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 81,
+              "column": 7
+            },
+            {
+              "title": "existing deck selection",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 18,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1325,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:31.411Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-216fc63d28ae238e0ac0",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 112,
+              "column": 7
+            },
+            {
+              "title": "mobile responsiveness",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 19,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1775,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:31.673Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-5cc6b973e982a962b55e",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 127,
+              "column": 7
+            },
+            {
+              "title": "error handling - network failure",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 3,
+                      "status": "failed",
+                      "duration": 1923,
+                      "error": {
+                        "message": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/error|failed|unable|problem|try again/i).or(locator('[role=\"alert\"]')).or(locator('.text-red-')) resolved to 5 elements:\n    1) <div role=\"alert\" aria-live=\"assertive\" id=\"__next-route-announcer__\"></div> aka locator('[id=\"__next-route-announcer__\"]')\n    2) <p class=\"text-sm font-medium text-zinc-100\">Deck Creation Failed</p> aka getByText('Deck Creation Failed').first()\n    3) <p class=\"text-xs text-zinc-400 mt-1\">Unable to create a new deck. Please try again.</p> aka getByText('Unable to create a new deck. Please try again.')\n    4) <p class=\"text-sm font-medium text-zinc-100\">Deck Creation Failed</p> aka getByText('Deck Creation Failed').nth(1)\n    5) <p class=\"text-xs text-zinc-400 mt-1\">Unable to create a new deck. Please try again or …</p> aka getByText('Unable to create a new deck. Please try again or check your connection.')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/error|failed|unable|problem|try again/i).or(locator('[role=\"alert\"]')).or(locator('.text-red-'))\u001b[22m\n",
+                        "stack": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/error|failed|unable|problem|try again/i).or(locator('[role=\"alert\"]')).or(locator('.text-red-')) resolved to 5 elements:\n    1) <div role=\"alert\" aria-live=\"assertive\" id=\"__next-route-announcer__\"></div> aka locator('[id=\"__next-route-announcer__\"]')\n    2) <p class=\"text-sm font-medium text-zinc-100\">Deck Creation Failed</p> aka getByText('Deck Creation Failed').first()\n    3) <p class=\"text-xs text-zinc-400 mt-1\">Unable to create a new deck. Please try again.</p> aka getByText('Unable to create a new deck. Please try again.')\n    4) <p class=\"text-sm font-medium text-zinc-100\">Deck Creation Failed</p> aka getByText('Deck Creation Failed').nth(1)\n    5) <p class=\"text-xs text-zinc-400 mt-1\">Unable to create a new deck. Please try again or …</p> aka getByText('Unable to create a new deck. Please try again or check your connection.')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/error|failed|unable|problem|try again/i).or(locator('[role=\"alert\"]')).or(locator('.text-red-'))\u001b[22m\n\n    at /Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts:175:7",
+                        "location": {
+                          "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                          "column": 7,
+                          "line": 175
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 173 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[role=\"alert\"]'\u001b[39m))\n \u001b[90m 174 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.text-red-'\u001b[39m))\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 175 |\u001b[39m     )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m15000\u001b[39m })\n \u001b[90m     |\u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 176 |\u001b[39m   })\n \u001b[90m 177 |\u001b[39m\n \u001b[90m 178 |\u001b[39m   test(\u001b[32m'accessibility compliance'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                            "column": 7,
+                            "line": 175
+                          },
+                          "message": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/error|failed|unable|problem|try again/i).or(locator('[role=\"alert\"]')).or(locator('.text-red-')) resolved to 5 elements:\n    1) <div role=\"alert\" aria-live=\"assertive\" id=\"__next-route-announcer__\"></div> aka locator('[id=\"__next-route-announcer__\"]')\n    2) <p class=\"text-sm font-medium text-zinc-100\">Deck Creation Failed</p> aka getByText('Deck Creation Failed').first()\n    3) <p class=\"text-xs text-zinc-400 mt-1\">Unable to create a new deck. Please try again.</p> aka getByText('Unable to create a new deck. Please try again.')\n    4) <p class=\"text-sm font-medium text-zinc-100\">Deck Creation Failed</p> aka getByText('Deck Creation Failed').nth(1)\n    5) <p class=\"text-xs text-zinc-400 mt-1\">Unable to create a new deck. Please try again or …</p> aka getByText('Unable to create a new deck. Please try again or check your connection.')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/error|failed|unable|problem|try again/i).or(locator('[role=\"alert\"]')).or(locator('.text-red-'))\u001b[22m\n\n\n\u001b[0m \u001b[90m 173 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[role=\"alert\"]'\u001b[39m))\n \u001b[90m 174 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.text-red-'\u001b[39m))\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 175 |\u001b[39m     )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m15000\u001b[39m })\n \u001b[90m     |\u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 176 |\u001b[39m   })\n \u001b[90m 177 |\u001b[39m\n \u001b[90m 178 |\u001b[39m   test(\u001b[32m'accessibility compliance'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts:175:7\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:30.923Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-b2bea--handling---network-failure-webkit/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-b2bea--handling---network-failure-webkit/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-b2bea--handling---network-failure-webkit/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                        "column": 7,
+                        "line": 175
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-5e5506845773f1c5a3cb",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 151,
+              "column": 7
+            },
+            {
+              "title": "accessibility compliance",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 21,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 3043,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:32.686Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-6f5ee07b59c6fb74f510",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 178,
+              "column": 7
+            },
+            {
+              "title": "performance benchmarks",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 20,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 2796,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:32.317Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-3082d0064c25ae55fd54",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 221,
+              "column": 7
+            },
+            {
+              "title": "complete deck building workflow - with known commander",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 22,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 12340,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n\n    at /Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts:38:7",
+                        "location": {
+                          "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                          "column": 7,
+                          "line": 38
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 36 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mgetByText(\u001b[32m'Building your complete deck...'\u001b[39m))\n \u001b[90m 37 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.animate-spin'\u001b[39m))\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m     )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m   })\n \u001b[90m 40 |\u001b[39m\n \u001b[90m 41 |\u001b[39m   test(\u001b[32m'complete deck building workflow - need commander suggestions'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                            "column": 7,
+                            "line": 38
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n\n\n\u001b[0m \u001b[90m 36 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mgetByText(\u001b[32m'Building your complete deck...'\u001b[39m))\n \u001b[90m 37 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.animate-spin'\u001b[39m))\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m     )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m   })\n \u001b[90m 40 |\u001b[39m\n \u001b[90m 41 |\u001b[39m   test(\u001b[32m'complete deck building workflow - need commander suggestions'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts:38:7\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:32.945Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-Mobile-Chrome/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-Mobile-Chrome/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-Mobile-Chrome/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                        "column": 7,
+                        "line": 38
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-52d0499284a070e24b7b",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "complete deck building workflow - need commander suggestions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 23,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 2446,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:33.264Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-bec902870020f8355c21",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 41,
+              "column": 7
+            },
+            {
+              "title": "card recommendations workflow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 24,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 2078,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:33.719Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-ba67b008ffa7a952ae6a",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 58,
+              "column": 7
+            },
+            {
+              "title": "wizard navigation through consultation flow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 25,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 2564,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:33.948Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-0a4d9a30b81a9d1b4297",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 81,
+              "column": 7
+            },
+            {
+              "title": "existing deck selection",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 26,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2093,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:34.675Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-d8b82ce634f72b0d9c0b",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 112,
+              "column": 7
+            },
+            {
+              "title": "mobile responsiveness",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 27,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 2027,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:36.367Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-48cf8299af97b843c2e9",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 127,
+              "column": 7
+            },
+            {
+              "title": "error handling - network failure",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 28,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 1788,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:36.892Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-33d1a484e0a5e90b4786",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 151,
+              "column": 7
+            },
+            {
+              "title": "accessibility compliance",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 24,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 2807,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:36.221Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-67e339704327be2142c8",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 178,
+              "column": 7
+            },
+            {
+              "title": "performance benchmarks",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 23,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 2324,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:36.240Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-63264e611b416516b865",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 221,
+              "column": 7
+            },
+            {
+              "title": "complete deck building workflow - with known commander",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 29,
+                      "parallelIndex": 4,
+                      "status": "failed",
+                      "duration": 1554,
+                      "error": {
+                        "message": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin')) resolved to 4 elements:\n    1) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').first()\n    2) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').nth(1)\n    3) <svg width=\"24\" height=\"24\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\" class=\"lucide lucide-loader2 h-5 w-5 animate-spin text-zinc-300\">…</svg> aka locator('.lucide.lucide-loader2')\n    4) <span class=\"text-zinc-300\">Building your complete deck...</span> aka getByText('Building your complete deck...')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n",
+                        "stack": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin')) resolved to 4 elements:\n    1) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').first()\n    2) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').nth(1)\n    3) <svg width=\"24\" height=\"24\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\" class=\"lucide lucide-loader2 h-5 w-5 animate-spin text-zinc-300\">…</svg> aka locator('.lucide.lucide-loader2')\n    4) <span class=\"text-zinc-300\">Building your complete deck...</span> aka getByText('Building your complete deck...')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n\n    at /Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts:38:7",
+                        "location": {
+                          "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                          "column": 7,
+                          "line": 38
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 36 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mgetByText(\u001b[32m'Building your complete deck...'\u001b[39m))\n \u001b[90m 37 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.animate-spin'\u001b[39m))\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m     )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m   })\n \u001b[90m 40 |\u001b[39m\n \u001b[90m 41 |\u001b[39m   test(\u001b[32m'complete deck building workflow - need commander suggestions'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                            "column": 7,
+                            "line": 38
+                          },
+                          "message": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin')) resolved to 4 elements:\n    1) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').first()\n    2) <p class=\"whitespace-pre-wrap text-zinc-100\">🎯 Perfect! I'm now generating your complete 100-c…</p> aka getByText('🎯 Perfect! I\\'m now').nth(1)\n    3) <svg width=\"24\" height=\"24\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\" class=\"lucide lucide-loader2 h-5 w-5 animate-spin text-zinc-300\">…</svg> aka locator('.lucide.lucide-loader2')\n    4) <span class=\"text-zinc-300\">Building your complete deck...</span> aka getByText('Building your complete deck...')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n\n\n\u001b[0m \u001b[90m 36 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mgetByText(\u001b[32m'Building your complete deck...'\u001b[39m))\n \u001b[90m 37 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.animate-spin'\u001b[39m))\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m     )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m   })\n \u001b[90m 40 |\u001b[39m\n \u001b[90m 41 |\u001b[39m   test(\u001b[32m'complete deck building workflow - need commander suggestions'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts:38:7\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:37.890Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-Mobile-Safari/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-Mobile-Safari/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-Mobile-Safari/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                        "column": 7,
+                        "line": 38
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-2da3a8d0d6c564d8b992",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "complete deck building workflow - need commander suggestions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 30,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1318,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:38.086Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-f25e0ce4345f89c883d6",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 41,
+              "column": 7
+            },
+            {
+              "title": "card recommendations workflow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 31,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 1247,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:39.126Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-46f15fbd0fbde09a3ff9",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 58,
+              "column": 7
+            },
+            {
+              "title": "wizard navigation through consultation flow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 32,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 1779,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:39.306Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-8854b55f9ff41f807771",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 81,
+              "column": 7
+            },
+            {
+              "title": "existing deck selection",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 33,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 1288,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:39.593Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-38c9ba42ab8b9394c9e0",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 112,
+              "column": 7
+            },
+            {
+              "title": "mobile responsiveness",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 34,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 1719,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:39.712Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-4029eb0991e9bf12de07",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 127,
+              "column": 7
+            },
+            {
+              "title": "error handling - network failure",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 30,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1298,
+                      "error": {
+                        "message": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/error|failed|unable|problem|try again/i).or(locator('[role=\"alert\"]')).or(locator('.text-red-')) resolved to 5 elements:\n    1) <div role=\"alert\" aria-live=\"assertive\" id=\"__next-route-announcer__\"></div> aka locator('[id=\"__next-route-announcer__\"]')\n    2) <p class=\"text-sm font-medium text-zinc-100\">Deck Creation Failed</p> aka getByText('Deck Creation Failed').first()\n    3) <p class=\"text-xs text-zinc-400 mt-1\">Unable to create a new deck. Please try again.</p> aka getByText('Unable to create a new deck. Please try again.')\n    4) <p class=\"text-sm font-medium text-zinc-100\">Deck Creation Failed</p> aka getByText('Deck Creation Failed').nth(1)\n    5) <p class=\"text-xs text-zinc-400 mt-1\">Unable to create a new deck. Please try again or …</p> aka getByText('Unable to create a new deck. Please try again or check your connection.')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/error|failed|unable|problem|try again/i).or(locator('[role=\"alert\"]')).or(locator('.text-red-'))\u001b[22m\n",
+                        "stack": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/error|failed|unable|problem|try again/i).or(locator('[role=\"alert\"]')).or(locator('.text-red-')) resolved to 5 elements:\n    1) <div role=\"alert\" aria-live=\"assertive\" id=\"__next-route-announcer__\"></div> aka locator('[id=\"__next-route-announcer__\"]')\n    2) <p class=\"text-sm font-medium text-zinc-100\">Deck Creation Failed</p> aka getByText('Deck Creation Failed').first()\n    3) <p class=\"text-xs text-zinc-400 mt-1\">Unable to create a new deck. Please try again.</p> aka getByText('Unable to create a new deck. Please try again.')\n    4) <p class=\"text-sm font-medium text-zinc-100\">Deck Creation Failed</p> aka getByText('Deck Creation Failed').nth(1)\n    5) <p class=\"text-xs text-zinc-400 mt-1\">Unable to create a new deck. Please try again or …</p> aka getByText('Unable to create a new deck. Please try again or check your connection.')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/error|failed|unable|problem|try again/i).or(locator('[role=\"alert\"]')).or(locator('.text-red-'))\u001b[22m\n\n    at /Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts:175:7",
+                        "location": {
+                          "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                          "column": 7,
+                          "line": 175
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 173 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[role=\"alert\"]'\u001b[39m))\n \u001b[90m 174 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.text-red-'\u001b[39m))\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 175 |\u001b[39m     )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m15000\u001b[39m })\n \u001b[90m     |\u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 176 |\u001b[39m   })\n \u001b[90m 177 |\u001b[39m\n \u001b[90m 178 |\u001b[39m   test(\u001b[32m'accessibility compliance'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                            "column": 7,
+                            "line": 175
+                          },
+                          "message": "Error: expect.toBeVisible: Error: strict mode violation: getByText(/error|failed|unable|problem|try again/i).or(locator('[role=\"alert\"]')).or(locator('.text-red-')) resolved to 5 elements:\n    1) <div role=\"alert\" aria-live=\"assertive\" id=\"__next-route-announcer__\"></div> aka locator('[id=\"__next-route-announcer__\"]')\n    2) <p class=\"text-sm font-medium text-zinc-100\">Deck Creation Failed</p> aka getByText('Deck Creation Failed').first()\n    3) <p class=\"text-xs text-zinc-400 mt-1\">Unable to create a new deck. Please try again.</p> aka getByText('Unable to create a new deck. Please try again.')\n    4) <p class=\"text-sm font-medium text-zinc-100\">Deck Creation Failed</p> aka getByText('Deck Creation Failed').nth(1)\n    5) <p class=\"text-xs text-zinc-400 mt-1\">Unable to create a new deck. Please try again or …</p> aka getByText('Unable to create a new deck. Please try again or check your connection.')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/error|failed|unable|problem|try again/i).or(locator('[role=\"alert\"]')).or(locator('.text-red-'))\u001b[22m\n\n\n\u001b[0m \u001b[90m 173 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'[role=\"alert\"]'\u001b[39m))\n \u001b[90m 174 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.text-red-'\u001b[39m))\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 175 |\u001b[39m     )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m15000\u001b[39m })\n \u001b[90m     |\u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 176 |\u001b[39m   })\n \u001b[90m 177 |\u001b[39m\n \u001b[90m 178 |\u001b[39m   test(\u001b[32m'accessibility compliance'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts:175:7\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:39.724Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-b2bea--handling---network-failure-Mobile-Safari/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-b2bea--handling---network-failure-Mobile-Safari/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-b2bea--handling---network-failure-Mobile-Safari/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                        "column": 7,
+                        "line": 175
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-86aea592a168d8e8a52c",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 151,
+              "column": 7
+            },
+            {
+              "title": "accessibility compliance",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 35,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 2651,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:40.241Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-01b8c826d7b01bccc38b",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 178,
+              "column": 7
+            },
+            {
+              "title": "performance benchmarks",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 31,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 1611,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:40.568Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-bf2b53a1d566ff663e86",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 221,
+              "column": 7
+            },
+            {
+              "title": "complete deck building workflow - with known commander",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [
+                    {
+                      "workerIndex": 36,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\"",
+                        "stack": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:41.474Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-72adee2525fdf5d6cc77",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "complete deck building workflow - need commander suggestions",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [
+                    {
+                      "workerIndex": 37,
+                      "parallelIndex": 3,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\"",
+                        "stack": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:41.476Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-72bcea0b1830dd710b2d",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 41,
+              "column": 7
+            },
+            {
+              "title": "card recommendations workflow",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [
+                    {
+                      "workerIndex": 38,
+                      "parallelIndex": 6,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\"",
+                        "stack": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:41.794Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-73da4f88bde2ee4c6a08",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 58,
+              "column": 7
+            },
+            {
+              "title": "wizard navigation through consultation flow",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [
+                    {
+                      "workerIndex": 39,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\"",
+                        "stack": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:41.904Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-222158e84fe7a6e49680",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 81,
+              "column": 7
+            },
+            {
+              "title": "existing deck selection",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [
+                    {
+                      "workerIndex": 40,
+                      "parallelIndex": 3,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\"",
+                        "stack": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:41.899Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-699d7f278f610fdfe8f2",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 112,
+              "column": 7
+            },
+            {
+              "title": "mobile responsiveness",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [
+                    {
+                      "workerIndex": 41,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\"",
+                        "stack": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:42.025Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-8ec13b52ba6d22cef03a",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 127,
+              "column": 7
+            },
+            {
+              "title": "error handling - network failure",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [
+                    {
+                      "workerIndex": 42,
+                      "parallelIndex": 6,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\"",
+                        "stack": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:42.143Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-3931a33d4c1f78b3546b",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 151,
+              "column": 7
+            },
+            {
+              "title": "accessibility compliance",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [
+                    {
+                      "workerIndex": 43,
+                      "parallelIndex": 3,
+                      "status": "failed",
+                      "duration": 0,
+                      "error": {
+                        "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\"",
+                        "stack": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:42.236Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-534d72f7de628d07eafc",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 178,
+              "column": 7
+            },
+            {
+              "title": "performance benchmarks",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [
+                    {
+                      "workerIndex": 44,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\"",
+                        "stack": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:42.241Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-2f0ba746eec45d0b1d8c",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 221,
+              "column": 7
+            },
+            {
+              "title": "complete deck building workflow - with known commander",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 45,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 12425,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n\n    at /Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts:38:7",
+                        "location": {
+                          "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                          "column": 7,
+                          "line": 38
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 36 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mgetByText(\u001b[32m'Building your complete deck...'\u001b[39m))\n \u001b[90m 37 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.animate-spin'\u001b[39m))\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m     )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m   })\n \u001b[90m 40 |\u001b[39m\n \u001b[90m 41 |\u001b[39m   test(\u001b[32m'complete deck building workflow - need commander suggestions'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                            "column": 7,
+                            "line": 38
+                          },
+                          "message": "Error: \u001b[31mTimed out 10000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/generating your complete 100-card commander deck/i).or(getByText('Building your complete deck...')).or(locator('.animate-spin'))\u001b[22m\n\n\n\u001b[0m \u001b[90m 36 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mgetByText(\u001b[32m'Building your complete deck...'\u001b[39m))\n \u001b[90m 37 |\u001b[39m         \u001b[33m.\u001b[39mor(page\u001b[33m.\u001b[39mlocator(\u001b[32m'.animate-spin'\u001b[39m))\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m     )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m   })\n \u001b[90m 40 |\u001b[39m\n \u001b[90m 41 |\u001b[39m   test(\u001b[32m'complete deck building workflow - need commander suggestions'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at /Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts:38:7\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:42.363Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-Google-Chrome/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-Google-Chrome/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/test-results/deck-building-tutor-AI-Dec-971f0-flow---with-known-commander-Google-Chrome/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/jared.wolf/Projects/personal/moxmuse/apps/web/e2e/deck-building-tutor.spec.ts",
+                        "column": 7,
+                        "line": 38
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-05439feaa6d8e16f867d",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "complete deck building workflow - need commander suggestions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 46,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 2430,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:42.450Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-ef66f16f0f5cff35087e",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 41,
+              "column": 7
+            },
+            {
+              "title": "card recommendations workflow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 47,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 2299,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:42.498Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-4b76ca54cb8ddd7cd368",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 58,
+              "column": 7
+            },
+            {
+              "title": "wizard navigation through consultation flow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 48,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 2554,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:42.525Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-5ed45748f25a96eb4829",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 81,
+              "column": 7
+            },
+            {
+              "title": "existing deck selection",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 49,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2040,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:42.533Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-4e39591bd393476b042a",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 112,
+              "column": 7
+            },
+            {
+              "title": "mobile responsiveness",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 50,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 2618,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:43.562Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-1e384911aee9b769e6ca",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 127,
+              "column": 7
+            },
+            {
+              "title": "error handling - network failure",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 49,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1564,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:45.099Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-4689ae0cd424fecfdb3b",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 151,
+              "column": 7
+            },
+            {
+              "title": "accessibility compliance",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 47,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 2328,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:45.359Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-240345759e16c26540f1",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 178,
+              "column": 7
+            },
+            {
+              "title": "performance benchmarks",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 46,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 1572,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-01T14:15:45.482Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "41f7ff3b153b4692b4ff-6fa73a77d09e37abb1e1",
+              "file": "deck-building-tutor.spec.ts",
+              "line": 221,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-08-01T14:14:57.835Z",
+    "duration": 57696.636000000006,
+    "expected": 46,
+    "skipped": 0,
+    "unexpected": 17,
+    "flaky": 0
+  }
+}

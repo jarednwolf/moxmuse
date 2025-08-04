@@ -1,0 +1,10 @@
+{
+  "buildCommand": "pnpm turbo run build",
+  "installCommand": "pnpm install",
+  "framework": null,
+  "outputDirectory": "apps/web/.next",
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet .",
+  "env": {
+    "PNPM_VERSION": "8.14.0"
+  }
+}

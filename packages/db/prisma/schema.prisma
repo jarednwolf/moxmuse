@@ -1,0 +1,1607 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String                @id @default(cuid())
+  email                String                @unique
+  password             String?
+  name                 String?
+  image                String?
+  emailVerified        DateTime?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  accounts             Account[]
+  clickEvents          ClickEvent[]
+  collections          CollectionCard[]
+  collectionSources    CollectionSource[]
+  decks                Deck[]
+  recommendations      Recommendation[]
+  sessions             Session[]
+  syncJobs             SyncJob[]
+  generatedDecks       GeneratedDeck[]
+  consultationSessions ConsultationSession[]
+  priceAlerts          PriceAlert[]
+  notifications        Notification[]
+  enhancedDecks        EnhancedDeck[]
+  learningData         UserLearningData?
+  
+  // Moxfield Parity + AI Enhancement relationships
+  deckFolders          DeckFolder[]
+  deckTemplates        DeckTemplate[]
+  savedCardSearches    SavedCardSearch[]
+  importJobs           ImportJob[]
+  exportJobs           ExportJob[]
+  goldfishSimulations  GoldfishSimulation[]
+  gameResults          GameResult[]
+  publicDecks          PublicDeck[]
+  deckComments         DeckComment[]
+  userProfile          UserProfile?
+  followers            UserFollow[]          @relation("UserFollows")
+  following            UserFollow[]          @relation("UserFollowing")
+  deckLikes            DeckLike[]
+  commentLikes         CommentLike[]
+  performanceMetrics   PerformanceMetric[]
+  templateRatings      TemplateRating[]
+  savedDeckSearches    SavedDeckSearch[]
+  deckSearchHistory    DeckSearchHistory[]
+  bulkOperations       BulkOperation[]
+  undoOperations       UndoOperation[]
+  savedSearches        SavedSearch[]
+  searchHistory        SearchHistory[]
+  searchAnalytics      SearchAnalytics[]
+  cardClicks           CardClick[]
+  customFormats        CustomFormat[]
+  legalityNotifications LegalityNotification[]
+  importHistory        ImportHistory[]
+  importAnalytics      ImportAnalytics[]
+  importTemplates      ImportTemplate[]
+
+  @@index([email])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model CollectionCard {
+  id            String   @id @default(cuid())
+  userId        String
+  cardId        String
+  quantity      Int      @default(1)
+  foilQuantity  Int      @default(0)
+  condition     String   @default("NM")
+  language      String   @default("en")
+  purchasePrice Decimal? @db.Decimal(10, 2)
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, cardId, condition, language])
+  @@index([userId])
+  @@index([cardId])
+}
+
+model Deck {
+  id              String           @id @default(cuid())
+  userId          String
+  name            String
+  format          String           @default("commander")
+  commander       String?
+  companion       String?
+  description     String?
+  isPublic        Boolean          @default(false)
+  powerLevel      Int?
+  budget          Decimal?         @db.Decimal(10, 2)
+  tags            String[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cards           DeckCard[]
+  recommendations Recommendation[]
+  
+  // Moxfield Parity + AI Enhancement relationships
+  folderItems     DeckFolderItem[]
+  analytics       DeckAnalytics?
+  simulations     GoldfishSimulation[]
+  gameResults     GameResult[]
+  publicDeck      PublicDeck?
+  importJobItems  ImportJobItem[]
+
+  @@index([userId])
+  @@index([format])
+}
+
+model DeckCard {
+  id          String   @id @default(cuid())
+  deckId      String
+  cardId      String
+  quantity    Int      @default(1)
+  isCommander Boolean  @default(false)
+  isCompanion Boolean  @default(false)
+  category    String?
+  boardState  String   @default("mainboard")
+  createdAt   DateTime @default(now())
+  deck        Deck     @relation(fields: [deckId], references: [id], onDelete: Cascade)
+
+  @@unique([deckId, cardId, boardState])
+  @@index([deckId])
+  @@index([cardId])
+}
+
+model Recommendation {
+  id           String   @id @default(cuid())
+  userId       String
+  deckId       String?
+  sessionId    String
+  cardId       String
+  reason       String
+  confidence   Float
+  owned        Boolean
+  affiliateUrl String?
+  accepted     Boolean?
+  createdAt    DateTime @default(now())
+  deck         Deck?    @relation(fields: [deckId], references: [id])
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([deckId])
+  @@index([sessionId])
+  @@index([createdAt])
+}
+
+model ClickEvent {
+  id               String   @id @default(cuid())
+  userId           String
+  sessionId        String
+  cardId           String
+  affiliateUrl     String
+  affiliatePartner String
+  referrer         String?
+  userAgent        String?
+  ipHash           String?
+  createdAt        DateTime @default(now())
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([sessionId])
+  @@index([createdAt])
+  @@index([affiliatePartner])
+}
+
+model SyncJob {
+  id          String    @id @default(cuid())
+  userId      String
+  provider    String
+  status      String
+  itemsTotal  Int?
+  itemsSynced Int?
+  error       String?
+  metadata    Json?
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model CollectionSource {
+  id         String    @id @default(cuid())
+  userId     String
+  type       String
+  username   String?
+  name       String
+  isActive   Boolean   @default(true)
+  metadata   Json?
+  lastSynced DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, type, username])
+  @@index([userId])
+}
+
+model GeneratedDeck {
+  id                String                @id @default(cuid())
+  userId            String
+  sessionId         String
+  name              String
+  commander         String
+  format            String                @default("commander")
+  strategy          Json                  // DeckStrategy object
+  winConditions     Json                  // WinCondition[] array
+  powerLevel        Int?
+  estimatedBudget   Decimal?              @db.Decimal(10, 2)
+  consultationData  Json                  // ConsultationData object
+  generationPrompt  String?
+  status            String                @default("generated") // generated, saved, exported
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+  user              User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cards             GeneratedDeckCard[]
+  analysis          DeckAnalysis?
+  consultationSession ConsultationSession?
+
+  @@index([userId])
+  @@index([sessionId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model GeneratedDeckCard {
+  id             String       @id @default(cuid())
+  deckId         String
+  cardId         String
+  quantity       Int          @default(1)
+  category       String       // ramp, draw, removal, win-con, etc.
+  role           String?      // primary, secondary, utility
+  reasoning      String?
+  alternatives   String[]     // Array of card IDs
+  upgradeOptions String[]     // Array of card IDs for upgrades
+  budgetOptions  String[]     // Array of card IDs for budget alternatives
+  createdAt      DateTime     @default(now())
+  deck           GeneratedDeck @relation(fields: [deckId], references: [id], onDelete: Cascade)
+
+  @@unique([deckId, cardId])
+  @@index([deckId])
+  @@index([cardId])
+  @@index([category])
+}
+
+model DeckAnalysis {
+  id                      String       @id @default(cuid())
+  deckId                  String       @unique
+  statistics              Json         // DeckStatistics object
+  synergies               Json         // CardSynergy[] array
+  weaknesses              String[]
+  strategyDescription     String?
+  winConditionAnalysis    String?
+  playPatternDescription  String?
+  analyzedAt              DateTime     @default(now())
+  deck                    GeneratedDeck @relation(fields: [deckId], references: [id], onDelete: Cascade)
+
+  @@index([deckId])
+  @@index([analyzedAt])
+}
+
+model ConsultationSession {
+  id               String        @id @default(cuid())
+  userId           String
+  sessionId        String        @unique
+  consultationData Json          // ConsultationData object
+  currentStep      String?
+  completed        Boolean       @default(false)
+  generatedDeckId  String?       @unique
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  generatedDeck    GeneratedDeck? @relation(fields: [generatedDeckId], references: [id])
+
+  @@index([userId])
+  @@index([sessionId])
+  @@index([completed])
+  @@index([createdAt])
+}
+
+model CardPriceHistory {
+  id        String   @id @default(cuid())
+  cardId    String
+  price     Decimal  @db.Decimal(10, 2)
+  source    String
+  condition String   @default("NM")
+  foil      Boolean  @default(false)
+  date      DateTime @default(now())
+  metadata  Json?
+
+  @@index([cardId])
+  @@index([date])
+  @@index([source])
+}
+
+model PriceAlert {
+  id          String   @id @default(cuid())
+  userId      String
+  cardId      String
+  targetPrice Decimal  @db.Decimal(10, 2)
+  condition   String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([cardId])
+  @@index([isActive])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  title     String
+  message   String
+  data      Json?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@index([read])
+  @@index([createdAt])
+}
+
+model MarketIntelligence {
+  id                String   @id @default(cuid())
+  cardId            String   @unique
+  currentPrice      Decimal? @db.Decimal(10, 2)
+  priceHistory      Json?
+  volatility        Decimal? @db.Decimal(5, 4)
+  metaShare         Decimal? @db.Decimal(5, 4)
+  winRate           Decimal? @db.Decimal(5, 4)
+  popularityTrend   String?
+  tournamentResults Json?
+  matchupData       Json?
+  lastUpdated       DateTime @default(now())
+
+  @@index([cardId])
+  @@index([lastUpdated])
+}
+
+model DeckMetaAnalysis {
+  id                   String   @id @default(cuid())
+  deckId               String
+  format               String   @default("commander")
+  archetype            String?
+  metaShare            Decimal? @db.Decimal(5, 4)
+  winRate              Decimal? @db.Decimal(5, 4)
+  popularityTrend      String?
+  favorableMatchups    Json?
+  unfavorableMatchups  Json?
+  metaAdaptations      Json?
+  competitiveViability Decimal? @db.Decimal(5, 2)
+  analyzedAt           DateTime @default(now())
+
+  @@index([deckId])
+  @@index([format])
+  @@index([archetype])
+  @@index([analyzedAt])
+}
+
+model PopularityTrend {
+  id                 String   @id @default(cuid())
+  cardId             String
+  cardName           String
+  format             String   @default("commander")
+  currentPopularity  Decimal  @db.Decimal(5, 2)
+  previousPopularity Decimal  @db.Decimal(5, 2)
+  trend              String
+  trendStrength      Decimal  @db.Decimal(3, 2)
+  playRate           Decimal  @db.Decimal(5, 4)
+  winRate            Decimal  @db.Decimal(5, 4)
+  timeframe          String
+  date               DateTime @default(now())
+
+  @@index([cardId])
+  @@index([format])
+  @@index([trend])
+  @@index([date])
+  @@index([timeframe])
+}
+
+model EnhancedDeck {
+  id                   String                @id @default(cuid())
+  userId               String
+  name                 String
+  commander            String
+  format               String                @default("commander")
+  
+  // AI analysis data
+  strategy             Json
+  analysis             Json?
+  personalizationData  Json?
+  
+  // Real-time data
+  statistics           Json?
+  marketData           Json?
+  metaPosition         Json?
+  
+  // Maintenance tracking
+  lastOptimized        DateTime?
+  suggestionHistory    Json[]
+  userPreferences      Json?
+  
+  // Mobile optimization
+  mobileLayout         Json?
+  touchSettings        Json?
+  
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cards                EnhancedDeckCard[]
+  analysisCache        AIAnalysisCache[]
+
+  @@index([userId])
+  @@index([format])
+  @@index([lastOptimized])
+  @@index([createdAt])
+}
+
+model EnhancedDeckCard {
+  id                   String       @id @default(cuid())
+  deckId               String
+  cardId               String
+  quantity             Int          @default(1)
+  category             String
+  role                 String
+  
+  // AI insights
+  synergyScore         Decimal?     @db.Decimal(3, 2)
+  strategicImportance  Decimal?     @db.Decimal(3, 2)
+  replaceability       Decimal?     @db.Decimal(3, 2)
+  
+  // Market data
+  currentPrice         Decimal?     @db.Decimal(10, 2)
+  priceHistory         Json?
+  alternatives         Json?
+  
+  // Personalization
+  userRating           Int?
+  performanceNotes     String?
+  lastModified         DateTime     @default(now())
+  
+  // Collection integration
+  owned                Boolean      @default(false)
+  ownedQuantity        Int          @default(0)
+  condition            String?
+  
+  createdAt            DateTime     @default(now())
+  deck                 EnhancedDeck @relation(fields: [deckId], references: [id], onDelete: Cascade)
+
+  @@unique([deckId, cardId])
+  @@index([deckId])
+  @@index([cardId])
+  @@index([category])
+  @@index([role])
+  @@index([synergyScore])
+  @@index([owned])
+}
+
+model UserLearningData {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  
+  // Style profile
+  styleProfile         Json
+  deckPreferences      Json?
+  
+  // Learning history
+  learningEvents       Json[]
+  suggestionFeedback   Json[]
+  
+  // Multi-deck context
+  deckRelationships    Json?
+  crossDeckInsights    Json?
+  
+  lastUpdated          DateTime @default(now())
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([lastUpdated])
+}
+
+model AIAnalysisCache {
+  id                   String       @id @default(cuid())
+  deckId               String
+  analysisVersion      Int
+  
+  // Analysis results
+  synergyAnalysis      Json?
+  strategyAnalysis     Json?
+  metaAnalysis         Json?
+  personalizedInsights Json?
+  
+  // Metadata
+  confidenceScore      Decimal?     @db.Decimal(3, 2)
+  analysisDuration     Int?         // milliseconds
+  modelVersion         String?
+  
+  createdAt            DateTime     @default(now())
+  deck                 EnhancedDeck @relation(fields: [deckId], references: [id], onDelete: Cascade)
+
+  @@unique([deckId, analysisVersion])
+  @@index([deckId])
+  @@index([analysisVersion])
+  @@index([createdAt])
+  @@index([confidenceScore])
+}
+
+model SuggestionFeedback {
+  id                   String   @id @default(cuid())
+  userId               String
+  suggestionId         String
+  deckId               String?
+  feedback             String   // accepted, rejected, modified, ignored
+  reason               String?
+  alternativeChosen    String?
+  satisfactionRating   Int?
+  context              Json?
+  createdAt            DateTime @default(now())
+
+  @@index([userId])
+  @@index([suggestionId])
+  @@index([deckId])
+  @@index([feedback])
+  @@index([createdAt])
+}
+
+// =====================================================
+// MOXFIELD PARITY + AI ENHANCEMENT MODELS
+// =====================================================
+
+// Deck Organization System
+model DeckFolder {
+  id          String            @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  color       String            @default("#6366f1")
+  parentId    String?
+  sortOrder   Int               @default(0)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent      DeckFolder?       @relation("FolderHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children    DeckFolder[]      @relation("FolderHierarchy")
+  items       DeckFolderItem[]
+
+  @@unique([userId, parentId, name], name: "unique_folder_name_per_parent")
+  @@unique([userId, name], name: "unique_root_folder_name")
+  @@index([userId])
+  @@index([parentId])
+  @@index([sortOrder])
+}
+
+model DeckTemplate {
+  id              String   @id @default(cuid())
+  userId          String
+  name            String
+  description     String
+  format          String   @default("commander")
+  archetype       String
+  isPublic        Boolean  @default(false)
+  powerLevel      Int?
+  estimatedBudget Decimal? @db.Decimal(10, 2)
+  tags            String[]
+  usageCount      Int      @default(0)
+  categories      Json     @default("[]")
+  coreCards       Json     @default("[]")
+  flexSlots       Json     @default("[]")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  versions        DeckTemplateVersion[]
+  ratings         TemplateRating[]
+
+  @@index([userId])
+  @@index([format])
+  @@index([archetype])
+  @@index([isPublic])
+  @@index([usageCount])
+}
+
+model DeckTemplateVersion {
+  id         String       @id @default(cuid())
+  templateId String
+  version    String
+  changes    String
+  categories Json         @default("[]")
+  coreCards  Json         @default("[]")
+  flexSlots  Json         @default("[]")
+  createdAt  DateTime     @default(now())
+  template   DeckTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@unique([templateId, version])
+  @@index([templateId])
+  @@index([createdAt])
+}
+
+model TemplateRating {
+  id         String       @id @default(cuid())
+  userId     String
+  templateId String
+  rating     Int
+  review     String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  template   DeckTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, templateId])
+  @@index([userId])
+  @@index([templateId])
+  @@index([rating])
+  @@index([createdAt])
+}
+
+model DeckFolderItem {
+  id        String     @id @default(cuid())
+  folderId  String
+  deckId    String
+  sortOrder Int        @default(0)
+  createdAt DateTime   @default(now())
+  folder    DeckFolder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  deck      Deck       @relation(fields: [deckId], references: [id], onDelete: Cascade)
+
+  @@unique([folderId, deckId])
+  @@index([folderId])
+  @@index([deckId])
+  @@index([sortOrder])
+}
+
+// Enhanced Card Database Integration
+model EnhancedCardData {
+  id              String   @id @default(cuid())
+  cardId          String   @unique
+  name            String
+  manaCost        String?
+  cmc             Int      @default(0)
+  typeLine        String
+  oracleText      String?
+  power           String?
+  toughness       String?
+  colors          String[]
+  colorIdentity   String[]
+  legalities      Json     @default("{}")
+  rulings         Json     @default("[]")
+  printings       Json     @default("[]")
+  relatedCards    Json     @default("[]")
+  edhrecRank      Int?
+  popularityScore Decimal  @default(0) @db.Decimal(5, 2)
+  synergyTags     String[]
+  currentPrice    Decimal? @db.Decimal(10, 2)
+  priceHistory    Json     @default("[]")
+  availability    Json     @default("{}")
+  imageUrls       Json     @default("{}")
+  lastUpdated     DateTime @default(now())
+
+  @@index([cardId])
+  @@index([name])
+  @@index([cmc])
+  @@index([colors])
+  @@index([colorIdentity])
+  @@index([popularityScore])
+  @@index([currentPrice])
+  @@index([lastUpdated])
+}
+
+model SavedCardSearch {
+  id         String   @id @default(cuid())
+  userId     String
+  name       String
+  query      Json
+  isPublic   Boolean  @default(false)
+  usageCount Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isPublic])
+  @@index([usageCount])
+}
+
+// Universal Import/Export System (moved to Import Job Processing System section)
+
+model ExportJob {
+  id          String    @id @default(cuid())
+  userId      String
+  deckIds     String[]
+  format      Json
+  options     Json      @default("{}")
+  status      String    @default("pending")
+  downloadUrl String?
+  fileSize    Int?
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model PlatformAdapter {
+  id               String   @id @default(cuid())
+  name             String
+  type             String
+  isActive         Boolean  @default(true)
+  configuration    Json     @default("{}")
+  supportedFormats String[]
+  lastUpdated      DateTime @default(now())
+
+  @@index([name])
+  @@index([type])
+  @@index([isActive])
+}
+
+// Advanced Analytics and Testing
+model DeckAnalytics {
+  id                      String   @id @default(cuid())
+  deckId                  String   @unique
+  manaAnalysis            Json     @default("{}")
+  consistencyMetrics      Json     @default("{}")
+  metaAnalysis            Json     @default("{}")
+  performanceData         Json     @default("{}")
+  optimizationSuggestions Json     @default("[]")
+  analysisVersion         String
+  lastAnalyzed            DateTime @default(now())
+  deck                    Deck     @relation(fields: [deckId], references: [id], onDelete: Cascade)
+
+  @@index([deckId])
+  @@index([analysisVersion])
+  @@index([lastAnalyzed])
+}
+
+model GoldfishSimulation {
+  id                   String   @id @default(cuid())
+  deckId               String
+  userId               String
+  simulationRuns       Int
+  openingHandStats     Json     @default("{}")
+  earlyGameStats       Json     @default("{}")
+  keepableHands        Decimal  @db.Decimal(5, 2)
+  averageTurnToPlay    Json     @default("{}")
+  mulliganRate         Decimal  @db.Decimal(5, 2)
+  gameplayConsistency  Decimal  @db.Decimal(5, 2)
+  simulationParameters Json     @default("{}")
+  createdAt            DateTime @default(now())
+  deck                 Deck     @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([deckId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model GameResult {
+  id           String   @id @default(cuid())
+  userId       String
+  deckId       String
+  opponent     String?
+  opponentDeck String?
+  result       String
+  gameLength   Int?
+  format       String   @default("commander")
+  notes        String?
+  metadata     Json?
+  playedAt     DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deck         Deck     @relation(fields: [deckId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([deckId])
+  @@index([result])
+  @@index([format])
+  @@index([playedAt])
+}
+
+// Social and Community Features
+model PublicDeck {
+  id              String        @id @default(cuid())
+  deckId          String        @unique
+  userId          String
+  name            String
+  description     String?
+  commander       String
+  format          String        @default("commander")
+  cardCount       Int           @default(0)
+  estimatedBudget Decimal?      @db.Decimal(10, 2)
+  powerLevel      Int?
+  archetype       String?
+  tags            String[]
+  views           Int           @default(0)
+  likes           Int           @default(0)
+  comments        Int           @default(0)
+  copies          Int           @default(0)
+  rating          Decimal       @default(0) @db.Decimal(3, 2)
+  isActive        Boolean       @default(true)
+  publishedAt     DateTime      @default(now())
+  lastUpdated     DateTime      @updatedAt
+  deck            Deck          @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deckComments    DeckComment[]
+  deckLikes       DeckLike[]
+
+  @@index([deckId])
+  @@index([userId])
+  @@index([format])
+  @@index([archetype])
+  @@index([views])
+  @@index([likes])
+  @@index([rating])
+  @@index([publishedAt])
+  @@index([isActive])
+}
+
+model DeckComment {
+  id           String        @id @default(cuid())
+  publicDeckId String
+  userId       String
+  parentId     String?
+  content      String
+  likes        Int           @default(0)
+  isEdited     Boolean       @default(false)
+  isDeleted    Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  publicDeck   PublicDeck    @relation(fields: [publicDeckId], references: [id], onDelete: Cascade)
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent       DeckComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies      DeckComment[] @relation("CommentReplies")
+  commentLikes CommentLike[]
+
+  @@index([publicDeckId])
+  @@index([userId])
+  @@index([parentId])
+  @@index([createdAt])
+  @@index([isDeleted])
+}
+
+model UserProfile {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  username           String   @unique
+  displayName        String
+  bio                String?
+  avatar             String?
+  totalDecks         Int      @default(0)
+  publicDecks        Int      @default(0)
+  totalLikes         Int      @default(0)
+  totalViews         Int      @default(0)
+  favoriteFormats    String[]
+  favoriteArchetypes String[]
+  brewingStyle       String[]
+  followers          Int      @default(0)
+  following          Int      @default(0)
+  achievements       Json     @default("[]")
+  isPublic           Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  lastActive         DateTime @default(now())
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([username])
+  @@index([totalLikes])
+  @@index([followers])
+  @@index([isPublic])
+  @@index([lastActive])
+}
+
+model UserFollow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+  follower    User     @relation("UserFollows", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+  @@index([createdAt])
+}
+
+model DeckLike {
+  id           String     @id @default(cuid())
+  userId       String
+  publicDeckId String
+  createdAt    DateTime   @default(now())
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  publicDeck   PublicDeck @relation(fields: [publicDeckId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, publicDeckId])
+  @@index([userId])
+  @@index([publicDeckId])
+  @@index([createdAt])
+}
+
+model CommentLike {
+  id        String      @id @default(cuid())
+  userId    String
+  commentId String
+  createdAt DateTime    @default(now())
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment   DeckComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, commentId])
+  @@index([userId])
+  @@index([commentId])
+  @@index([createdAt])
+}
+
+model TrendingData {
+  id       String   @id @default(cuid())
+  type     String
+  itemId   String
+  itemName String
+  score    Decimal  @db.Decimal(10, 2)
+  timeframe String
+  metadata Json?
+  date     DateTime @default(now())
+
+  @@index([type])
+  @@index([itemId])
+  @@index([score])
+  @@index([timeframe])
+  @@index([date])
+}
+
+// Performance Monitoring and Caching
+model PerformanceMetric {
+  id           String   @id @default(cuid())
+  userId       String?
+  operation    String
+  duration     Int
+  success      Boolean  @default(true)
+  errorMessage String?
+  metadata     Json?
+  timestamp    DateTime @default(now())
+  user         User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([operation])
+  @@index([success])
+  @@index([timestamp])
+}
+
+model CacheEntry {
+  id           String    @id @default(cuid())
+  key          String    @unique
+  value        Json
+  tags         String[]
+  expiresAt    DateTime?
+  hitCount     Int       @default(0)
+  lastAccessed DateTime  @default(now())
+  createdAt    DateTime  @default(now())
+
+  @@index([key])
+  @@index([tags])
+  @@index([expiresAt])
+  @@index([lastAccessed])
+}
+
+model BackgroundJob {
+  id           String    @id @default(cuid())
+  type         String
+  status       String    @default("pending")
+  priority     Int       @default(0)
+  data         Json      @default("{}")
+  result       Json?
+  error        String?
+  attempts     Int       @default(0)
+  maxAttempts  Int       @default(3)
+  scheduledFor DateTime?
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@index([type])
+  @@index([status])
+  @@index([priority])
+  @@index([scheduledFor])
+  @@index([createdAt])
+}
+
+model SystemHealth {
+  id        String   @id @default(cuid())
+  component String
+  status    String
+  metrics   Json     @default("{}")
+  message   String?
+  timestamp DateTime @default(now())
+
+  @@index([component])
+  @@index([status])
+  @@index([timestamp])
+}
+// Advanced Deck Search Models
+model SavedDeckSearch {
+  id         String   @id @default(cuid())
+  userId     String
+  name       String
+  query      Json
+  isPublic   Boolean  @default(false)
+  usageCount Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isPublic])
+  @@index([usageCount])
+  @@index([createdAt])
+}
+
+model DeckSearchHistory {
+  id          String   @id @default(cuid())
+  userId      String
+  query       Json
+  resultCount Int
+  searchedAt  DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([searchedAt])
+}
+
+model SearchIndex {
+  id             String   @id @default(cuid())
+  type           String
+  itemId         String
+  searchableText String
+  metadata       Json     @default("{}")
+  popularity     Decimal  @default(0) @db.Decimal(5, 2)
+  lastUpdated    DateTime @default(now())
+
+  @@index([type])
+  @@index([itemId])
+  @@index([searchableText])
+  @@index([popularity])
+  @@index([lastUpdated])
+}
+
+// Bulk Operations Models
+enum BulkOperationType {
+  import
+  export
+  delete
+  move
+  clone
+  tag
+  analyze
+  optimize
+  share
+  privacy
+}
+
+enum BulkOperationStatus {
+  pending
+  processing
+  completed
+  failed
+  cancelled
+}
+
+model BulkOperation {
+  id            String              @id @default(cuid())
+  userId        String
+  type          BulkOperationType
+  deckIds       String[]
+  parameters    Json                @default("{}")
+  status        BulkOperationStatus @default(pending)
+  result        Json?
+  canUndo       Boolean             @default(false)
+  undoData      Json?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  completedAt   DateTime?
+  user          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  undoOperations UndoOperation[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model UndoOperation {
+  id                  String            @id @default(cuid())
+  userId              String
+  originalOperationId String
+  operationType       BulkOperationType
+  undoData            Json
+  canRedo             Boolean           @default(true)
+  createdAt           DateTime          @default(now())
+  user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  originalOperation   BulkOperation     @relation(fields: [originalOperationId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([originalOperationId])
+}
+
+// Card Search Models
+model SavedSearch {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  query       String   // JSON string of CardSearchQuery
+  isPublic    Boolean  @default(false)
+  tags        String[]
+  useCount    Int      @default(0)
+  lastUsed    DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isPublic])
+  @@index([useCount])
+  @@index([createdAt])
+  @@index([lastUsed])
+}
+
+model SearchHistory {
+  id          String   @id @default(cuid())
+  userId      String
+  query       String   // JSON string of CardSearchQuery
+  resultCount Int
+  timestamp   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([timestamp])
+}
+
+model SearchAnalytics {
+  id                String   @id @default(cuid())
+  query             String   // JSON string of CardSearchQuery
+  resultCount       Int
+  clickThroughRate  Decimal  @default(0) @db.Decimal(5, 4)
+  averagePosition   Decimal  @default(0) @db.Decimal(5, 2)
+  searchTime        Int      // milliseconds
+  userId            String?
+  timestamp         DateTime @default(now())
+  user              User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([timestamp])
+  @@index([query])
+}
+
+model CardClick {
+  id        String   @id @default(cuid())
+  userId    String
+  cardId    String
+  query     String   // The search query that led to this click
+  position  Int      // Position in search results
+  timestamp DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([cardId])
+  @@index([timestamp])
+}
+
+model EnhancedCard {
+  id              String   @id @default(cuid())
+  scryfallId      String   @unique
+  name            String
+  edhrecRank      Int?
+  popularityScore Decimal  @default(0) @db.Decimal(10, 2)
+  synergyTags     String[]
+  priceHistory    Json     @default("[]")
+  rulings         Json     @default("[]")
+  relatedCards    Json     @default("[]")
+  lastUpdated     DateTime @default(now())
+
+  @@index([scryfallId])
+  @@index([name])
+  @@index([edhrecRank])
+  @@index([popularityScore])
+  @@index([lastUpdated])
+}
+
+// Format Legality System Models
+model FormatRules {
+  id                   String   @id @default(cuid())
+  format               String   @unique
+  deckSizeMin          Int
+  deckSizeMax          Int
+  sideboardSizeMin     Int      @default(0)
+  sideboardSizeMax     Int      @default(15)
+  defaultCardLimit     Int      @default(4)
+  cardLimitExceptions  Json     @default("{}")
+  bannedCards          String[]
+  restrictedCards      String[]
+  specialRules         String[]
+  isActive             Boolean  @default(true)
+  lastUpdated          DateTime @default(now())
+  createdAt            DateTime @default(now())
+
+  @@index([format])
+  @@index([isActive])
+  @@index([lastUpdated])
+}
+
+model CardLegality {
+  id          String   @id @default(cuid())
+  cardId      String   @unique
+  scryfallId  String   @unique
+  name        String
+  legalities  Json     @default("{}")
+  lastUpdated DateTime @default(now())
+
+  @@index([cardId])
+  @@index([scryfallId])
+  @@index([name])
+  @@index([lastUpdated])
+}
+
+model BannedListUpdate {
+  id               String   @id @default(cuid())
+  format           String
+  updateType       String
+  cards            Json     @default("[]")
+  effectiveDate    DateTime
+  announcementDate DateTime @default(now())
+  source           String
+  reason           String?
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+
+  @@index([format])
+  @@index([updateType])
+  @@index([effectiveDate])
+  @@index([isActive])
+  @@index([createdAt])
+}
+
+model FormatRotation {
+  id               String    @id @default(cuid())
+  format           String    @unique
+  rotationType     String
+  rotatingOut      Json      @default("[]")
+  rotatingIn       Json      @default("[]")
+  nextRotationDate DateTime?
+  lastUpdated      DateTime  @default(now())
+  createdAt        DateTime  @default(now())
+
+  @@index([format])
+  @@index([rotationType])
+  @@index([nextRotationDate])
+  @@index([lastUpdated])
+}
+
+model DeckValidation {
+  id                String   @id @default(cuid())
+  deckId            String
+  format            String
+  isValid           Boolean
+  violations        Json     @default("[]")
+  warnings          Json     @default("[]")
+  suggestions       Json     @default("[]")
+  validatedAt       DateTime @default(now())
+  validationVersion String   @default("1.0")
+
+  @@index([deckId])
+  @@index([format])
+  @@index([isValid])
+  @@index([validatedAt])
+}
+
+model CustomFormat {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  rules       Json
+  isPublic    Boolean  @default(false)
+  usageCount  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([name])
+  @@index([isPublic])
+  @@index([usageCount])
+  @@index([createdAt])
+}
+
+model LegalityNotification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  format    String
+  cardId    String?
+  cardName  String?
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@index([format])
+  @@index([isRead])
+  @@index([createdAt])
+}
+
+// Import Job Processing System Models
+
+enum ImportJobStatus {
+  pending
+  processing
+  completed
+  failed
+  cancelled
+}
+
+enum ImportJobType {
+  single
+  batch
+  bulk
+}
+
+enum ImportSource {
+  moxfield
+  archidekt
+  tappedout
+  edhrec
+  mtggoldfish
+  csv
+  text
+  custom
+}
+
+enum ConflictResolution {
+  skip
+  overwrite
+  merge
+  rename
+  ask_user
+}
+
+model ImportJob {
+  id     String          @id @default(cuid())
+  userId String
+  type   ImportJobType   @default(single)
+  source ImportSource
+  status ImportJobStatus @default(pending)
+  priority Int           @default(0)
+
+  // Input data
+  rawData  String?
+  sourceUrl String?
+  fileName String?
+  fileSize Int?
+  mimeType String?
+
+  // Processing configuration
+  options            Json              @default("{}")
+  conflictResolution ConflictResolution @default(ask_user)
+
+  // Progress tracking
+  progress                Int     @default(0)
+  currentStep             String?
+  totalSteps              Int?
+  estimatedTimeRemaining  Int?
+
+  // Results
+  decksFound      Int  @default(0)
+  decksImported   Int  @default(0)
+  cardsProcessed  Int  @default(0)
+  cardsResolved   Int  @default(0)
+  errors          Json @default("[]")
+  warnings        Json @default("[]")
+
+  // Metadata
+  processingStartedAt   DateTime?
+  processingCompletedAt DateTime?
+  processingTime        Int?
+  retryCount            Int       @default(0)
+  maxRetries            Int       @default(3)
+  nextRetryAt           DateTime?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     ImportJobItem[]
+  conflicts ImportConflict[]
+  preview   ImportPreview?
+  history   ImportHistory[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([source])
+  @@index([createdAt])
+  @@index([priority, status])
+}
+
+model ImportJobItem {
+  id          String          @id @default(cuid())
+  importJobId String
+  itemIndex   Int
+  status      ImportJobStatus @default(pending)
+
+  // Input data for this item
+  rawData          String
+  sourceIdentifier String?
+
+  // Processing results
+  deckId        String?
+  deckName      String?
+  cardsFound    Int?    @default(0)
+  cardsImported Int?    @default(0)
+  errors        Json    @default("[]")
+  warnings      Json    @default("[]")
+
+  // Timing
+  processingStartedAt   DateTime?
+  processingCompletedAt DateTime?
+  processingTime        Int?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  importJob ImportJob        @relation(fields: [importJobId], references: [id], onDelete: Cascade)
+  deck      Deck?            @relation(fields: [deckId], references: [id], onDelete: SetNull)
+  conflicts ImportConflict[]
+
+  @@index([importJobId])
+  @@index([status])
+  @@index([deckId])
+}
+
+model ImportConflict {
+  id           String              @id @default(cuid())
+  importJobId  String
+  itemId       String?
+  conflictType String
+  description  String
+  existingData Json?
+  newData      Json?
+  resolution   ConflictResolution?
+  resolvedAt   DateTime?
+  resolvedBy   String?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  importJob ImportJob      @relation(fields: [importJobId], references: [id], onDelete: Cascade)
+  item      ImportJobItem? @relation(fields: [itemId], references: [id], onDelete: SetNull)
+
+  @@index([importJobId])
+  @@index([resolution])
+}
+
+model ImportPreview {
+  id           String   @id @default(cuid())
+  importJobId  String   @unique
+  previewData  Json
+  decksPreview Json     @default("[]")
+  statistics   Json     @default("{}")
+  warnings     Json     @default("[]")
+  conflicts    Json     @default("[]")
+  isApproved   Boolean  @default(false)
+  approvedAt   DateTime?
+  expiresAt    DateTime
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  importJob ImportJob @relation(fields: [importJobId], references: [id], onDelete: Cascade)
+
+  @@index([importJobId])
+  @@index([expiresAt])
+}
+
+model ImportHistory {
+  id           String    @id @default(cuid())
+  userId       String
+  importJobId  String
+  action       String
+  description  String?
+  metadata     Json      @default("{}")
+  canRollback  Boolean   @default(false)
+  rollbackData Json?
+  rolledBackAt DateTime?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+
+  // Relations
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  importJob ImportJob @relation(fields: [importJobId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([importJobId])
+  @@index([createdAt])
+}
+
+model ImportAnalytics {
+  id             String          @id @default(cuid())
+  userId         String
+  source         ImportSource
+  jobType        ImportJobType
+  status         ImportJobStatus
+  decksCount     Int             @default(0)
+  cardsCount     Int             @default(0)
+  processingTime Int?
+  errorCount     Int             @default(0)
+  warningCount   Int             @default(0)
+  successRate    Decimal?        @db.Decimal(5, 2)
+  fileSize       Int?
+  metadata       Json            @default("{}")
+
+  // Timestamps
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([source])
+  @@index([createdAt])
+}
+
+model ImportTemplate {
+  id          String       @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  source      ImportSource
+  template    Json
+  options     Json         @default("{}")
+  isPublic    Boolean      @default(false)
+  usageCount  Int          @default(0)
+  rating      Decimal?     @default(0) @db.Decimal(3, 2)
+  ratingCount Int          @default(0)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([source])
+  @@index([isPublic])
+}

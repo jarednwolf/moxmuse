@@ -1,0 +1,56 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - link "MOXMUSE Commander Deck Engine":
+    - /url: /
+    - img
+    - img
+    - img
+    - img
+    - img
+    - heading "MOXMUSE" [level=1]
+    - paragraph: Commander Deck Engine
+  - navigation:
+    - link "SolSync":
+      - /url: /solsync
+      - img
+      - text: SolSync
+    - link "LotusList":
+      - /url: /lotuslist
+      - img
+      - text: LotusList
+    - link "TolarianTutor":
+      - /url: /tutor
+      - img
+      - text: TolarianTutor
+    - link "DeckForge":
+      - /url: /decks
+      - img
+      - text: DeckForge
+    - paragraph: Demo User
+    - paragraph: demo@moxmuse.com
+    - button "Sign out":
+      - img
+- img
+- heading "Tutor Page Error" [level=3]
+- paragraph: undefined is not an object (evaluating 'data.cards')
+- button "Try Again":
+  - img
+  - text: Try Again
+- button "Show technical details":
+  - img
+  - text: Show technical details
+- alert
+- img
+- paragraph: Deck Creation Failed
+- paragraph: Unable to create a new deck. Please try again.
+- button "Retry"
+- img
+- paragraph: Deck Creation Failed
+- paragraph: Unable to create a new deck. Please try again or check your connection.
+- img
+- text: 2 errors
+- button "Hide Errors":
+  - img
+```

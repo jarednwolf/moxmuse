@@ -1,0 +1,262 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+ 
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+ 
+    --primary: 263 70% 50%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+ 
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+ 
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 263 70% 50%;
+ 
+    --radius: 0.5rem;
+  }
+ 
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+ 
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+ 
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+ 
+    --primary: 263 70% 50%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+ 
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+ 
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 263 70% 50%;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Custom scrollbar for dark theme */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-zinc-900;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-zinc-700 rounded-full hover:bg-zinc-600;
+  }
+
+  /* Blob animation for decorative elements */
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+}
+
+/* 
+  Reset and Base Styles
+  - Remove default margins and paddings
+  - Set consistent baseline styles
+*/
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* 
+  Background Cycling System for Landing Page
+  
+  This creates a 25-second animation cycle through 5 different backgrounds,
+  each representing one of Magic's basic land types.
+  
+  How it works:
+  1. All 5 backgrounds are stacked on top of each other
+  2. The animation changes opacity from 0 to 1 and back
+  3. Each background is visible for 5 seconds (20% of the 25s cycle)
+  4. Animation delays ensure they cycle in order
+  
+  Images are now live! We have 10 AI-generated images (2 variants per land type):
+  - plains1.png & plains2.png (white plains landscape)
+  - island1.png & island2.png (blue ocean/island scene)
+  - swamp1.png & swamp2.png (dark swamp/bog)
+  - mountain1.png & mountain2.png (red mountain range)
+  - forest1.png & forest2.png (green forest)
+*/
+
+/* Container for all cycling backgrounds */
+.cycling-backgrounds {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Base layer styling - all backgrounds start invisible */
+.cycling-image {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  animation: cycle 25s infinite;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* 
+  Individual Background Styles
+  Using AI-generated fantasy landscape images for each MTG land type
+*/
+
+/* Plains - White/Light (0-5 seconds) */
+.cycling-image.bg-plains {
+  background-image: url('/images/plains1.png');
+  animation-delay: 0s;
+}
+
+/* Island - Blue (5-10 seconds) */
+.cycling-image.bg-island {
+  background-image: url('/images/island1.png');
+  animation-delay: 5s;
+}
+
+/* Swamp - Black/Dark (10-15 seconds) */
+.cycling-image.bg-swamp {
+  background-image: url('/images/swamp1.png');
+  animation-delay: 10s;
+}
+
+/* Mountain - Red (15-20 seconds) */
+.cycling-image.bg-mountain {
+  background-image: url('/images/mountain1.png');
+  animation-delay: 15s;
+}
+
+/* Forest - Green (20-25 seconds) */
+.cycling-image.bg-forest {
+  background-image: url('/images/forest1.png');
+  animation-delay: 20s;
+}
+
+/* 
+  Keyframe Animation
+  Each background fades in and out over the 25s cycle
+  - 0-4%: Fade in (0s to 1s)
+  - 4-20%: Fully visible (1s to 5s)
+  - 20-24%: Fade out (5s to 6s)
+  - 24-100%: Invisible (6s to 25s)
+*/
+@keyframes cycle {
+  0%, 4% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 1;
+  }
+  24%, 100% {
+    opacity: 0;
+  }
+}
+
+/* 
+  Optional: Add these utility classes for other pages
+  that might want static MTG-themed backgrounds
+*/
+.bg-static-plains {
+  background-image: url('/images/plains2.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.bg-static-island {
+  background-image: url('/images/island2.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.bg-static-swamp {
+  background-image: url('/images/swamp2.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.bg-static-mountain {
+  background-image: url('/images/mountain2.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.bg-static-forest {
+  background-image: url('/images/forest2.png');
+  background-size: cover;
+  background-position: center;
+}

@@ -1,0 +1,1092 @@
+/**
+ * Import Job Processing Service
+ * 
+ * Handles asynchronous import job processing with progress tracking,
+ * error handling, conflict resolution, and rollback capabilities.
+ */
+
+import { PrismaClient } from '@moxmuse/db'
+// Import types directly - since these types aren't exported from index,
+// we'll define minimal interfaces here to avoid conflicts
+interface ImportJob {
+  id: string
+  userId: string
+  type: string
+  source: string
+  status: string
+  priority: number
+  rawData?: string | null
+  sourceUrl?: string | null
+  fileName?: string | null
+  fileSize?: number | null
+  mimeType?: string | null
+  options?: any
+  conflictResolution?: string
+  errors?: any[]
+  warnings?: any[]
+  decksFound: number
+  decksImported: number
+  cardsProcessed: number
+  processingTime?: number | null
+}
+
+interface ImportJobOptions {
+  validateCards?: boolean
+  resolveCardNames?: boolean
+  preserveCategories?: boolean
+  includeMetadata?: boolean
+  customFields?: string[]
+  timeout?: number
+  batchSize?: number
+  concurrency?: number
+  continueOnError?: boolean
+  defaultConflictResolution?: string
+  autoResolveConflicts?: boolean
+  generatePreview?: boolean
+  previewTimeout?: number
+  enableRollback?: boolean
+  rollbackTimeout?: number
+  customProcessors?: any[]
+  processingHooks?: any[]
+}
+
+type ImportJobStatus = 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled'
+type ImportSource = string
+
+interface ImportProgress {
+  jobId: string
+  status: ImportJobStatus
+  progress: number
+  currentStep?: string
+  totalSteps?: number
+  estimatedTimeRemaining?: number
+  itemsCompleted: number
+  itemsTotal: number
+  errors: any[]
+  warnings: any[]
+  lastUpdated: Date
+}
+
+interface CreateImportJobRequest {
+  userId?: string
+  type: string
+  source: string
+  rawData?: string
+  sourceUrl?: string
+  file?: any
+  options?: Partial<ImportJobOptions>
+  priority?: number
+}
+
+interface StandardDeck {
+  name: string
+  format: string
+  commander?: { name: string }
+  description?: string
+  tags?: string[]
+  cards: Array<{ name: string; quantity: number; category?: string }>
+  metadata: {
+    colors?: string[]
+    archetype?: string
+  }
+}
+
+interface ParseResult {
+  success: boolean
+  decks: StandardDeck[]
+  warnings?: any[]
+  metadata?: any
+}
+
+interface PlatformAdapter {
+  parseDecks(data: string, options: any): Promise<ParseResult>
+}
+
+// Stub interfaces for other types
+interface ImportJobItem {}
+interface ImportError { type: string; message: string; severity: string }
+interface ImportWarning { type: string; message: string }
+interface ImportConflict {}
+interface ImportPreview {}
+interface UpdateImportJobRequest {
+  status?: string
+  conflictResolution?: string
+  options?: any
+  priority?: number
+}
+interface ResolveConflictRequest {
+  conflictId: string
+  resolution: any
+  customData?: any
+}
+interface ApprovePreviewRequest {
+  previewId: string
+  approved: boolean
+  conflictResolutions?: Record<string, any>
+}
+interface BatchImportRequest {
+  userId?: string
+  items: any[]
+  options?: Partial<ImportJobOptions>
+  priority?: number
+}
+interface BulkImportRequest {}
+interface RollbackRequest {
+  importJobId: string
+  reason?: string
+  selectiveRollback?: any
+}
+interface ImportQueueStats {
+  pending: number
+  processing: number
+  completed: number
+  failed: number
+  cancelled: number
+  totalProcessingTime: number
+  averageWaitTime: number
+  queueLength: number
+  [key: string]: number
+}
+type ConflictResolution = string
+import { AdapterRegistry } from './platform-adapters/adapter-registry'
+import { JobProcessor, Logger, MetricsCollector } from './core/interfaces'
+import { BackgroundJobProcessor } from './core/job-processor'
+
+interface ImportJobContext {
+  job: ImportJob
+  adapter: PlatformAdapter
+  options: Required<ImportJobOptions>
+  logger: Logger
+  updateProgress: (progress: number, step?: string) => Promise<void>
+}
+
+export class ImportJobProcessingService {
+  private db: PrismaClient
+  private adapterRegistry: AdapterRegistry
+  private jobProcessor: JobProcessor
+  private logger: Logger
+  private metrics?: MetricsCollector
+
+  constructor(
+    db: PrismaClient,
+    adapterRegistry: AdapterRegistry,
+    jobProcessor: JobProcessor,
+    logger: Logger,
+    metrics?: MetricsCollector
+  ) {
+    this.db = db
+    this.adapterRegistry = adapterRegistry
+    this.jobProcessor = jobProcessor
+    this.logger = logger.child({ service: 'ImportJobProcessor' })
+    this.metrics = metrics
+
+    // Register job handlers
+    this.registerJobHandlers()
+  }
+
+  /**
+   * Create a new import job
+   */
+  async createImportJob(request: CreateImportJobRequest): Promise<ImportJob> {
+    const {
+      type,
+      source,
+      rawData,
+      sourceUrl,
+      file,
+      options = {},
+      priority = 0
+    } = request
+
+    // Validate input
+    if (!rawData && !sourceUrl && !file) {
+      throw new Error('Must provide rawData, sourceUrl, or file')
+    }
+
+    // Process file if provided
+    let fileData: string | undefined
+    let fileName: string | undefined
+    let fileSize: number | undefined
+    let mimeType: string | undefined
+
+    if (file) {
+      fileData = await this.readFile(file)
+      fileName = file.name
+      fileSize = file.size
+      mimeType = file.type
+    }
+
+    // Create job record
+    const job = await this.db.importJob.create({
+      data: {
+        userId: request.userId || '', // This should come from auth context
+        type,
+        source,
+        status: 'pending',
+        priority,
+        rawData: rawData || fileData,
+        sourceUrl,
+        fileName,
+        fileSize,
+        mimeType,
+        options: options as any,
+        conflictResolution: options.defaultConflictResolution || 'ask_user'
+      },
+      include: {
+        items: true,
+        conflicts: true,
+        preview: true,
+        history: true
+      }
+    })
+
+    // Schedule job for processing
+    await this.jobProcessor.schedule({
+      type: 'import_job',
+      data: { jobId: job.id },
+      options: {
+        priority,
+        timeout: options.timeout || 300000, // 5 minutes default
+        attempts: 3
+      }
+    })
+
+    this.logger.info(`Created import job: ${job.id}`, {
+      type,
+      source,
+      priority,
+      hasFile: !!file
+    })
+
+    if (this.metrics) {
+      this.metrics.increment('import_jobs.created', 1, {
+        source,
+        type
+      })
+    }
+
+    return job as ImportJob
+  }
+
+  /**
+   * Update an existing import job
+   */
+  async updateImportJob(
+    jobId: string,
+    request: UpdateImportJobRequest
+  ): Promise<ImportJob> {
+    const job = await this.db.importJob.update({
+      where: { id: jobId },
+      data: {
+        status: request.status,
+        conflictResolution: request.conflictResolution,
+        options: request.options as any,
+        priority: request.priority,
+        updatedAt: new Date()
+      },
+      include: {
+        items: true,
+        conflicts: true,
+        preview: true,
+        history: true
+      }
+    })
+
+    return job as ImportJob
+  }
+
+  /**
+   * Get import job by ID
+   */
+  async getImportJob(jobId: string): Promise<ImportJob | null> {
+    const job = await this.db.importJob.findUnique({
+      where: { id: jobId },
+      include: {
+        items: true,
+        conflicts: true,
+        preview: true,
+        history: true
+      }
+    })
+
+    return job as ImportJob | null
+  }
+
+  /**
+   * Get import jobs for a user
+   */
+  async getUserImportJobs(
+    userId: string,
+    options: {
+      status?: ImportJobStatus
+      source?: ImportSource
+      limit?: number
+      offset?: number
+    } = {}
+  ): Promise<ImportJob[]> {
+    const jobs = await this.db.importJob.findMany({
+      where: {
+        userId,
+        status: options.status,
+        source: options.source
+      },
+      include: {
+        items: true,
+        conflicts: true,
+        preview: true,
+        history: true
+      },
+      orderBy: { createdAt: 'desc' },
+      take: options.limit || 50,
+      skip: options.offset || 0
+    })
+
+    return jobs as ImportJob[]
+  }
+
+  /**
+   * Cancel an import job
+   */
+  async cancelImportJob(jobId: string): Promise<boolean> {
+    const job = await this.db.importJob.findUnique({
+      where: { id: jobId }
+    })
+
+    if (!job) {
+      return false
+    }
+
+    if (job.status === 'processing') {
+      // Try to cancel the background job
+      const cancelled = await this.jobProcessor.cancel(jobId)
+      if (!cancelled) {
+        this.logger.warn(`Could not cancel active job: ${jobId}`)
+        return false
+      }
+    }
+
+    await this.db.importJob.update({
+      where: { id: jobId },
+      data: {
+        status: 'cancelled',
+        processingCompletedAt: new Date(),
+        updatedAt: new Date()
+      }
+    })
+
+    this.logger.info(`Cancelled import job: ${jobId}`)
+
+    if (this.metrics) {
+      this.metrics.increment('import_jobs.cancelled', 1, {
+        source: job.source
+      })
+    }
+
+    return true
+  }
+
+  /**
+   * Get import job progress
+   */
+  async getImportProgress(jobId: string): Promise<ImportProgress | null> {
+    const job = await this.db.importJob.findUnique({
+      where: { id: jobId },
+      include: {
+        items: true
+      }
+    })
+
+    if (!job) {
+      return null
+    }
+
+    const itemsCompleted = job.items?.filter(item => 
+      item.status === 'completed' || item.status === 'failed'
+    ).length || 0
+
+    return {
+      jobId: job.id,
+      status: job.status as ImportJobStatus,
+      progress: job.progress,
+      currentStep: job.currentStep || undefined,
+      totalSteps: job.totalSteps || undefined,
+      estimatedTimeRemaining: job.estimatedTimeRemaining || undefined,
+      itemsCompleted,
+      itemsTotal: job.items?.length || 0,
+      errors: (job.errors as ImportError[]) || [],
+      warnings: (job.warnings as ImportWarning[]) || [],
+      lastUpdated: job.updatedAt
+    }
+  }
+
+  /**
+   * Resolve a conflict
+   */
+  async resolveConflict(request: ResolveConflictRequest): Promise<void> {
+    const { conflictId, resolution, customData } = request
+
+    await this.db.importConflict.update({
+      where: { id: conflictId },
+      data: {
+        resolution,
+        resolvedAt: new Date(),
+        resolvedBy: 'user', // This should come from auth context
+        updatedAt: new Date()
+      }
+    })
+
+    // If this was the last unresolved conflict, resume processing
+    const conflict = await this.db.importConflict.findUnique({
+      where: { id: conflictId },
+      include: { importJob: true }
+    })
+
+    if (conflict) {
+      const unresolvedConflicts = await this.db.importConflict.count({
+        where: {
+          importJobId: conflict.importJobId,
+          resolution: null
+        }
+      })
+
+      if (unresolvedConflicts === 0) {
+        // Resume job processing
+        await this.jobProcessor.schedule({
+          type: 'import_job_resume',
+          data: { jobId: conflict.importJobId },
+          options: { priority: 1 }
+        })
+      }
+    }
+  }
+
+  /**
+   * Generate preview for import job
+   */
+  async generatePreview(jobId: string): Promise<ImportPreview> {
+    const job = await this.db.importJob.findUnique({
+      where: { id: jobId }
+    })
+
+    if (!job) {
+      throw new Error(`Import job not found: ${jobId}`)
+    }
+
+    // Get appropriate adapter
+    const adapter = this.adapterRegistry.getAdapter(job.source)
+    if (!adapter) {
+      throw new Error(`No adapter found for source: ${job.source}`)
+    }
+
+    // Parse data to generate preview
+    const parseResult = await adapter.parseDecks(
+      job.rawData || '',
+      {
+        includeMetadata: true,
+        validateCards: false, // Skip validation for preview
+        resolveCardNames: false,
+        timeout: 30000
+      }
+    )
+
+    // Generate preview data
+    const previewData = {
+      source: job.source,
+      totalDecks: parseResult.decks.length,
+      totalCards: parseResult.decks.reduce((sum: number, deck: any) => sum + deck.cards.length, 0),
+      estimatedProcessingTime: this.estimateProcessingTime(parseResult.decks),
+      parseResult
+    }
+
+    const decksPreview = parseResult.decks.map(deck => ({
+      name: deck.name,
+      commander: deck.commander?.name,
+      format: deck.format,
+      cardCount: deck.cards.length,
+      colors: deck.metadata.colors || [],
+      archetype: deck.metadata.archetype,
+      warnings: [],
+      conflicts: []
+    }))
+
+    const statistics = {
+      totalDecks: parseResult.decks.length,
+      totalCards: parseResult.decks.reduce((sum: number, deck: any) => sum + deck.cards.length, 0),
+      uniqueCards: new Set(parseResult.decks.flatMap(deck => deck.cards.map(c => c.name))).size,
+      resolvedCards: 0, // Will be calculated during actual processing
+      unresolvedCards: 0,
+      estimatedProcessingTime: this.estimateProcessingTime(parseResult.decks),
+      formatDistribution: this.calculateFormatDistribution(parseResult.decks),
+      colorDistribution: this.calculateColorDistribution(parseResult.decks),
+      rarityDistribution: {}
+    }
+
+    // Create or update preview
+    const preview = await this.db.importPreview.upsert({
+      where: { importJobId: jobId },
+      create: {
+        importJobId: jobId,
+        previewData: previewData as any,
+        decksPreview: decksPreview as any,
+        statistics: statistics as any,
+        warnings: parseResult.warnings as any,
+        conflicts: [] as any,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+      },
+      update: {
+        previewData: previewData as any,
+        decksPreview: decksPreview as any,
+        statistics: statistics as any,
+        warnings: parseResult.warnings as any,
+        updatedAt: new Date()
+      }
+    })
+
+    return preview as ImportPreview
+  }
+
+  /**
+   * Approve preview and start processing
+   */
+  async approvePreview(request: ApprovePreviewRequest): Promise<void> {
+    const { previewId, approved, conflictResolutions } = request
+
+    const preview = await this.db.importPreview.update({
+      where: { id: previewId },
+      data: {
+        isApproved: approved,
+        approvedAt: approved ? new Date() : null,
+        updatedAt: new Date()
+      }
+    })
+
+    if (approved) {
+      // Apply conflict resolutions if provided
+      if (conflictResolutions) {
+        for (const [conflictId, resolution] of Object.entries(conflictResolutions)) {
+          await this.resolveConflict({
+            conflictId,
+            resolution
+          })
+        }
+      }
+
+      // Start job processing
+      await this.jobProcessor.schedule({
+        type: 'import_job',
+        data: { jobId: preview.importJobId },
+        options: { priority: 1 }
+      })
+    }
+  }
+
+  /**
+   * Create batch import job
+   */
+  async createBatchImportJob(request: BatchImportRequest): Promise<ImportJob> {
+    const { items, options = {}, priority = 0 } = request
+
+    // Create main job
+    const job = await this.db.importJob.create({
+      data: {
+        userId: request.userId || '', // This should come from auth context
+        type: 'batch',
+        source: items[0]?.source || 'text', // Use first item's source as default
+        status: 'pending',
+        priority,
+        options: options as any,
+        conflictResolution: options.defaultConflictResolution || 'ask_user',
+        totalSteps: items.length
+      }
+    })
+
+    // Create job items
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i]
+      let rawData = item.rawData
+
+      if (item.file) {
+        rawData = await this.readFile(item.file)
+      }
+
+      await this.db.importJobItem.create({
+        data: {
+          importJobId: job.id,
+          itemIndex: i,
+          rawData: rawData || '',
+          sourceIdentifier: item.identifier || item.sourceUrl
+        }
+      })
+    }
+
+    // Schedule job for processing
+    await this.jobProcessor.schedule({
+      type: 'batch_import_job',
+      data: { jobId: job.id },
+      options: {
+        priority,
+        timeout: (options.timeout || 300000) * items.length,
+        attempts: 3
+      }
+    })
+
+    return job as ImportJob
+  }
+
+  /**
+   * Rollback import job
+   */
+  async rollbackImportJob(request: RollbackRequest): Promise<void> {
+    const { importJobId, reason, selectiveRollback } = request
+
+    const job = await this.db.importJob.findUnique({
+      where: { id: importJobId },
+      include: {
+        items: true,
+        history: true
+      }
+    })
+
+    if (!job) {
+      throw new Error(`Import job not found: ${importJobId}`)
+    }
+
+    if (job.status !== 'completed') {
+      throw new Error('Can only rollback completed jobs')
+    }
+
+    // Create rollback history entry
+    await this.db.importHistory.create({
+      data: {
+        userId: job.userId,
+        importJobId: job.id,
+        action: 'rollback_started',
+        description: reason || 'Manual rollback',
+        metadata: {
+          selectiveRollback,
+          timestamp: new Date()
+        } as any,
+        canRollback: false
+      }
+    })
+
+    // Schedule rollback job
+    await this.jobProcessor.schedule({
+      type: 'import_rollback',
+      data: {
+        jobId: importJobId,
+        selectiveRollback
+      },
+      options: { priority: 2 }
+    })
+  }
+
+  /**
+   * Get queue statistics
+   */
+  async getQueueStats(): Promise<ImportQueueStats> {
+    const stats = await this.db.importJob.groupBy({
+      by: ['status'],
+      _count: {
+        status: true
+      }
+    })
+
+    const result: ImportQueueStats = {
+      pending: 0,
+      processing: 0,
+      completed: 0,
+      failed: 0,
+      cancelled: 0,
+      totalProcessingTime: 0,
+      averageWaitTime: 0,
+      queueLength: 0
+    }
+
+    for (const stat of stats) {
+      result[stat.status as keyof ImportQueueStats] = stat._count.status
+    }
+
+    // Calculate additional metrics
+    const processingTimes = await this.db.importJob.findMany({
+      where: {
+        processingTime: { not: null }
+      },
+      select: {
+        processingTime: true
+      }
+    })
+
+    if (processingTimes.length > 0) {
+      result.totalProcessingTime = processingTimes.reduce(
+        (sum, job) => sum + (job.processingTime || 0),
+        0
+      )
+    }
+
+    result.queueLength = result.pending + result.processing
+
+    return result
+  }
+
+  /**
+   * Register job handlers with the job processor
+   */
+  private registerJobHandlers(): void {
+    // Single import job handler
+    this.jobProcessor.process('import_job', async (data, context) => {
+      const { jobId } = data
+      await this.processImportJob(jobId, context)
+    })
+
+    // Batch import job handler
+    this.jobProcessor.process('batch_import_job', async (data, context) => {
+      const { jobId } = data
+      await this.processBatchImportJob(jobId, context)
+    })
+
+    // Job resume handler
+    this.jobProcessor.process('import_job_resume', async (data, context) => {
+      const { jobId } = data
+      await this.resumeImportJob(jobId, context)
+    })
+
+    // Rollback handler
+    this.jobProcessor.process('import_rollback', async (data, context) => {
+      const { jobId, selectiveRollback } = data
+      await this.processRollback(jobId, selectiveRollback, context)
+    })
+  }
+
+  /**
+   * Process a single import job
+   */
+  private async processImportJob(jobId: string, context: any): Promise<void> {
+    const job = await this.db.importJob.findUnique({
+      where: { id: jobId },
+      include: { items: true, conflicts: true }
+    })
+
+    if (!job) {
+      throw new Error(`Import job not found: ${jobId}`)
+    }
+
+    // Update job status
+    await this.db.importJob.update({
+      where: { id: jobId },
+      data: {
+        status: 'processing',
+        processingStartedAt: new Date(),
+        currentStep: 'Initializing',
+        updatedAt: new Date()
+      }
+    })
+
+    try {
+      // Get adapter
+      const adapter = this.adapterRegistry.getAdapter(job.source)
+      if (!adapter) {
+        throw new Error(`No adapter found for source: ${job.source}`)
+      }
+
+      const updateProgress = async (progress: number, step?: string) => {
+        await this.db.importJob.update({
+          where: { id: jobId },
+          data: {
+            progress: Math.max(0, Math.min(100, progress)),
+            currentStep: step,
+            updatedAt: new Date()
+          }
+        })
+        await context.updateProgress(progress)
+      }
+
+      const jobContext: ImportJobContext = {
+        job: job as ImportJob,
+        adapter,
+        options: this.mergeOptions(job.options as any),
+        logger: this.logger,
+        updateProgress
+      }
+
+      // Parse decks
+      await updateProgress(10, 'Parsing deck data')
+      const parseResult = await adapter.parseDecks(
+        job.rawData || '',
+        jobContext.options
+      )
+
+      if (!parseResult.success || parseResult.decks.length === 0) {
+        throw new Error('Failed to parse deck data or no decks found')
+      }
+
+      // Process each deck
+      const totalDecks = parseResult.decks.length
+      let processedDecks = 0
+      let importedDecks = 0
+
+      for (const deck of parseResult.decks) {
+        await updateProgress(
+          10 + (processedDecks / totalDecks) * 80,
+          `Processing deck: ${deck.name}`
+        )
+
+        try {
+          // Check for conflicts
+          const conflicts = await this.detectConflicts(deck, job.userId)
+          
+          if (conflicts.length > 0 && job.conflictResolution === 'ask_user') {
+            // Create conflict records and pause processing
+            for (const conflict of conflicts) {
+              await this.db.importConflict.create({
+                data: {
+                  importJobId: job.id,
+                  conflictType: conflict.type,
+                  description: conflict.description,
+                  existingData: conflict.existingData as any,
+                  newData: conflict.newData as any
+                }
+              })
+            }
+
+            // Pause job and wait for user resolution
+            await this.db.importJob.update({
+              where: { id: jobId },
+              data: {
+                status: 'pending',
+                currentStep: 'Waiting for conflict resolution',
+                updatedAt: new Date()
+              }
+            })
+            return
+          }
+
+          // Import deck
+          const importedDeck = await this.importDeck(deck, job.userId, jobContext)
+          if (importedDeck) {
+            importedDecks++
+          }
+
+        } catch (error) {
+          this.logger.error(`Failed to process deck: ${deck.name}`, error as Error)
+          // Continue with next deck
+        }
+
+        processedDecks++
+      }
+
+      // Complete job
+      await this.db.importJob.update({
+        where: { id: jobId },
+        data: {
+          status: 'completed',
+          progress: 100,
+          currentStep: 'Completed',
+          decksFound: totalDecks,
+          decksImported: importedDecks,
+          cardsProcessed: parseResult.decks.reduce((sum: number, deck: any) => sum + deck.cards.length, 0),
+          processingCompletedAt: new Date(),
+          processingTime: Date.now() - (job.processingStartedAt?.getTime() || Date.now()),
+          updatedAt: new Date()
+        }
+      })
+
+      // Record analytics
+      await this.recordAnalytics(job as ImportJob, parseResult)
+
+      this.logger.info(`Completed import job: ${jobId}`, {
+        decksFound: totalDecks,
+        decksImported: importedDecks
+      })
+
+    } catch (error) {
+      await this.db.importJob.update({
+        where: { id: jobId },
+        data: {
+          status: 'failed',
+          errors: [
+            {
+              type: 'system_error',
+              message: error instanceof Error ? error.message : 'Unknown error',
+              severity: 'error'
+            }
+          ] as any,
+          processingCompletedAt: new Date(),
+          updatedAt: new Date()
+        }
+      })
+
+      this.logger.error(`Import job failed: ${jobId}`, error as Error)
+      throw error
+    }
+  }
+
+  /**
+   * Process batch import job
+   */
+  private async processBatchImportJob(jobId: string, context: any): Promise<void> {
+    // Implementation for batch processing
+    // Similar to processImportJob but handles multiple items
+    // This would be implemented based on specific requirements
+  }
+
+  /**
+   * Resume import job after conflict resolution
+   */
+  private async resumeImportJob(jobId: string, context: any): Promise<void> {
+    // Implementation for resuming paused jobs
+    // This would continue processing from where it left off
+  }
+
+  /**
+   * Process rollback operation
+   */
+  private async processRollback(
+    jobId: string,
+    selectiveRollback: any,
+    context: any
+  ): Promise<void> {
+    // Implementation for rolling back import operations
+    // This would reverse the changes made by the import
+  }
+
+  /**
+   * Helper methods
+   */
+  private async readFile(file: any): Promise<string> {
+    // In a Node.js environment, we would handle file differently
+    // This is a placeholder for the actual implementation
+    if (typeof file === 'string') {
+      return file;
+    }
+    // Handle Buffer or other file types
+    if (Buffer.isBuffer(file)) {
+      return file.toString('utf8');
+    }
+    // For now, return empty string for unsupported types
+    return '';
+  }
+
+  private mergeOptions(options: Partial<ImportJobOptions>): Required<ImportJobOptions> {
+    return {
+      validateCards: true,
+      resolveCardNames: true,
+      preserveCategories: true,
+      includeMetadata: true,
+      customFields: [],
+      timeout: 300000,
+      batchSize: 10,
+      concurrency: 3,
+      continueOnError: true,
+      defaultConflictResolution: 'ask_user',
+      autoResolveConflicts: false,
+      generatePreview: true,
+      previewTimeout: 30000,
+      enableRollback: true,
+      rollbackTimeout: 86400000,
+      customProcessors: [],
+      processingHooks: [],
+      ...options
+    }
+  }
+
+  private estimateProcessingTime(decks: StandardDeck[]): number {
+    // Rough estimate: 100ms per card + 500ms per deck
+    const totalCards = decks.reduce((sum: number, deck: any) => sum + deck.cards.length, 0)
+    return (totalCards * 100) + (decks.length * 500)
+  }
+
+  private calculateFormatDistribution(decks: StandardDeck[]): Record<string, number> {
+    const distribution: Record<string, number> = {}
+    for (const deck of decks) {
+      distribution[deck.format] = (distribution[deck.format] || 0) + 1
+    }
+    return distribution
+  }
+
+  private calculateColorDistribution(decks: StandardDeck[]): Record<string, number> {
+    const distribution: Record<string, number> = {}
+    for (const deck of decks) {
+      const colors = deck.metadata.colors || []
+      for (const color of colors) {
+        distribution[color] = (distribution[color] || 0) + 1
+      }
+    }
+    return distribution
+  }
+
+  private async detectConflicts(deck: StandardDeck, userId: string): Promise<any[]> {
+    // Check for existing decks with same name
+    const existingDeck = await this.db.deck.findFirst({
+      where: {
+        userId,
+        name: deck.name
+      }
+    })
+
+    const conflicts = []
+    if (existingDeck) {
+      conflicts.push({
+        type: 'duplicate_deck_name',
+        description: `A deck with the name "${deck.name}" already exists`,
+        existingData: { deckId: existingDeck.id, name: existingDeck.name },
+        newData: { name: deck.name }
+      })
+    }
+
+    return conflicts
+  }
+
+  private async importDeck(
+    deck: StandardDeck,
+    userId: string,
+    context: ImportJobContext
+  ): Promise<any> {
+    // Create deck in database
+    const createdDeck = await this.db.deck.create({
+      data: {
+        userId,
+        name: deck.name,
+        format: deck.format,
+        commander: deck.commander?.name,
+        description: deck.description,
+        tags: deck.tags || []
+      }
+    })
+
+    // Add cards to deck
+    for (const card of deck.cards) {
+      await this.db.deckCard.create({
+        data: {
+          deckId: createdDeck.id,
+          cardId: card.name, // This should be cardId, not cardName
+          quantity: card.quantity,
+          category: card.category || 'main'
+        }
+      })
+    }
+
+    return createdDeck
+  }
+
+  private async recordAnalytics(job: ImportJob, parseResult: ParseResult): Promise<void> {
+    await this.db.importAnalytics.create({
+      data: {
+        userId: job.userId,
+        source: job.source,
+        jobType: job.type,
+        status: job.status,
+        decksCount: job.decksFound,
+        cardsCount: job.cardsProcessed,
+        processingTime: job.processingTime,
+        errorCount: (job.errors as any[]).length,
+        warningCount: (job.warnings as any[]).length,
+        successRate: job.decksImported / Math.max(job.decksFound, 1) * 100,
+        fileSize: job.fileSize,
+        metadata: {
+          parseMetadata: parseResult.metadata
+        } as any
+      }
+    })
+  }
+}
