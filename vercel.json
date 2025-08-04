@@ -7,10 +7,5 @@
   "env": {
     "PNPM_VERSION": "8.14.0",
     "NODE_OPTIONS": "--max-old-space-size=4096"
-  },
-  "functions": {
-    "apps/web/app/api/trpc/[trpc]/route.ts": {
-      "maxDuration": 60
-    }
   }
 }
