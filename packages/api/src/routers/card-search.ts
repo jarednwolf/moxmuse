@@ -257,7 +257,7 @@ export const cardSearchRouter = createTRPCRouter({
         take: input.limit || 100
       })
 
-      return analytics.map(entry => ({
+      return analytics.map((entry: any) => ({
         query: entry.query,
         resultCount: entry.resultCount,
         clickThroughRate: entry.clickThroughRate,
