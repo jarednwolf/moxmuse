@@ -1,8 +1,9 @@
 {
-  "buildCommand": "pnpm --filter=@moxmuse/web run build",
-  "installCommand": "pnpm install --filter=@moxmuse/web... --frozen-lockfile --config.dedupe-peer-dependents=false",
+  "buildCommand": "pnpm run build",
+  "installCommand": "pnpm install --no-frozen-lockfile --ignore-scripts",
   "framework": null,
   "outputDirectory": "apps/web/.next",
+  "root": "apps/web",
   "ignoreCommand": "git diff HEAD^ HEAD --quiet .",
   "env": {
     "PNPM_VERSION": "8.14.0",
