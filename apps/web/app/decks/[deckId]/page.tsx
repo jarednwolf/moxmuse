@@ -28,7 +28,7 @@ export default function DeckEditorPage() {
   const { data: deck, isLoading: deckLoading, refetch: refetchDeck } = trpc.deck.getById.useQuery({ deckId })
   
   // Fetch card details for deck cards
-  const cardIds = deck?.cards.map(c => c.cardId) || []
+  const cardIds = deck?.cards.map((c: any) => c.cardId) || []
   const { data: cardDetails } = trpc.collection.getCardDetails.useQuery(
     { cardIds },
     { enabled: cardIds.length > 0 }
