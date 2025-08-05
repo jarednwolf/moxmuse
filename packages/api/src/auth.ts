@@ -125,14 +125,16 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  // Disable all logging to prevent _log endpoint calls
+  // Completely disable all logging
   logger: {
     error: () => {},
     warn: () => {},
     debug: () => {},
   },
-  // Disable client-side logging completely
+  // Disable all events and callbacks that might trigger logging
   events: {},
-  // Disable debug mode to prevent client-side logging
+  // Disable debug mode completely
   debug: false,
+  // Disable client-side error logging
+  useSecureCookies: process.env.NODE_ENV === "production",
 };

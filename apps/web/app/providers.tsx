@@ -6,9 +6,10 @@ import { TRPCProvider } from '../src/lib/trpc/provider'
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider
-      session={null}
       refetchInterval={0}
       refetchOnWindowFocus={false}
+      refetchWhenOffline={false}
+      basePath="/api/auth"
     >
       <TRPCProvider>
         {children}
