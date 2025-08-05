@@ -79,17 +79,22 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      if (session.user) {
-        // Get the user from database to ensure we have the correct ID
-        const dbUser = await prisma.user.findUnique({
-          where: { email: session.user.email! },
-          select: { id: true }
-        });
-        
-        if (dbUser) {
-          session.user.id = dbUser.id;
-        } else if (token.id) {
-          session.user.id = token.id as string;
+      if (session?.user?.email) {
+        try {
+          // Get the user from database to ensure we have the correct ID
+          const dbUser = await prisma.user.findUnique({
+            where: { email: session.user.email },
+            select: { id: true }
+          });
+          
+          if (dbUser) {
+            session.user.id = dbUser.id;
+          } else if (token?.id) {
+            session.user.id = token.id as string;
+          }
+        } catch (error) {
+          console.error("Session callback error:", error);
+          // Return session without ID if database lookup fails
         }
       }
       return session;
