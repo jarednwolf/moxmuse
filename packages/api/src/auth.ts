@@ -137,4 +137,8 @@ export const authOptions: NextAuthOptions = {
   debug: false,
   // Disable client-side error logging
   useSecureCookies: process.env.NODE_ENV === "production",
+  // Additional configuration to prevent client-side issues
+  theme: {
+    colorScheme: "dark",
+  },
 };
