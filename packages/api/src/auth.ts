@@ -125,20 +125,14 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  // Disable all logging to prevent _log endpoint calls
   logger: {
-    error: (code, metadata) => {
-      console.error("NextAuth Error:", code, metadata);
-    },
-    warn: (code) => {
-      console.warn("NextAuth Warning:", code);
-    },
-    debug: (code, metadata) => {
-      // Suppress debug logs in production
-      if (process.env.NODE_ENV !== 'production') {
-        console.debug("NextAuth Debug:", code, metadata);
-      }
-    },
+    error: () => {},
+    warn: () => {},
+    debug: () => {},
   },
-  // Disable client-side logging to prevent _log endpoint calls
+  // Disable client-side logging completely
   events: {},
-}; 
+  // Disable debug mode to prevent client-side logging
+  debug: false,
+};
