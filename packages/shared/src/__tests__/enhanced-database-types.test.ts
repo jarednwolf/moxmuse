@@ -25,8 +25,10 @@ describe('Enhanced Database Types', () => {
         sortOrder: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
-        // Enhanced properties
+        // Base properties
+        deckIds: ['deck1', 'deck2', 'deck3', 'deck4', 'deck5'],
         children: [],
+        // Enhanced properties
         deckCount: 5,
         totalDecks: 12,
         depth: 0,

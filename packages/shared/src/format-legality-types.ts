@@ -236,7 +236,7 @@ export interface FormatInfo {
   cardLimits: { default: number; exceptions?: Record<string, number> }
   hasRotation: boolean
   isEternal: boolean
-  category: 'standard' | 'eternal' | 'limited' | 'casual'
+  category: 'standard' | 'eternal' | 'limited' | 'casual' | 'digital'
 }
 
 // Format categories for organization
@@ -364,7 +364,7 @@ export function getFormatInfo(format: SupportedFormat): FormatInfo {
       cardLimits: { default: 4 },
       hasRotation: false,
       isEternal: false,
-      category: 'digital'
+      category: 'digital' as const
     },
     alchemy: {
       id: 'alchemy',
@@ -375,7 +375,7 @@ export function getFormatInfo(format: SupportedFormat): FormatInfo {
       cardLimits: { default: 4 },
       hasRotation: true,
       isEternal: false,
-      category: 'digital'
+      category: 'digital' as const
     },
     explorer: {
       id: 'explorer',
@@ -397,7 +397,7 @@ export function getFormatInfo(format: SupportedFormat): FormatInfo {
       cardLimits: { default: 4 },
       hasRotation: false,
       isEternal: true,
-      category: 'digital'
+      category: 'digital' as const
     },
     pauper: {
       id: 'pauper',
@@ -435,5 +435,5 @@ export function hasFormatRotation(format: SupportedFormat): boolean {
 }
 
 export function getFormatsByCategory(category: keyof typeof FORMAT_CATEGORIES): SupportedFormat[] {
-  return FORMAT_CATEGORIES[category] as SupportedFormat[]
+  return [...FORMAT_CATEGORIES[category]] as SupportedFormat[]
 }

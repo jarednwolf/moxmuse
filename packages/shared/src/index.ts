@@ -5,6 +5,28 @@ export * from './types'
 export * from './constants'
 export * from './utils'
 
+// Export specific types needed by tests to avoid conflicts
+export {
+  DeckFolder,
+  DeckTemplate,
+  ImportJob,
+  ExportJob,
+  DeckAnalytics,
+  PublicDeck,
+  UserProfile,
+  TrendingData,
+  PerformanceMetric,
+  CacheEntry
+} from './moxfield-parity-types'
+
+// Export validation utilities that exist
+export {
+  getFormatInfo,
+  isFormatEternal,
+  hasFormatRotation,
+  getFormatsByCategory
+} from './format-legality-types'
+
 // Note: Additional type files are available but not re-exported to avoid conflicts
 // Import specific types directly from their files if needed:
 // - './import-job-types'
@@ -14,5 +36,3 @@ export * from './utils'
 // - './deck-search-types'
 // - './enhanced-database-types'
 // - './export-format-types'
-// - './format-legality-types'
-// - './moxfield-parity-types'
