@@ -55,32 +55,47 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account }) {
-      if (account?.provider === "google") {
-        // Create or update user for OAuth sign-ins
-        await prisma.user.upsert({
-          where: { email: user.email! },
-          update: {
-            name: user.name,
-            image: user.image,
-          },
-          create: {
-            email: user.email!,
-            name: user.name,
-            image: user.image,
-          },
-        });
+      try {
+        if (account?.provider === "google" && user?.email) {
+          // Create or update user for OAuth sign-ins
+          await prisma.user.upsert({
+            where: { email: user.email },
+            update: {
+              name: user.name,
+              image: user.image,
+            },
+            create: {
+              email: user.email,
+              name: user.name,
+              image: user.image,
+            },
+          });
+        }
+        return true;
+      } catch (error) {
+        console.error("SignIn callback error:", error);
+        return true; // Allow sign in even if database operation fails
       }
-      return true;
     },
     async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
+      try {
+        if (user?.id) {
+          token.id = user.id;
+        }
+        return token || {};
+      } catch (error) {
+        console.error("JWT callback error:", error);
+        return token || {};
       }
-      return token;
     },
     async session({ session, token }) {
-      if (session?.user?.email) {
-        try {
+      try {
+        // Ensure session object exists
+        if (!session) {
+          return { user: {}, expires: "" };
+        }
+        
+        if (session?.user?.email) {
           // Get the user from database to ensure we have the correct ID
           const dbUser = await prisma.user.findUnique({
             where: { email: session.user.email },
@@ -92,12 +107,14 @@ export const authOptions: NextAuthOptions = {
           } else if (token?.id) {
             session.user.id = token.id as string;
           }
-        } catch (error) {
-          console.error("Session callback error:", error);
-          // Return session without ID if database lookup fails
         }
+        
+        return session;
+      } catch (error) {
+        console.error("Session callback error:", error);
+        // Return minimal valid session object
+        return session || { user: {}, expires: "" };
       }
-      return session;
     },
   },
   pages: {
