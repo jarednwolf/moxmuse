@@ -1,8 +1,22 @@
 {
-  "buildCommand": "cd packages/db && pnpm run db:generate && cd ../../apps/web && pnpm run build",
+  "version": 2,
+  "builds": [
+    {
+      "src": "apps/web/package.json",
+      "use": "@vercel/next",
+      "config": {
+        "distDir": ".next"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "apps/web/$1"
+    }
+  ],
   "installCommand": "pnpm install --no-frozen-lockfile --config.dedupe-peer-dependents=false",
-  "framework": null,
-  "outputDirectory": "apps/web/.next",
+  "buildCommand": "cd packages/db && pnpm run db:generate && cd ../../apps/web && pnpm run build",
   "ignoreCommand": "git diff HEAD^ HEAD --quiet .",
   "env": {
     "PNPM_VERSION": "8.14.0",
