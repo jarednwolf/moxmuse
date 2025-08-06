@@ -55,7 +55,17 @@ export const publicProcedure = t.procedure
 
 // Enhanced authentication middleware with session validation
 const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
+  // Add debugging for authentication flow
+  console.log('🔐 Auth Middleware Check:', {
+    hasSession: !!ctx.session,
+    hasUser: !!ctx.session?.user,
+    userId: ctx.session?.user?.id,
+    userEmail: ctx.session?.user?.email,
+    sessionExpires: ctx.session?.expires
+  })
+
   if (!ctx.session || !ctx.session.user) {
+    console.log('❌ Authentication failed: No session or user')
     throw new TRPCError({
       code: 'UNAUTHORIZED',
       message: 'You must be logged in to access this resource'
@@ -75,11 +85,14 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
   })
 
   if (!dbUser) {
+    console.log('❌ User not found in database:', ctx.session.user.id)
     throw new TRPCError({
       code: 'UNAUTHORIZED',
       message: 'User account not found. Please log in again.'
     })
   }
+
+  console.log('✅ Authentication successful for user:', dbUser.email)
 
   return next({
     ctx: {

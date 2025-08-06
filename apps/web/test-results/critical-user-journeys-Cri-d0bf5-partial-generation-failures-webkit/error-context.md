@@ -1,0 +1,68 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - link "MOXMUSE Commander Deck Engine":
+    - /url: /
+    - img
+    - img
+    - img
+    - img
+    - img
+    - heading "MOXMUSE" [level=1]
+    - paragraph: Commander Deck Engine
+  - navigation:
+    - link "SolSync":
+      - /url: /solsync
+      - img
+      - text: SolSync
+    - link "LotusList":
+      - /url: /lotuslist
+      - img
+      - text: LotusList
+    - link "TolarianTutor":
+      - /url: /tutor
+      - img
+      - text: TolarianTutor
+    - link "DeckForge":
+      - /url: /decks
+      - img
+      - text: DeckForge
+    - paragraph: Test User
+    - paragraph
+    - button "Sign out":
+      - img
+- img
+- heading "AI Deck Building Tutor" [level=1]
+- paragraph: I'm here to help you build amazing Commander decks
+- button "Guided Deck Building Step-by-step wizard to build a complete 100-card Commander deck Answer questions about your playstyle and get a fully optimized deck":
+  - img
+  - heading "Guided Deck Building" [level=3]
+  - paragraph: Step-by-step wizard to build a complete 100-card Commander deck
+  - paragraph: Answer questions about your playstyle and get a fully optimized deck
+- button "Card Recommendations Chat with me about your existing deck and get specific card suggestions":
+  - img
+  - heading "Card Recommendations" [level=3]
+  - paragraph: Chat with me about your existing deck and get specific card suggestions
+- button "BETA Describe Your Vision Simply tell me your deck idea in natural language and I'll build it for you":
+  - text: BETA
+  - img
+  - heading "Describe Your Vision" [level=3]
+  - paragraph: Simply tell me your deck idea in natural language and I'll build it for you
+- paragraph: Powered by advanced AI with knowledge of thousands of Commander decks
+- img
+- heading "Continue with Existing Deck" [level=3]
+- button "Teysa Karlov Midrange Deck 97 cards • commander":
+  - text: Teysa Karlov Midrange Deck 97 cards • commander
+  - img
+- button "New Commander Deck 0 cards • commander":
+  - text: New Commander Deck 0 cards • commander
+  - img
+- button "Krenko, Mob Boss Midrange Deck 95 cards • commander":
+  - text: Krenko, Mob Boss Midrange Deck 95 cards • commander
+  - img
+- button "Show 309 More"
+- link "Manage All Decks":
+  - /url: /decks
+- alert
+```

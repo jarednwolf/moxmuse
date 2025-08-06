@@ -1,5 +1,5 @@
-import { vi, beforeAll, afterAll, beforeEach, afterEach } from 'vitest'
-import { performanceMonitor } from '../../../../packages/api/src/services/performance/performance-monitor'
+import { vi, beforeAll, afterAll, beforeEach, afterEach, expect } from 'vitest'
+import { performanceMonitor } from '../../../../../packages/api/src/services/performance/performance-monitor'
 
 // Performance testing utilities
 declare global {
@@ -16,11 +16,12 @@ const mockPerformanceObserver = vi.fn().mockImplementation((callback) => ({
   takeRecords: vi.fn(() => []),
 }))
 
-const mockPerformanceEntry = {
+const mockPerformanceEntry: PerformanceEntry = {
   name: 'test-metric',
   entryType: 'measure',
   startTime: 0,
   duration: 100,
+  toJSON: () => ({}),
 }
 
 // Setup performance monitoring for tests
@@ -31,8 +32,8 @@ beforeAll(() => {
   // Mock performance.mark and performance.measure
   global.performance.mark = vi.fn()
   global.performance.measure = vi.fn()
-  global.performance.getEntriesByName = vi.fn(() => [mockPerformanceEntry])
-  global.performance.getEntriesByType = vi.fn(() => [mockPerformanceEntry])
+  global.performance.getEntriesByName = vi.fn(() => [mockPerformanceEntry] as PerformanceEntryList)
+  global.performance.getEntriesByType = vi.fn(() => [mockPerformanceEntry] as PerformanceEntryList)
   global.performance.clearMarks = vi.fn()
   global.performance.clearMeasures = vi.fn()
 
@@ -132,7 +133,7 @@ export const performanceUtils = {
    */
   mockSlowNetwork: (delay: number = 3000) => {
     const originalFetch = global.fetch
-    global.fetch = vi.fn().mockImplementation(async (...args) => {
+    global.fetch = vi.fn().mockImplementation(async (...args: Parameters<typeof fetch>) => {
       await new Promise(resolve => setTimeout(resolve, delay))
       return originalFetch(...args)
     })
@@ -161,9 +162,9 @@ export const performanceUtils = {
    */
   simulateCPUThrottling: (factor: number = 2) => {
     const originalSetTimeout = global.setTimeout
-    global.setTimeout = vi.fn().mockImplementation((callback, delay) => {
+    global.setTimeout = vi.fn().mockImplementation((callback: TimerHandler, delay?: number) => {
       return originalSetTimeout(callback, (delay || 0) * factor)
-    })
+    }) as any
     
     return () => {
       global.setTimeout = originalSetTimeout

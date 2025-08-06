@@ -9,7 +9,7 @@ async function main() {
   try {
     // Check if demo user already exists
     const existingUser = await prisma.user.findUnique({
-      where: { email: 'demo@example.com' }
+      where: { email: 'demo@moxmuse.com' }
     })
     
     if (existingUser) {
@@ -18,10 +18,10 @@ async function main() {
     }
     
     // Create demo user
-    const hashedPassword = await bcrypt.hash('demo123', 10)
+    const hashedPassword = await bcrypt.hash('password123', 10)
     const demoUser = await prisma.user.create({
       data: {
-        email: 'demo@example.com',
+        email: 'demo@moxmuse.com',
         password: hashedPassword,
         name: 'Demo User',
         emailVerified: new Date()

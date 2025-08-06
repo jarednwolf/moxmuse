@@ -33,24 +33,36 @@
     - button "Sign out":
       - img
 - img
-- heading "Tutor Page Error" [level=3]
-- paragraph: Cannot read properties of undefined (reading 'cards')
-- button "Try Again":
+- heading "AI Deck Building Tutor" [level=1]
+- paragraph: I'm here to help you build amazing Commander decks
+- button "Guided Deck Building Step-by-step wizard to build a complete 100-card Commander deck Answer questions about your playstyle and get a fully optimized deck":
   - img
-  - text: Try Again
-- button "Show technical details":
+  - heading "Guided Deck Building" [level=3]
+  - paragraph: Step-by-step wizard to build a complete 100-card Commander deck
+  - paragraph: Answer questions about your playstyle and get a fully optimized deck
+- button "Card Recommendations Chat with me about your existing deck and get specific card suggestions":
   - img
-  - text: Show technical details
+  - heading "Card Recommendations" [level=3]
+  - paragraph: Chat with me about your existing deck and get specific card suggestions
+- button "BETA Describe Your Vision Simply tell me your deck idea in natural language and I'll build it for you":
+  - text: BETA
+  - img
+  - heading "Describe Your Vision" [level=3]
+  - paragraph: Simply tell me your deck idea in natural language and I'll build it for you
+- paragraph: Powered by advanced AI with knowledge of thousands of Commander decks
+- img
+- heading "Continue with Existing Deck" [level=3]
+- button "Teysa Karlov Midrange Deck 97 cards • commander":
+  - text: Teysa Karlov Midrange Deck 97 cards • commander
+  - img
+- button "New Commander Deck 0 cards • commander":
+  - text: New Commander Deck 0 cards • commander
+  - img
+- button "Krenko, Mob Boss Midrange Deck 95 cards • commander":
+  - text: Krenko, Mob Boss Midrange Deck 95 cards • commander
+  - img
+- button "Show 309 More"
+- link "Manage All Decks":
+  - /url: /decks
 - alert
-- img
-- paragraph: Deck Creation Failed
-- paragraph: Unable to create a new deck. Please try again.
-- button "Retry"
-- img
-- paragraph: Deck Creation Failed
-- paragraph: Unable to create a new deck. Please try again or check your connection.
-- img
-- text: 2 errors
-- button "Hide Errors":
-  - img
 ```

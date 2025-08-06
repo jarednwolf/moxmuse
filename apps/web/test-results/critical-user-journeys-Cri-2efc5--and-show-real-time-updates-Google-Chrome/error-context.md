@@ -1,0 +1,44 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - link "MOXMUSE Commander Deck Engine":
+    - /url: /
+    - img
+    - img
+    - img
+    - img
+    - img
+    - heading "MOXMUSE" [level=1]
+    - paragraph: Commander Deck Engine
+  - navigation:
+    - link "SolSync":
+      - /url: /solsync
+      - img
+      - text: SolSync
+    - link "LotusList":
+      - /url: /lotuslist
+      - img
+      - text: LotusList
+    - link "TolarianTutor":
+      - /url: /tutor
+      - img
+      - text: TolarianTutor
+    - link "DeckForge":
+      - /url: /decks
+      - img
+      - text: DeckForge
+    - paragraph: Test User
+    - paragraph
+    - button "Sign out":
+      - img
+- img
+- heading "404" [level=1]
+- heading "Page Not Found" [level=2]
+- paragraph: The spell you're looking for doesn't exist in our grimoire.
+- link "Return Home":
+  - /url: /
+  - img
+  - text: Return Home
+- alert
+```
