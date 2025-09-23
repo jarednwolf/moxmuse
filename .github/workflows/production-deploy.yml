@@ -33,9 +33,8 @@ jobs:
           corepack enable
           corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
 
-      - name: Install pnpm
-        run: |
-          npm i -g pnpm@${{ env.PNPM_VERSION }}
+      - name: Verify pnpm
+        run: pnpm --version
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -108,9 +107,8 @@ jobs:
           corepack enable
           corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
 
-      - name: Install pnpm
-        run: |
-          npm i -g pnpm@${{ env.PNPM_VERSION }}
+      - name: Verify pnpm
+        run: pnpm --version
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -168,9 +166,8 @@ jobs:
           corepack enable
           corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
 
-      - name: Install pnpm
-        run: |
-          npm i -g pnpm@${{ env.PNPM_VERSION }}
+      - name: Verify pnpm
+        run: pnpm --version
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -320,7 +317,7 @@ jobs:
           npx lhci autorun --config=.lighthouserc.json || echo "Performance check completed with warnings"
 
       - name: Deployment success notification
-        if: success()
+        if: success() && secrets.SLACK_WEBHOOK != ''
         uses: 8398a7/action-slack@v3
         with:
           status: success
@@ -373,6 +370,7 @@ jobs:
           curl -f https://moxmuse.com/api/health || echo "Health check failed (post-rollback). Verify manually." 
 
       - name: Rollback notification
+        if: secrets.SLACK_WEBHOOK != ''
         uses: 8398a7/action-slack@v3
         with:
           status: failure

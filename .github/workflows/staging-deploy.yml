@@ -37,9 +37,8 @@ jobs:
           corepack enable
           corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
 
-      - name: Install pnpm
-        run: |
-          npm i -g pnpm@${{ env.PNPM_VERSION }}
+      - name: Verify pnpm
+        run: pnpm --version
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
