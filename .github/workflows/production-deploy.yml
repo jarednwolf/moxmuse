@@ -317,8 +317,10 @@ jobs:
           npx lhci autorun --config=.lighthouserc.json || echo "Performance check completed with warnings"
 
       - name: Deployment success notification
-        if: success() && secrets.SLACK_WEBHOOK != ''
+        if: ${{ success() && env.SLACK_WEBHOOK_URL != '' }}
         uses: 8398a7/action-slack@v3
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
         with:
           status: success
           text: |
@@ -331,8 +333,7 @@ jobs:
             Performance: ✅ Verified
             
             URL: https://moxmuse.com
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        
 
   # Automated Rollback on Failure
   rollback-on-failure:
@@ -370,8 +371,10 @@ jobs:
           curl -f https://moxmuse.com/api/health || echo "Health check failed (post-rollback). Verify manually." 
 
       - name: Rollback notification
-        if: secrets.SLACK_WEBHOOK != ''
+        if: ${{ env.SLACK_WEBHOOK_URL != '' }}
         uses: 8398a7/action-slack@v3
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
         with:
           status: failure
           text: |
@@ -381,8 +384,6 @@ jobs:
             Rolled back to: ${{ steps.get-previous.outputs.previous_deployment }}
             
             Please investigate the deployment failure.
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
   # Deployment Monitoring and Alerting
   post-deployment-monitoring:
