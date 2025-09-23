@@ -15,13 +15,6 @@
     "noEmit": true,
     "types": ["vitest/globals", "node"]
   },
-  "include": ["next-env.d.ts", "src/lib/trpc/**/*.ts", "src/lib/trpc/**/*.tsx"],
-  "exclude": [
-    "node_modules",
-    "e2e/**",
-    "**/__tests__/**",
-    "components/**",
-    "app/**",
-    "src/**"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "e2e/**", "**/__tests__/**"]
 } 
