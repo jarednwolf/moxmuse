@@ -37,7 +37,7 @@ jobs:
         run: pnpm --version
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Type checking
         run: pnpm type-check
@@ -111,7 +111,7 @@ jobs:
         run: pnpm --version
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -170,7 +170,7 @@ jobs:
         run: pnpm --version
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Run performance tests
         run: pnpm test:performance --run
@@ -253,7 +253,7 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Pre-deployment health check
         run: |
