@@ -1,3 +1,5 @@
 packages:
   - 'apps/*'
-  - 'packages/*' 
+  - 'packages/*'
+catalog:
+  '@types/express': ^4.17.21
