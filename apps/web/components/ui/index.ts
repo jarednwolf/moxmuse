@@ -20,6 +20,14 @@ export {
   TabsList, 
   TabsTrigger 
 } from './tabs'
+export {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from './card'
 export { 
   VirtualizedList,
   VirtualizedCardList,
