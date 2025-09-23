@@ -1,0 +1,25 @@
+# Staging Environment Configuration
+name: staging
+url: https://staging.moxmuse.com
+
+# Environment protection rules
+protection_rules:
+  required_reviewers: 0
+  wait_timer: 0
+  prevent_self_review: false
+
+# Environment variables (secrets should be configured in GitHub UI)
+variables:
+  NODE_ENV: staging
+  VERCEL_ENV: preview
+  NEXT_PUBLIC_APP_ENV: staging
+  NEXT_PUBLIC_SENTRY_ENVIRONMENT: staging
+
+# Required secrets (configure in GitHub repository settings):
+# - VERCEL_TOKEN
+# - VERCEL_ORG_ID  
+# - VERCEL_PROJECT_ID
+# - STAGING_DATABASE_URL
+# - STAGING_NEXTAUTH_SECRET
+# - OPENAI_API_KEY
+# - SLACK_WEBHOOK

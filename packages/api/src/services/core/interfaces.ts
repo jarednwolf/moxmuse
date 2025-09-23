@@ -212,6 +212,7 @@ export interface MetricsCollector {
 
 export interface Timer {
   stop(tags?: Record<string, string>): void
+  end?(tags?: Record<string, string>): void
 }
 
 export interface MetricSnapshot {

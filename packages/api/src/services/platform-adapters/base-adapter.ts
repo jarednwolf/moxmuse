@@ -5,18 +5,18 @@
  */
 
 import {
-  PlatformAdapter,
-  AdapterCapabilities,
-  ParseOptions,
-  ExportOptions,
-  ParseResult,
-  ExportResult,
-  ValidationResult,
-  StandardDeck,
-  ParseError,
-  ParseWarning,
-  ValidationError
-} from '@repo/shared/platform-adapter-types'
+	PlatformAdapter,
+	AdapterCapabilities,
+	ParseOptions,
+	ExportOptions,
+	ParseResult,
+	ExportResult,
+	ValidationResult,
+	StandardDeck,
+	ParseError,
+	ParseWarning,
+	ValidationError
+} from '@moxmuse/shared/src/platform-adapter-types'
 
 export abstract class BasePlatformAdapter implements PlatformAdapter {
   abstract readonly name: string

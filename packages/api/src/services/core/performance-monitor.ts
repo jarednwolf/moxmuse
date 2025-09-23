@@ -158,11 +158,13 @@ export class ComprehensiveMetricsCollector implements MetricsCollector, BaseServ
       tags
     }
 
+    const endFn = (additionalTags: Record<string, string> = {}) => {
+      const duration = Date.now() - timer.startTime
+      this.timing(timer.metric, duration, { ...timer.tags, ...additionalTags })
+    }
     return {
-      stop: (additionalTags: Record<string, string> = {}) => {
-        const duration = Date.now() - timer.startTime
-        this.timing(timer.metric, duration, { ...timer.tags, ...additionalTags })
-      }
+      stop: endFn,
+      end: endFn
     }
   }
 
@@ -237,6 +239,15 @@ export class AdvancedPerformanceMonitor implements PerformanceMonitor, BaseServi
   constructor(logger: Logger, metrics: MetricsCollector) {
     this.logger = logger.child({ service: 'PerformanceMonitor' })
     this.metrics = metrics
+  }
+
+  // Adapter to align with call sites expecting startTimer(name)
+  startTimer(metric: string, tags: Record<string, string> = {}) {
+    const timer = this.metrics.startTimer(metric, tags)
+    return {
+      stop: (stopTags?: Record<string, string>) => timer.stop(stopTags),
+      end: (endTags?: Record<string, string>) => timer.stop(endTags)
+    }
   }
 
   async initialize(): Promise<void> {

@@ -22,15 +22,16 @@ vi.mock('../redis', () => ({
   }
 }))
 
-vi.mock('@moxmuse/db', () => ({
-  db: {
+vi.mock('@moxmuse/db', () => {
+  const mockDb = {
     enhancedCardData: {
       count: vi.fn(),
       findMany: vi.fn(),
       update: vi.fn()
     }
   }
-}))
+  return { db: mockDb, prisma: mockDb }
+})
 
 vi.mock('../core/logging', () => ({
   logger: {
@@ -48,8 +49,8 @@ vi.mock('../core/performance-monitor', () => ({
   }
 }))
 
-vi.mock('cron', () => ({
-  CronJob: vi.fn().mockImplementation((pattern, callback, onComplete, start, timezone) => ({
+vi.mock('cron', () => {
+  const CronJob = vi.fn().mockImplementation((pattern, callback, onComplete, start, timezone) => ({
     start: vi.fn(),
     stop: vi.fn(),
     pattern,
@@ -57,7 +58,8 @@ vi.mock('cron', () => ({
     onComplete,
     timezone
   }))
-}))
+  return { CronJob }
+})
 
 const mockEnhancedCardDataService = enhancedCardDataService as any
 const mockRedisCache = redisCache as any

@@ -1,0 +1,32 @@
+# Production Environment Configuration
+name: production
+url: https://moxmuse.com
+
+# Environment protection rules
+protection_rules:
+  required_reviewers: 1
+  wait_timer: 5 # 5 minutes
+  prevent_self_review: true
+
+# Deployment branches
+deployment_branch_policy:
+  protected_branches: true
+  custom_branch_policies: false
+
+# Environment variables (secrets should be configured in GitHub UI)
+variables:
+  NODE_ENV: production
+  VERCEL_ENV: production
+  NEXT_PUBLIC_APP_ENV: production
+  NEXT_PUBLIC_SENTRY_ENVIRONMENT: production
+
+# Required secrets (configure in GitHub repository settings):
+# - VERCEL_TOKEN
+# - VERCEL_ORG_ID
+# - VERCEL_PROJECT_ID  
+# - DATABASE_URL
+# - NEXTAUTH_SECRET
+# - OPENAI_API_KEY
+# - SENTRY_DSN
+# - SLACK_WEBHOOK
+# - MONITORING_API_KEY

@@ -5,7 +5,17 @@ import { db } from '@moxmuse/db'
 
 // Mock dependencies
 vi.mock('../../services/card-search')
-vi.mock('@moxmuse/db')
+vi.mock('@moxmuse/db', () => {
+  const mockDb = {
+    cardClick: {
+      create: vi.fn(),
+    },
+    savedSearch: {
+      findMany: vi.fn(),
+    },
+  }
+  return { db: mockDb, prisma: mockDb }
+})
 
 const mockCardSearchService = vi.mocked(cardSearchService)
 const mockDb = vi.mocked(db)

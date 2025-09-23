@@ -3,6 +3,8 @@ import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
 import { pipeline } from 'stream/promises';
+import { cardDatabaseManagementService } from '../../api/src/services/card-database-management';
+import { syncJobSchedulerService } from '../../api/src/services/sync-job-scheduler';
 
 const prisma = new PrismaClient();
 
@@ -62,7 +64,8 @@ function extractSynergyKeywords(card: ScryfallCard): string[] {
   ];
   
   // Check for matches
-  [...creatureTypes, ...mechanics, ...themes].forEach(keyword => {
+  const allKeywords = creatureTypes.concat(mechanics, themes);
+  allKeywords.forEach(keyword => {
     if (text.includes(keyword)) {
       keywords.add(keyword);
     }
@@ -264,29 +267,76 @@ async function verifyImport() {
 }
 
 /**
- * Main import function
+ * Main import function using enhanced services
  */
 async function main() {
   try {
-    console.log('🚀 Starting Scryfall bulk data import...\n');
+    console.log('🚀 Starting enhanced Scryfall bulk data import...\n');
     
-    // Download latest data
-    const filePath = await downloadBulkData();
+    // Initialize sync job scheduler
+    await syncJobSchedulerService.initialize();
     
-    // Import into database
-    await importCards(filePath);
+    // Perform incremental import using the new service
+    console.log('📥 Performing incremental bulk import...');
+    const importResult = await cardDatabaseManagementService.performIncrementalImport();
     
-    // Create indexes
-    await createIndexes();
+    if (importResult.success) {
+      console.log(`✅ Import successful!`);
+      console.log(`   - Cards added: ${importResult.cardsAdded}`);
+      console.log(`   - Cards updated: ${importResult.cardsUpdated}`);
+      console.log(`   - Cards removed: ${importResult.cardsRemoved}`);
+      console.log(`   - Duration: ${importResult.duration}ms`);
+      
+      if (importResult.errors.length > 0) {
+        console.log(`⚠️  Errors encountered: ${importResult.errors.length}`);
+        importResult.errors.slice(0, 5).forEach(error => {
+          console.log(`   - ${error}`);
+        });
+      }
+    } else {
+      console.error('❌ Import failed:', importResult.errors);
+      process.exit(1);
+    }
     
-    // Verify
-    await verifyImport();
+    // Create search indexes
+    console.log('\n🔧 Creating search indexes...');
+    await cardDatabaseManagementService.createSearchIndexes();
+    console.log('✅ Search indexes created successfully!');
     
-    console.log('\n🎉 Import complete! Your database now has 15,000+ commander-legal cards!');
+    // Setup automated sync jobs
+    console.log('\n⏰ Setting up automated sync jobs...');
+    await cardDatabaseManagementService.setupAutomatedSyncJobs();
+    console.log('✅ Automated sync jobs configured!');
+    
+    // Perform health check
+    console.log('\n🏥 Performing health check...');
+    const healthStatus = await cardDatabaseManagementService.performHealthCheck();
+    console.log(`Health Status: ${healthStatus.status}`);
+    console.log(`Total Cards: ${healthStatus.summary.totalCards}`);
+    console.log(`Last Import: ${healthStatus.summary.lastImport || 'Never'}`);
+    
+    // Show failed health checks
+    const failedChecks = healthStatus.checks.filter(check => check.status === 'fail');
+    if (failedChecks.length > 0) {
+      console.log('\n⚠️  Failed Health Checks:');
+      failedChecks.forEach(check => {
+        console.log(`   - ${check.name}: ${check.message}`);
+      });
+    }
+    
+    console.log('\n🎉 Enhanced import complete! Your database is production-ready!');
+    console.log('\n📊 Available features:');
+    console.log('   - Full-text search with advanced filtering');
+    console.log('   - Automated daily sync jobs');
+    console.log('   - Real-time format legality updates');
+    console.log('   - Image optimization and caching');
+    console.log('   - Comprehensive health monitoring');
+    
   } catch (error) {
-    console.error('❌ Import failed:', error);
+    console.error('❌ Enhanced import failed:', error);
     process.exit(1);
   } finally {
+    await syncJobSchedulerService.shutdown();
     await prisma.$disconnect();
   }
 }

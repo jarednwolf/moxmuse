@@ -8,8 +8,8 @@ import { db } from '@moxmuse/db'
 import { ExportFormat, ExportOptions } from '@moxmuse/shared/export-format-types'
 
 // Mock dependencies
-vi.mock('@moxmuse/db', () => ({
-  db: {
+vi.mock('@moxmuse/db', () => {
+  const mockDb = {
     exportJob: {
       create: vi.fn(),
       findUnique: vi.fn(),
@@ -36,7 +36,9 @@ vi.mock('@moxmuse/db', () => ({
       findUnique: vi.fn()
     }
   }
-}))
+
+  return { db: mockDb, prisma: mockDb }
+})
 
 vi.mock('../core/logging', () => ({
   logger: {

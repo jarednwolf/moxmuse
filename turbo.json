@@ -11,14 +11,39 @@
       "persistent": true
     },
     "lint": {},
+    "lint:fix": {},
     "type-check": {},
+    "test": {},
+    "test:unit": {},
+    "test:integration": {},
+    "test:performance": {},
+    "test:accessibility": {},
+    "test:e2e": {
+      "cache": false
+    },
+    "analyze": {
+      "dependsOn": ["build"],
+      "outputs": ["analyze-results/**"]
+    },
     "db:push": {
       "cache": false
     },
     "db:migrate": {
       "cache": false
     },
+    "db:migrate:deploy": {
+      "cache": false
+    },
+    "db:migrate:status": {
+      "cache": false
+    },
+    "db:seed:test": {
+      "cache": false
+    },
     "db:generate": {
+      "cache": false
+    },
+    "clean": {
       "cache": false
     }
   }

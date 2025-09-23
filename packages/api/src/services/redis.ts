@@ -94,4 +94,56 @@ export const redisCache = {
       return []
     }
   },
+
+  async lpush(key: string, value: string): Promise<number> {
+    if (!redis || !isConnected) return 0
+    
+    try {
+      return await redis.lpush(key, value)
+    } catch (error) {
+      console.error('Redis lpush error:', error)
+      return 0
+    }
+  },
+
+  async lrange(key: string, start: number, stop: number): Promise<string[]> {
+    if (!redis || !isConnected) return []
+    
+    try {
+      return await redis.lrange(key, start, stop)
+    } catch (error) {
+      console.error('Redis lrange error:', error)
+      return []
+    }
+  },
+
+  async ltrim(key: string, start: number, stop: number): Promise<void> {
+    if (!redis || !isConnected) return
+    
+    try {
+      await redis.ltrim(key, start, stop)
+    } catch (error) {
+      console.error('Redis ltrim error:', error)
+    }
+  },
+
+  async expire(key: string, seconds: number): Promise<void> {
+    if (!redis || !isConnected) return
+    
+    try {
+      await redis.expire(key, seconds)
+    } catch (error) {
+      console.error('Redis expire error:', error)
+    }
+  },
+
+  async setex(key: string, seconds: number, value: string): Promise<void> {
+    if (!redis || !isConnected) return
+    
+    try {
+      await redis.setex(key, seconds, value)
+    } catch (error) {
+      console.error('Redis setex error:', error)
+    }
+  },
 } 

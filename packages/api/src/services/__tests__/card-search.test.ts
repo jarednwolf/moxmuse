@@ -37,7 +37,7 @@ describe('CardSearchService', () => {
   let cardSearchService: CardSearchService
 
   beforeEach(() => {
-    cardSearchService = new CardSearchService()
+    cardSearchService = new CardSearchService(db as any)
     vi.clearAllMocks()
   })
 
@@ -233,13 +233,15 @@ describe('CardSearchService', () => {
     it('should return card name suggestions', async () => {
       const mockCards = [
         {
-          ...mockScryfallCards[0],
+          id: 'card-1',
           name: 'Lightning Bolt',
-          edhrec_rank: 100
-        }
+          type_line: 'Instant',
+          edhrec_rank: 100,
+          prices: { usd: '5.00' },
+        } as any,
       ]
       
-      mockScryfallService.search.mockResolvedValue(mockCards)
+      mockScryfallService.search.mockResolvedValue(mockCards as any)
 
       const suggestions = await cardSearchService.getSearchSuggestions('Lightning', 5, ['card'])
 

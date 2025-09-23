@@ -1,175 +1,187 @@
 # MoxMuse 🎴
 
-Advanced deck analysis engine for competitive Commander (EDH) players. Build winning decks in half the time with AI-powered recommendations, real-time price tracking, and collection management.
+**AI-Powered Commander Deck Building Platform**
 
-![MoxMuse Logo](https://via.placeholder.com/800x400/1a1a1a/8b5cf6?text=MoxMuse+-+Commander+Deck+Engine)
+MoxMuse is the most intelligent deck building tool for Magic: The Gathering Commander players. Get complete 100-card decks generated through AI consultation, then refine them with professional editing tools.
 
-## 🚀 Features
+![MoxMuse Logo](https://via.placeholder.com/800x400/1a1a1a/8b5cf6?text=MoxMuse+-+AI+Commander+Deck+Builder)
 
-### Core Features
-- **AI-Powered Recommendations**: GPT-4 analyzes your deck strategy and suggests optimal cards
-- **Guided Deck Building**: Interactive consultation wizard walks you through deck creation
-- **Collection Sync**: Import from Moxfield, Archidekt, or CSV in seconds
-- **Price Tracking**: Real-time prices from TCGPlayer, Card Kingdom, and more
-- **Synergy Analysis**: Score card combinations based on 100K+ tournament games
-- **Power Level Estimation**: Official Commander Brackets (1-5) from Exhibition to cEDH
-- **Budget Alternatives**: Find cheaper cards with similar effects
+## ✨ Core Features
 
-### TolarianTutor AI Assistant
-- **Dual-Mode Interface**: Choose between guided wizard or open chat
+### 🤖 AI Deck Building Tutor
+- **Complete Deck Generation**: Get full 100-card Commander decks tailored to your preferences
+- **Guided Consultation**: Multi-step wizard that learns your playstyle and constraints
+- **Commander Recommendations**: AI suggests commanders based on your preferred strategy
+- **Professional Deck Editor**: Moxfield-quality editing with interactive statistics
+- **Strategy Analysis**: Understand your deck's win conditions and play patterns
+
+### 🎯 Key Capabilities
 - **Smart Consultation Flow**: Adapts questions based on your answers
-- **Multi-Select Preferences**: Support for complex deck requirements
-- **Win Condition Analysis**: Combat, combo, or alternative strategies
-- **Social Dynamics**: Table politics and threat assessment
-- **Collection Integration**: Build with cards you own or explore new options
+- **Budget Optimization**: Build within your price range with upgrade suggestions  
+- **Power Level Targeting**: Official Commander Brackets (1-4) from casual to cEDH
+- **Interactive Statistics**: Mana curve, color distribution, and type breakdown
+- **Export Options**: Share to Moxfield, Archidekt, or download as text
 
-### Design Highlights
-- Professional dark theme designed for competitive players
-- Cycling fantasy backgrounds (Plains, Island, Swamp, Mountain, Forest)
-- Mox-inspired branding with five colored circles (WUBRG)
-- Mobile-responsive design
-- No ads, no clutter - just data
+## 🚀 Quick Start
 
-## 🛠️ Tech Stack
+### Prerequisites
+- Node.js 20+
+- PostgreSQL database
+- OpenAI API key
+- pnpm package manager
 
-- **Frontend**: Next.js 14, React 18, Tailwind CSS
-- **Backend**: tRPC, Prisma, PostgreSQL
-- **AI**: OpenAI GPT-4 with function calling
-- **Auth**: NextAuth.js with Moxfield OAuth
-- **Cache**: Redis for API rate limiting
-- **Deployment**: Vercel/Railway ready
+### Installation
 
-## 📦 Installation
-
-1. **Clone the repository**
+1. **Clone and install**
    ```bash
    git clone https://github.com/yourusername/moxmuse.git
    cd moxmuse
-   ```
-
-2. **Install dependencies**
-   ```bash
    pnpm install
    ```
 
-3. **Set up environment variables**
+2. **Environment setup**
    ```bash
    cp env.example apps/web/.env.local
    ```
    
-   Edit `.env.local` with your keys:
+   Configure your `.env.local`:
    ```env
-   # Database
    DATABASE_URL="postgresql://user:password@localhost:5432/moxmuse"
-   
-   # Redis
-   REDIS_URL="redis://localhost:6379"
-   
-   # Auth
-   NEXTAUTH_URL="http://localhost:3001"
-   NEXTAUTH_SECRET="generate-a-secret-here"
-   
-   # OpenAI
-   OPENAI_API_KEY="your-openai-key"
-   
-   # Moxfield OAuth
-   MOXFIELD_CLIENT_ID="your-client-id"
-   MOXFIELD_CLIENT_SECRET="your-client-secret"
+   NEXTAUTH_SECRET="your-secret-key"
+   NEXTAUTH_URL="http://localhost:3000"
+   OPENAI_API_KEY="your-openai-api-key"
    ```
 
-4. **Set up the database**
+3. **Database setup**
    ```bash
    pnpm db:push
+   pnpm db:generate
    ```
 
-5. **Run the development server**
+4. **Start development**
    ```bash
    pnpm dev
    ```
 
-6. **Visit http://localhost:3001**
+5. **Open http://localhost:3000**
 
-## 🗂️ Project Structure
+## 🏗️ Architecture
 
+### Tech Stack
+- **Frontend**: Next.js 14, React 18, Tailwind CSS
+- **Backend**: tRPC, Prisma ORM, PostgreSQL
+- **AI**: OpenAI GPT-4 with structured outputs
+- **Auth**: NextAuth.js with OAuth providers
+- **Testing**: Playwright (E2E), Vitest (Unit)
+
+### Project Structure
 ```
 moxmuse/
-├── apps/
-│   └── web/                 # Next.js frontend
+├── apps/web/                    # Next.js application
+│   ├── app/                     # App router pages
+│   ├── src/                     # Source code
+│   │   ├── components/          # React components
+│   │   │   ├── ui/             # Base UI components
+│   │   │   └── tutor/          # Tutor-specific components
+│   │   ├── lib/                # Utilities and config
+│   │   ├── hooks/              # Custom React hooks
+│   │   └── types/              # TypeScript definitions
+│   └── public/                 # Static assets
 ├── packages/
-│   ├── api/                 # tRPC API
-│   ├── db/                  # Prisma database
-│   └── shared/              # Shared types & utils
-└── docs/                    # Documentation
+│   ├── api/                    # tRPC API layer
+│   ├── db/                     # Database schema & migrations
+│   └── shared/                 # Shared types & utilities
+└── docs/                       # Documentation
 ```
 
-## 🎨 Customization
+## 📚 Documentation
 
-### Adding Background Images
+- **[Getting Started](docs/GETTING_STARTED.md)** - Detailed setup guide
+- **[Architecture](docs/ARCHITECTURE.md)** - System design and patterns
+- **[API Reference](docs/API_REFERENCE.md)** - tRPC procedures and schemas
+- **[Style Guide](docs/STYLE_GUIDE.md)** - Code and design standards
+- **[Contributing](docs/CONTRIBUTING.md)** - Development workflow
+- **[Deployment](docs/DEPLOYMENT.md)** - Production deployment guide
 
-1. Find CC0/public domain fantasy landscapes
-2. Save as:
-   - `/public/images/plains-bg.jpg`
-   - `/public/images/island-bg.jpg`
-   - `/public/images/swamp-bg.jpg`
-   - `/public/images/mountain-bg.jpg`
-   - `/public/images/forest-bg.jpg`
-3. Uncomment the image CSS in `apps/web/app/globals.css`
+## 🎨 Design System
 
-### Theming
+### Visual Identity
+- **Dark Theme**: Professional zinc palette optimized for long sessions
+- **MTG Colors**: WUBRG accent colors for Magic-specific elements
+- **Typography**: Inter font family for clean, readable text
+- **Responsive**: Mobile-first design with desktop enhancements
 
-The color scheme uses Tailwind's zinc palette with MTG color accents:
-- White: `#ffffff`
-- Blue: `#60a5fa`
-- Black: `#000000`
-- Red: `#ef4444`
-- Green: `#22c55e`
+### Component Library
+- Consistent design tokens and spacing
+- Accessible color contrasts (WCAG AA)
+- Interactive elements with proper focus states
+- Loading states and error boundaries
 
-## 🔐 Security
+## 🔧 Development
 
-- Session-based auth with JWT tokens
-- Rate limiting on all external APIs
-- Input validation with Zod schemas
-- SQL injection prevention via Prisma
-- Minimal PII storage (email, name, avatar only)
+### Available Scripts
+```bash
+pnpm dev          # Start development server
+pnpm build        # Build for production
+pnpm test         # Run test suite
+pnpm test:e2e     # Run E2E tests
+pnpm lint         # Lint code
+pnpm type-check   # TypeScript validation
+pnpm db:push      # Push schema changes
+pnpm db:migrate   # Run migrations
+```
 
-## 📝 API Documentation
+### Code Standards
+- **TypeScript**: Strict mode with comprehensive types
+- **ESLint + Prettier**: Automated code formatting
+- **Testing**: Unit tests for utilities, E2E for workflows
+- **Git**: Conventional commits with automated hooks
 
-### tRPC Procedures
+## 🚀 Deployment
 
-- `tutor.recommendAndLink` - Get AI card recommendations
-- `collection.sync` - Sync from Moxfield
-- `collection.importCSV` - Import from CSV
-- `deck.create/update/delete` - Manage decks
-- `tutor.trackClick` - Track affiliate clicks
+### Production Checklist
+- [ ] Environment variables configured
+- [ ] Database migrations applied
+- [ ] OpenAI API limits configured
+- [ ] Error monitoring enabled
+- [ ] Performance monitoring active
+
+### Supported Platforms
+- **Vercel**: Recommended for Next.js apps
+- **Railway**: Database and backend services
+- **Docker**: Containerized deployment option
 
 ## 🤝 Contributing
 
+We welcome contributions! Please see our [Contributing Guide](docs/CONTRIBUTING.md) for details.
+
+### Development Workflow
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Make your changes with tests
+4. Submit a pull request
 
-## 📜 License
+### Code of Conduct
+- Be respectful and inclusive
+- Focus on constructive feedback
+- Help others learn and grow
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) for details.
 
 ## 🙏 Acknowledgments
 
-- MTG and all card names are © Wizards of the Coast
-- Built with data from Scryfall API
-- Powered by OpenAI GPT-4
-- Community contributions welcome!
-
-## 🚧 Roadmap
-
-- [ ] Add fantasy background images
-- [ ] Implement CSV upload
-- [ ] Add deck diff visualization
-- [ ] Build mobile app
-- [ ] Add trade matching
-- [ ] Multi-language support
+- **Wizards of the Coast** - Magic: The Gathering
+- **Scryfall** - Comprehensive card database API
+- **OpenAI** - GPT-4 language model
+- **Community** - Feedback and contributions
 
 ---
 
-**Not affiliated with Wizards of the Coast** 
+**Not affiliated with Wizards of the Coast**
+
+*MoxMuse is an independent tool for Magic: The Gathering players* 
+
+## Editor Setup
+- Developing in Cursor? See `docs/guides/CURSOR_SETUP.md` for optimized local workflow. 

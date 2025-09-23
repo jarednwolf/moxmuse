@@ -15,8 +15,8 @@ vi.mock('../redis', () => ({
   }
 }))
 
-vi.mock('@moxmuse/db', () => ({
-  db: {
+vi.mock('@moxmuse/db', () => {
+  const mockDb = {
     enhancedCardData: {
       findUnique: vi.fn(),
       findMany: vi.fn(),
@@ -25,7 +25,8 @@ vi.mock('@moxmuse/db', () => ({
       count: vi.fn()
     }
   }
-}))
+  return { db: mockDb, prisma: mockDb }
+})
 
 vi.mock('axios')
 

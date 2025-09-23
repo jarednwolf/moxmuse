@@ -17,7 +17,7 @@ import {
   CustomFormatDefinition,
   CustomFormatVariable,
   ValidationRule
-} from '@repo/shared/platform-adapter-types'
+} from '@moxmuse/shared'
 
 export class CustomFormatBuilder extends BasePlatformAdapter {
   readonly name = 'Custom Format'

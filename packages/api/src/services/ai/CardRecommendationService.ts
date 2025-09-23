@@ -47,17 +47,30 @@ export class CardRecommendationService {
     const systemPrompt = this.orchestrator.promptManagementService.getCommanderSuggestionsPrompt()
 
     try {
-      const openai = this.orchestrator.getOpenAIClient()
-      const response = await openai.chat.completions.create({
-        model: this.orchestrator.getModel(),
-        messages: [
+      const aiResult = await this.orchestrator.getReliableAIService().generateChatCompletion(
+        [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: prompt }
         ],
-        temperature: 0.7,
-        max_tokens: 1000,
-      })
+        {
+          operationType: 'card-recommendation',
+          priority: 7,
+          maxTokens: 1000,
+          temperature: 0.7,
+          metadata: {
+            requestType: 'commander-suggestions',
+            budget: constraints?.budget,
+            powerLevel: constraints?.powerLevel
+          }
+        }
+      )
 
+      if (!aiResult.success) {
+        console.log('❌ AI service failed, using mock commanders')
+        return this.getMockCommanders(prompt, constraints, ownedCardIds)
+      }
+
+      const response = aiResult.result!
       const content = response.choices[0]?.message?.content
       if (!content) {
         console.log('❌ No content in OpenAI response')
@@ -223,16 +236,30 @@ export class CardRecommendationService {
       console.log('User prompt:', prompt)
       console.log('Constraints:', constraints)
       
-      const openai = this.orchestrator.getOpenAIClient()
-      const response = await openai.chat.completions.create({
-        model: this.orchestrator.getModel(),
-        messages: [
+      const aiResult = await this.orchestrator.getReliableAIService().generateChatCompletion(
+        [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: prompt }
         ],
-        temperature: 0.7,
-        max_tokens: 1000,
-      })
+        {
+          operationType: 'card-recommendation',
+          priority: 6,
+          maxTokens: 1000,
+          temperature: 0.7,
+          metadata: {
+            requestType: 'simple-recommendations',
+            budget: constraints?.budget,
+            powerLevel: constraints?.powerLevel
+          }
+        }
+      )
+
+      if (!aiResult.success) {
+        console.log('❌ AI service failed, using mock recommendations')
+        return this.getMockRecommendations(prompt, constraints, input.ownedCardIds)
+      }
+
+      const response = aiResult.result!
 
       const content = response.choices[0]?.message?.content
       if (!content) return []
@@ -320,19 +347,34 @@ export class CardRecommendationService {
     try {
       const prompt = this.orchestrator.promptManagementService.buildDeckImprovementsUserPrompt(deck, focusArea)
       
-      const openai = this.orchestrator.getOpenAIClient()
-      const response = await openai.chat.completions.create({
-        model: this.orchestrator.getModel(),
-        messages: [
+      const aiResult = await this.orchestrator.getReliableAIService().generateChatCompletion(
+        [
           { 
             role: 'system', 
             content: this.orchestrator.promptManagementService.getDeckImprovementsPrompt() 
           },
           { role: 'user', content: prompt }
         ],
-        temperature: 0.7,
-        max_tokens: 1500,
-      })
+        {
+          operationType: 'card-recommendation',
+          priority: 6,
+          maxTokens: 1500,
+          temperature: 0.7,
+          metadata: {
+            requestType: 'deck-improvements',
+            deckName: deck.name,
+            commander: deck.commander,
+            focusArea: focusArea
+          }
+        }
+      )
+
+      if (!aiResult.success) {
+        console.log('❌ AI service failed, using mock improvements')
+        return this.getMockImprovements(deck, focusArea, ownedCardIds)
+      }
+
+      const response = aiResult.result!
 
       const content = response.choices[0]?.message?.content
       if (!content) {

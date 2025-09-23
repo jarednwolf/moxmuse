@@ -54,6 +54,8 @@ export class DeckGenerationService {
       budget?: number
       powerLevel?: number
       useCollection?: boolean
+      userId?: string
+      sessionId?: string
     }
   }): Promise<GeneratedDeckCard[]> {
     const { consultationData, commander, constraints } = input
@@ -76,25 +78,41 @@ export class DeckGenerationService {
       console.log('Prompt length:', prompt.length)
       console.log('Prompt preview:', prompt.substring(0, 200) + '...')
       
-      console.log('🤖 Calling OpenAI API...')
-      const openai = this.orchestrator.getOpenAIClient()
+      console.log('🤖 Calling OpenAI API with reliability features...')
       const startTime = Date.now()
       
-      const response = await openai.chat.completions.create({
-        model: this.orchestrator.getModel(),
-        messages: [
+      const aiResult = await this.orchestrator.getReliableAIService().generateChatCompletion(
+        [
           { 
             role: 'system', 
             content: this.orchestrator.promptManagementService.getDeckGenerationPrompt() 
           },
           { role: 'user', content: prompt }
         ],
-        temperature: 0.7,
-        max_tokens: 4000,
-      })
+        {
+          operationType: 'deck-generation',
+          userId: constraints?.userId,
+          sessionId: constraints?.sessionId,
+          priority: 8, // High priority for deck generation
+          maxTokens: 4000,
+          temperature: 0.7,
+          metadata: {
+            commander,
+            budget: constraints?.budget,
+            powerLevel: constraints?.powerLevel,
+            useCollection: constraints?.useCollection
+          }
+        }
+      )
       
       const openAITime = Date.now() - startTime
-      console.log(`✅ OpenAI responded in ${openAITime}ms`)
+      console.log(`✅ OpenAI responded in ${openAITime}ms (retries: ${aiResult.metrics.retryAttempts})`)
+
+      if (!aiResult.success) {
+        throw aiResult.error!
+      }
+
+      const response = aiResult.result!
 
       const content = response.choices[0]?.message?.content
       if (!content) {

@@ -16,7 +16,7 @@ import {
   DeckMetadata,
   TappedOutDeck,
   TappedOutCard
-} from '@repo/shared/platform-adapter-types'
+} from '@moxmuse/shared/src/platform-adapter-types'
 
 export class TappedOutAdapter extends BasePlatformAdapter {
   readonly name = 'TappedOut'

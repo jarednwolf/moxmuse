@@ -7,7 +7,7 @@
 import {
   PlatformAdapter,
   AdapterRegistry as IAdapterRegistry
-} from '@repo/shared/platform-adapter-types'
+} from '@moxmuse/shared'
 
 export class AdapterRegistry implements IAdapterRegistry {
   private adapters = new Map<string, PlatformAdapter>()

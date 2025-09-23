@@ -100,6 +100,39 @@ export default defineConfig({
         storageState: 'auth.json'
       },
     },
+
+    /* Comprehensive testing projects */
+    {
+      name: 'accessibility',
+      testMatch: '**/accessibility-tests.spec.ts',
+      use: { 
+        ...devices['Desktop Chrome'],
+        storageState: 'auth.json'
+      },
+    },
+
+    {
+      name: 'user-journeys',
+      testMatch: '**/comprehensive-user-journeys.spec.ts',
+      use: { 
+        ...devices['Desktop Chrome'],
+        storageState: 'auth.json'
+      },
+      timeout: 600000, // 10 minutes for complex user journeys
+    },
+
+    {
+      name: 'performance-e2e',
+      testMatch: '**/performance-e2e.spec.ts',
+      use: { 
+        ...devices['Desktop Chrome'],
+        storageState: 'auth.json',
+        // Performance testing specific settings
+        launchOptions: {
+          args: ['--disable-web-security', '--disable-features=VizDisplayCompositor']
+        }
+      },
+    },
   ],
 
   /* Run your local dev server before starting the tests */

@@ -17,7 +17,7 @@ import {
   ArchidektDeck,
   ArchidektCard,
   DeckCategory
-} from '@repo/shared/platform-adapter-types'
+} from '@moxmuse/shared'
 
 export class ArchidektAdapter extends BasePlatformAdapter {
   readonly name = 'Archidekt'

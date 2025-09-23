@@ -5,18 +5,14 @@
  */
 
 import { BasePlatformAdapter } from './base-adapter'
+import type { ParseOptions, ParseResult, ExportResult, MTGGoldfishDeck } from '@moxmuse/shared/src/platform-adapter-types'
 import {
   AdapterCapabilities,
-  ParseOptions,
-  ExportOptions,
-  ParseResult,
-  ExportResult,
   StandardDeck,
   StandardCard,
   DeckMetadata,
-  MTGGoldfishDeck,
   MTGGoldfishCard
-} from '@repo/shared/platform-adapter-types'
+} from '@moxmuse/shared/src/platform-adapter-types'
 
 export class MTGGoldfishAdapter extends BasePlatformAdapter {
   readonly name = 'MTGGoldfish'
@@ -128,7 +124,7 @@ export class MTGGoldfishAdapter extends BasePlatformAdapter {
   /**
    * Export deck to MTGGoldfish format
    */
-  async exportDeck(deck: StandardDeck, format: string, options?: ExportOptions): Promise<ExportResult> {
+  async exportDeck(deck: StandardDeck, format: string, options?: ParseOptions): Promise<ExportResult> {
     const opts = this.mergeExportOptions(options)
     const startTime = Date.now()
 
@@ -372,7 +368,7 @@ export class MTGGoldfishAdapter extends BasePlatformAdapter {
   /**
    * Convert standard deck to MTGGoldfish text format
    */
-  private convertToTextFormat(deck: StandardDeck, options: Required<ExportOptions>): string {
+  private convertToTextFormat(deck: StandardDeck, options: Required<ParseOptions>): string {
     const lines: string[] = []
     
     // Add metadata
@@ -412,7 +408,7 @@ export class MTGGoldfishAdapter extends BasePlatformAdapter {
   /**
    * Format a card line for MTGGoldfish export
    */
-  private formatCardLine(card: StandardCard, options: Required<ExportOptions>): string {
+  private formatCardLine(card: StandardCard, options: Required<ParseOptions>): string {
     let line = `${card.quantity} ${card.name}`
     
     if (options.includePrices && card.metadata?.price) {
@@ -442,4 +438,8 @@ export class MTGGoldfishAdapter extends BasePlatformAdapter {
     
     return total
   }
+}
+
+function getFileReader(): typeof FileReader | null {
+	return typeof (globalThis as any).FileReader === 'function' ? (globalThis as any).FileReader : null
 }

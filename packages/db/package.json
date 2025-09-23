@@ -9,6 +9,7 @@
     "db:push": "prisma db push --skip-generate",
     "db:migrate": "prisma migrate dev",
     "db:import-scryfall": "tsx scripts/import-scryfall-bulk.ts",
+    "db:manage": "tsx scripts/manage-card-database.ts",
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
@@ -22,6 +23,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.10.5",
+    "commander": "^11.1.0",
+    "cron": "^3.1.6",
     "dotenv": "^17.2.0",
     "eslint": "^8.56.0",
     "prisma": "^5.7.1",

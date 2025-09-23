@@ -3,6 +3,7 @@ import { DeckGenerationService } from './DeckGenerationService'
 import { CardRecommendationService } from './CardRecommendationService'
 import { SynergyAnalysisService } from './SynergyAnalysisService'
 import { PromptManagementService } from './PromptManagementService'
+import { ReliableAIService, type ReliableAIConfig } from './ReliableAIService'
 import type { 
   ConsultationData, 
   GeneratedDeck, 
@@ -18,16 +19,20 @@ import type {
  * This service acts as the main entry point for AI operations,
  * delegating to specialized services while managing the OpenAI client
  * and providing consistent error handling and fallback strategies.
+ * 
+ * Enhanced with production-ready reliability features including retry logic,
+ * circuit breakers, timeouts, request queuing, and comprehensive monitoring.
  */
 export class OpenAIOrchestrator {
   private openaiClient: OpenAI | null = null
+  private reliableAIService: ReliableAIService
   private deckGenerationService: DeckGenerationService
   private cardRecommendationService: CardRecommendationService
   private synergyAnalysisService: SynergyAnalysisService
   public promptManagementService: PromptManagementService
 
-  constructor() {
-    console.log('🔧 Initializing OpenAI Orchestrator...')
+  constructor(reliabilityConfig?: Partial<ReliableAIConfig>) {
+    console.log('🔧 Initializing OpenAI Orchestrator with reliability features...')
     console.log('Environment check:', {
       hasApiKey: !!process.env.OPENAI_API_KEY,
       apiKeyLength: process.env.OPENAI_API_KEY?.length,
@@ -36,15 +41,21 @@ export class OpenAIOrchestrator {
       nodeEnv: process.env.NODE_ENV
     })
 
+    // Initialize reliable AI service
+    this.reliableAIService = new ReliableAIService(reliabilityConfig)
+
     // Initialize specialized services
     this.deckGenerationService = new DeckGenerationService(this)
     this.cardRecommendationService = new CardRecommendationService(this)
     this.synergyAnalysisService = new SynergyAnalysisService(this)
     this.promptManagementService = new PromptManagementService()
+
+    console.log('✅ OpenAI Orchestrator initialized with reliability features')
   }
 
   /**
    * Get OpenAI client instance (lazy initialization)
+   * @deprecated Use reliableAIService for production operations
    */
   getOpenAIClient(): OpenAI {
     if (!this.openaiClient) {
@@ -60,8 +71,14 @@ export class OpenAIOrchestrator {
    * Check if OpenAI API is available and properly configured
    */
   isOpenAIAvailable(): boolean {
-    const apiKey = process.env.OPENAI_API_KEY
-    return !!(apiKey && apiKey.startsWith('sk-'))
+    return this.reliableAIService.isAvailable()
+  }
+
+  /**
+   * Get reliable AI service for production operations
+   */
+  getReliableAIService(): ReliableAIService {
+    return this.reliableAIService
   }
 
   /**
@@ -219,6 +236,53 @@ export class OpenAIOrchestrator {
     ownedCardIds: Set<string>
   }) {
     return this.cardRecommendationService.suggestDeckImprovements(input)
+  }
+
+  /**
+   * Get comprehensive service health status
+   */
+  getHealthStatus(): {
+    overall: 'healthy' | 'degraded' | 'unhealthy'
+    components: {
+      openai: 'available' | 'unavailable'
+      circuitBreaker: string
+      queue: {
+        size: number
+        activeRequests: number
+      }
+      monitoring: {
+        errorRate: number
+        averageResponseTime: number
+      }
+    }
+    recommendations: string[]
+  } {
+    return this.reliableAIService.getHealthStatus()
+  }
+
+  /**
+   * Get detailed reliability statistics
+   */
+  getReliabilityStats(): {
+    retry: any
+    circuitBreaker: any
+    queue: any
+    monitoring: {
+      errors: any
+      performance: any
+      health: any
+    }
+  } {
+    return this.reliableAIService.getStats()
+  }
+
+  /**
+   * Graceful shutdown of reliability services
+   */
+  async shutdown(): Promise<void> {
+    console.log('🛑 Shutting down OpenAI Orchestrator...')
+    await this.reliableAIService.shutdown()
+    console.log('✅ OpenAI Orchestrator shutdown complete')
   }
 
   /**

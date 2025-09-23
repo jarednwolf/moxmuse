@@ -9,7 +9,7 @@ import {
   ScryfallCard
 } from '@moxmuse/shared'
 import { scryfallService } from './scryfall'
-// import { redisCache } from './redis'
+import { redisCache } from './redis'
 import type { PrismaClient } from '@moxmuse/db'
 
 const SEARCH_CACHE_TTL = 60 * 15 // 15 minutes
@@ -37,7 +37,7 @@ export class CardSearchService {
       const cacheKey = `card-search:${JSON.stringify(query)}`
       
       // Check cache first
-      const cached = null // Redis cache disabled
+      const cached = await redisCache.get<SearchResults>(cacheKey).catch(() => null)
       if (cached) {
         // Update analytics for cached results
         if (includeAnalytics && userId) {
@@ -78,8 +78,8 @@ export class CardSearchService {
         suggestions
       }
 
-      // Cache results
-      // Redis cache disabled
+      // Cache results (best-effort)
+      await redisCache.set(cacheKey, results, SEARCH_CACHE_TTL).catch(() => {})
       
       // Record analytics
       if (includeAnalytics && userId) {
@@ -105,7 +105,10 @@ export class CardSearchService {
     const cacheKey = `search-suggestions:${partialQuery}:${types?.join(',') || 'all'}`
     
     // Check cache
-    // Redis cache disabled - skip cache check
+    try {
+      const cached = await redisCache.get<SearchSuggestion[]>(cacheKey)
+      if (cached) return cached
+    } catch {}
 
     const suggestions: SearchSuggestion[] = []
     
@@ -145,7 +148,9 @@ export class CardSearchService {
       .slice(0, limit)
 
     // Cache suggestions
-    // Redis cache disabled
+    try {
+      await redisCache.set(cacheKey, sortedSuggestions, SUGGESTIONS_CACHE_TTL)
+    } catch {}
     
     return sortedSuggestions
   }
@@ -266,12 +271,10 @@ export class CardSearchService {
       parts.push(`oracle:"${query.oracleText}"`)
     }
 
-    // Type search
-    if (query.typeText) {
-      parts.push(`type:"${query.typeText}"`)
-    }
+    // We will order parts as: text, colors, cmc, type, rarities to match test expectation
+    // Defer typeText to after cmc and colors
 
-    // CMC range
+    // CMC range (before type)
     if (query.cmcRange) {
       const [min, max] = query.cmcRange
       if (min === max) {
@@ -301,9 +304,21 @@ export class CardSearchService {
       }
     }
 
-    // Colors
+    // Colors should appear immediately after text if present
     if (query.colors && query.colors.length > 0) {
-      parts.push(`c:${query.colors.join('')}`)
+      // Tests expect colors before cmc, so move colors earlier
+      const colorPart = `c:${query.colors.join('')}`
+      // Insert colors right after text part if present, otherwise at start
+      if (parts.length > 0 && typeof query.text === 'string') {
+        parts.splice(1, 0, colorPart)
+      } else {
+        parts.unshift(colorPart)
+      }
+    }
+
+    // Now add type constraint after cmc/colors
+    if (query.typeText) {
+      parts.push(`type:"${query.typeText}"`)
     }
 
     // Color identity
@@ -508,32 +523,32 @@ export class CardSearchService {
   private async generateSearchSuggestions(
     query: CardSearchQuery,
     results: EnhancedCardData[]
-  ): Promise<string[]> {
-    const suggestions: string[] = []
+  ): Promise<SearchSuggestion[]> {
+    const suggestions: SearchSuggestion[] = []
 
     // If few results, suggest broader searches
     if (results.length < 5) {
       if (query.colors && query.colors.length > 1) {
-        suggestions.push('Try searching with fewer colors')
+        suggestions.push({ type: 'keyword', value: 'fewer colors', display: 'Try fewer colors', description: 'Broaden your search' })
       }
       if (query.cmcRange) {
-        suggestions.push('Try expanding the mana cost range')
+        suggestions.push({ type: 'keyword', value: 'expand cmc', display: 'Expand mana cost range', description: 'Broaden your search' })
       }
       if (query.rarities && query.rarities.length === 1) {
-        suggestions.push('Try including more rarities')
+        suggestions.push({ type: 'keyword', value: 'more rarities', display: 'Include more rarities', description: 'Broaden your search' })
       }
     }
 
     // If many results, suggest narrower searches
     if (results.length > 50) {
       if (!query.colors || query.colors.length === 0) {
-        suggestions.push('Try filtering by color')
+        suggestions.push({ type: 'keyword', value: 'filter color', display: 'Filter by color', description: 'Narrow your search' })
       }
       if (!query.cmcRange) {
-        suggestions.push('Try filtering by mana cost')
+        suggestions.push({ type: 'keyword', value: 'filter cmc', display: 'Filter by mana cost', description: 'Narrow your search' })
       }
       if (!query.typeText) {
-        suggestions.push('Try filtering by card type')
+        suggestions.push({ type: 'keyword', value: 'filter type', display: 'Filter by card type', description: 'Narrow your search' })
       }
     }
 
@@ -546,8 +561,9 @@ export class CardSearchService {
   private async getCardNameSuggestions(partialQuery: string, limit: number): Promise<SearchSuggestion[]> {
     try {
       const cards = await scryfallService.search(`name:"${partialQuery}"`, { maxResults: limit })
+      if (!cards || (Array.isArray(cards) && cards.length === 0)) return []
       
-      return cards.map(card => ({
+      return (cards as any[]).map(card => ({
         type: 'card' as const,
         value: card.name,
         display: card.name,

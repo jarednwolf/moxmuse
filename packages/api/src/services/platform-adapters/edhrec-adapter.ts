@@ -16,7 +16,7 @@ import {
   DeckMetadata,
   EDHRECDeck,
   EDHRECCard
-} from '@repo/shared/platform-adapter-types'
+} from '@moxmuse/shared'
 
 export class EDHRECAdapter extends BasePlatformAdapter {
   readonly name = 'EDHREC'

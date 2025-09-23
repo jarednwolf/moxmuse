@@ -53,6 +53,7 @@ export class MoxMuseError extends Error {
   public readonly userMessage: string
   public readonly recoveryActions: string[]
   public readonly retryable: boolean
+  public declare cause: Error | undefined
 
   constructor(
     message: string,

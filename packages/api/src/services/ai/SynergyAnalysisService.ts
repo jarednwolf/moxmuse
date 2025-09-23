@@ -31,16 +31,28 @@ export class SynergyAnalysisService {
       const systemPrompt = this.orchestrator.promptManagementService.getSynergyAnalysisPrompt()
       const userPrompt = `Analyze these cards for synergies:\n\n${cardList}`
       
-      const openai = this.orchestrator.getOpenAIClient()
-      const response = await openai.chat.completions.create({
-        model: this.orchestrator.getModel(),
-        messages: [
+      const aiResult = await this.orchestrator.getReliableAIService().generateChatCompletion(
+        [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        temperature: 0.3,
-        max_tokens: 2000,
-      })
+        {
+          operationType: 'synergy-analysis',
+          priority: 6,
+          maxTokens: 2000,
+          temperature: 0.3,
+          metadata: {
+            cardCount: cards.length
+          }
+        }
+      )
+
+      if (!aiResult.success) {
+        console.log('❌ AI service failed, using mock synergy analysis')
+        return this.getMockSynergies(cards)
+      }
+
+      const response = aiResult.result!
 
       const content = response.choices[0]?.message?.content
       if (!content) {
@@ -95,19 +107,33 @@ export class SynergyAnalysisService {
     try {
       const userPrompt = this.orchestrator.promptManagementService.buildStrategyAnalysisUserPrompt(deck)
       
-      const openai = this.orchestrator.getOpenAIClient()
-      const response = await openai.chat.completions.create({
-        model: this.orchestrator.getModel(),
-        messages: [
+      const aiResult = await this.orchestrator.getReliableAIService().generateChatCompletion(
+        [
           { 
             role: 'system', 
             content: this.orchestrator.promptManagementService.getStrategyAnalysisPrompt() 
           },
           { role: 'user', content: userPrompt }
         ],
-        temperature: 0.4,
-        max_tokens: 2500,
-      })
+        {
+          operationType: 'strategy-analysis',
+          priority: 6,
+          maxTokens: 2500,
+          temperature: 0.4,
+          metadata: {
+            deckName: deck.name,
+            commander: deck.commander,
+            strategy: deck.strategy.name
+          }
+        }
+      )
+
+      if (!aiResult.success) {
+        console.log('❌ AI service failed, using mock strategy analysis')
+        return this.getMockStrategyAnalysis(deck)
+      }
+
+      const response = aiResult.result!
 
       const content = response.choices[0]?.message?.content
       if (!content) {
@@ -155,19 +181,31 @@ export class SynergyAnalysisService {
     try {
       const userPrompt = this.orchestrator.promptManagementService.buildSynergyAnalysisUserPrompt(cardDetails)
       
-      const openai = this.orchestrator.getOpenAIClient()
-      const response = await openai.chat.completions.create({
-        model: this.orchestrator.getModel(),
-        messages: [
+      const aiResult = await this.orchestrator.getReliableAIService().generateChatCompletion(
+        [
           { 
             role: 'system', 
             content: this.orchestrator.promptManagementService.getSynergyAnalysisPrompt() 
           },
           { role: 'user', content: userPrompt }
         ],
-        temperature: 0.3,
-        max_tokens: 2000,
-      })
+        {
+          operationType: 'synergy-analysis',
+          priority: 6,
+          maxTokens: 2000,
+          temperature: 0.3,
+          metadata: {
+            cardCount: cardDetails.length
+          }
+        }
+      )
+
+      if (!aiResult.success) {
+        console.log('❌ AI service failed, using mock synergy analysis')
+        return this.getMockSynergies(cardDetails.map(cd => cd.cardData).filter(Boolean))
+      }
+
+      const response = aiResult.result!
 
       const content = response.choices[0]?.message?.content
       if (!content) {

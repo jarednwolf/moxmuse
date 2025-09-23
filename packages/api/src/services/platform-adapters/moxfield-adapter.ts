@@ -5,25 +5,14 @@
  */
 
 import { BasePlatformAdapter } from './base-adapter'
-import {
-  AdapterCapabilities,
-  ParseOptions,
-  ExportOptions,
-  ParseResult,
-  ExportResult,
-  StandardDeck,
-  StandardCard,
-  DeckMetadata,
-  MoxfieldDeck,
-  MoxfieldCard
-} from '@repo/shared/platform-adapter-types'
+import type { PlatformAdapter, ParseOptions, ParseResult, ExportResult, MoxfieldDeck, MoxfieldCard, StandardDeck, ExportOptions, StandardCard, DeckMetadata } from '@moxmuse/shared/src/platform-adapter-types'
 
 export class MoxfieldAdapter extends BasePlatformAdapter {
   readonly name = 'Moxfield'
   readonly id = 'moxfield'
   readonly version = '1.0.0'
   readonly supportedFormats = ['moxfield', 'json']
-  readonly capabilities: AdapterCapabilities = {
+  readonly capabilities: PlatformAdapter['capabilities'] = {
     canImport: true,
     canExport: true,
     supportsMultipleDecks: false,
@@ -379,4 +368,8 @@ export class MoxfieldAdapter extends BasePlatformAdapter {
     return Math.random().toString(36).substring(2, 15) + 
            Math.random().toString(36).substring(2, 15)
   }
+}
+
+function getFileReader(): typeof FileReader | null {
+	return typeof (globalThis as any).FileReader === 'function' ? (globalThis as any).FileReader : null
 }

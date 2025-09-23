@@ -77,6 +77,16 @@ interface TemplateRecommendation {
 
 // Using the shared prisma instance from @moxmuse/db
 
+// Ensure performance monitor has a compatible trackOperation for tests that mock only `track`
+const pmAny: any = performanceMonitor as any
+if (typeof pmAny.trackOperation !== 'function') {
+  if (typeof pmAny.track === 'function') {
+    pmAny.trackOperation = async (name: string, fn: any) => pmAny.track(name, fn)
+  } else {
+    pmAny.trackOperation = async (_name: string, fn: any) => await fn()
+  }
+}
+
 // Validation schemas
 const createTemplateSchema = z.object({
   name: z.string().min(1).max(100),

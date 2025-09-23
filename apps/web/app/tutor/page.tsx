@@ -13,7 +13,7 @@ import { ErrorBoundary } from '@/components/ui/error-boundary'
 import { useErrorToast, useSuccessToast } from '@/components/ui/toaster'
 import CommanderSelection from '../../components/tutor/CommanderSelection'
 import { NaturalLanguageVision } from '@/components/tutor/NaturalLanguageVision'
-import { ConsultationWizard, type ConsultationMode, type ConsultationData } from '@/components/tutor/ConsultationWizard'
+import { EnhancedConsultationWizard, type ConsultationMode, type ConsultationData } from '@/components/tutor/EnhancedConsultationWizard'
 import { DeckGenerationEngine } from '@/components/tutor/DeckGenerationEngine'
 import { DeckEditor } from '@/components/tutor/DeckEditor'
 import { AnalysisPanel } from '@/components/tutor/AnalysisPanel'
@@ -307,7 +307,7 @@ function TutorPageContent() {
             consultationMode === 'budget' ||
             consultationMode === 'bracket' ||
             consultationMode === 'summary') && (
-            <ConsultationWizard
+            <EnhancedConsultationWizard
               mode={consultationMode}
               consultationData={consultationData}
               onModeChange={setConsultationMode}
@@ -315,6 +315,11 @@ function TutorPageContent() {
               onComplete={handleConsultationComplete}
               showBracketModal={showBracketModal}
               onShowBracketModal={setShowBracketModal}
+              isFirstTime={!localStorage.getItem('tutor-onboarding-completed')}
+              onStartOnboarding={() => {
+                // Start onboarding tour
+                console.log('Starting onboarding tour')
+              }}
             />
           )}
 

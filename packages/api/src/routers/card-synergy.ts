@@ -9,7 +9,7 @@ import {
   type ComboDetection,
   type UpgradePath
 } from '../services/card-synergy-detection'
-import { prisma } from '@moxmuse/db'
+import { db as prisma } from '@repo/db'
 
 export const cardSynergyRouter = createTRPCRouter({
   /**
@@ -31,8 +31,8 @@ export const cardSynergyRouter = createTRPCRouter({
         const analysis = await cardSynergyDetectionService.analyzeSynergies(requestWithUser)
 
         // Cache the analysis results if deck ID is provided
-        if (input.cards.length > 0) {
-          await prisma.aIAnalysisCache.create({
+        if (input.cards.length > 0 && (prisma as any)?.aIAnalysisCache?.create) {
+          await (prisma as any).aIAnalysisCache.create({
             data: {
               deckId: `synergy-${Date.now()}`, // Temporary ID for synergy analysis
               analysisVersion: 1,
@@ -239,7 +239,7 @@ export const cardSynergyRouter = createTRPCRouter({
       console.log(`📋 Getting cached synergy analysis for deck ${input.deckId}`)
 
       try {
-        const cachedAnalysis = await prisma.aIAnalysisCache.findFirst({
+        const cachedAnalysis = (prisma as any)?.aIAnalysisCache?.findFirst ? await (prisma as any).aIAnalysisCache.findFirst({
           where: {
             deckId: input.deckId,
             analysisVersion: input.analysisVersion,
@@ -247,7 +247,7 @@ export const cardSynergyRouter = createTRPCRouter({
           orderBy: {
             createdAt: 'desc',
           },
-        })
+        }) : null
 
         if (!cachedAnalysis) {
           return {
@@ -290,7 +290,8 @@ export const cardSynergyRouter = createTRPCRouter({
       console.log(`📝 Recording synergy feedback from user ${ctx.session.user.id}`)
 
       try {
-        await prisma.suggestionFeedback.create({
+        if ((prisma as any)?.suggestionFeedback?.create) {
+          await (prisma as any).suggestionFeedback.create({
           data: {
             userId: ctx.session.user.id,
             suggestionId: input.suggestionId,
@@ -301,7 +302,8 @@ export const cardSynergyRouter = createTRPCRouter({
             satisfactionRating: input.satisfactionRating,
             context: input.context,
           },
-        })
+          })
+        }
 
         return {
           success: true,
@@ -322,7 +324,7 @@ export const cardSynergyRouter = createTRPCRouter({
 
       try {
         // Get feedback statistics
-        const feedbackStats = await prisma.suggestionFeedback.groupBy({
+        const feedbackStats = (prisma as any)?.suggestionFeedback?.groupBy ? await (prisma as any).suggestionFeedback.groupBy({
           by: ['feedback'],
           where: {
             userId: ctx.session.user.id,
@@ -330,10 +332,10 @@ export const cardSynergyRouter = createTRPCRouter({
           _count: {
             feedback: true,
           },
-        })
+        }) : []
 
         // Get recent analyses
-        const recentAnalyses = await prisma.aIAnalysisCache.count({
+        const recentAnalyses = (prisma as any)?.aIAnalysisCache?.count ? await (prisma as any).aIAnalysisCache.count({
           where: {
             deck: {
               userId: ctx.session.user.id,
@@ -342,9 +344,9 @@ export const cardSynergyRouter = createTRPCRouter({
               gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Last 30 days
             },
           },
-        })
+        }) : 0
 
-        const feedbackSummary = feedbackStats.reduce((acc: Record<string, number>, stat: any) => {
+        const feedbackSummary = (feedbackStats || []).reduce((acc: Record<string, number>, stat: any) => {
           acc[stat.feedback] = stat._count.feedback
           return acc
         }, {} as Record<string, number>)
@@ -354,8 +356,8 @@ export const cardSynergyRouter = createTRPCRouter({
           data: {
             feedbackSummary,
             recentAnalyses,
-            totalFeedback: feedbackStats.reduce((sum: number, stat: any) => sum + stat._count.feedback, 0),
-            acceptanceRate: feedbackSummary.accepted ? 
+            totalFeedback: (feedbackStats || []).reduce((sum: number, stat: any) => sum + (stat?._count?.feedback || 0), 0),
+            acceptanceRate: feedbackSummary.accepted && Object.values(feedbackSummary).length > 0 ? 
               (feedbackSummary.accepted / Object.values(feedbackSummary as Record<string, number>).reduce((a: number, b: number) => a + b, 0)) * 100 : 0,
           },
         }

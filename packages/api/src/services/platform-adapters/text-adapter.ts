@@ -5,17 +5,11 @@
  */
 
 import { BasePlatformAdapter } from './base-adapter'
-import {
-  AdapterCapabilities,
-  ParseOptions,
-  ExportOptions,
-  ParseResult,
-  ExportResult,
-  StandardDeck,
-  StandardCard,
-  DeckMetadata,
-  TextFormatOptions
-} from '@repo/shared/platform-adapter-types'
+import type { AdapterCapabilities, ParseOptions, ParseResult, ExportResult, StandardDeck, StandardCard, TextFormatOptions, DeckMetadata, ExportOptions } from '@moxmuse/shared/src/platform-adapter-types'
+
+function getFileReader(): typeof FileReader | null {
+	return typeof (globalThis as any).FileReader === 'function' ? (globalThis as any).FileReader : null
+}
 
 export class TextAdapter extends BasePlatformAdapter {
   readonly name = 'Text Format'
@@ -500,6 +494,11 @@ export class TextAdapter extends BasePlatformAdapter {
    * Read content from file
    */
   private async readFileContent(file: File): Promise<string> {
+    const FileReader = getFileReader()
+    if (!FileReader) {
+      throw new Error('FileReader is not available in this environment.')
+    }
+
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
       reader.onload = () => resolve(reader.result as string)

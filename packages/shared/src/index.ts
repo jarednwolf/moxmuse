@@ -42,6 +42,11 @@ export {
   getFormatsByCategory
 } from './format-legality-types'
 
+// Export platform adapter types needed by API services
+// Note: Avoid re-exporting to prevent name collisions with other modules.
+// Import directly from './platform-adapter-types' where needed.
+export * from './export-format-types'
+
 // Note: Additional type files are available but not re-exported to avoid conflicts
 // Import specific types directly from their files if needed:
 // - './import-job-types'

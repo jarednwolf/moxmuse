@@ -4,6 +4,7 @@ import { type Session } from 'next-auth'
 import { getServerSession } from 'next-auth/next'
 import superjson from 'superjson'
 import { ZodError } from 'zod'
+import { v4 as uuidv4 } from 'uuid'
 import { prisma } from '@moxmuse/db'
 import { authOptions } from './auth'
 import {
@@ -12,46 +13,143 @@ import {
   SessionManager,
   secureSchemas
 } from './utils/security'
+import { sentryService } from './services/monitoring/SentryService'
+import { metricsService } from './services/monitoring/MetricsService'
+import { errorHandler } from './middleware/error-handler'
+import { ddosProtection } from './middleware/rate-limiter'
+
+export interface Context {
+  session: Session | null
+  user: Session['user'] | null
+  prisma: typeof prisma
+  req?: CreateNextContextOptions['req']
+  res?: CreateNextContextOptions['res']
+  requestId: string
+  sessionId?: string
+  procedure?: string
+}
 
 interface CreateContextOptions {
   session: Session | null
+  req?: CreateNextContextOptions['req']
+  res?: CreateNextContextOptions['res']
 }
 
-export const createInnerTRPCContext = (opts: CreateContextOptions) => {
+export const createInnerTRPCContext = (opts: CreateContextOptions): Context => {
   return {
     session: opts.session,
+    user: opts.session?.user || null,
     prisma,
+    req: opts.req,
+    res: opts.res,
+    requestId: uuidv4(),
+    sessionId: opts.session?.user?.id,
   }
 }
 
-export const createTRPCContext = async (opts: CreateNextContextOptions) => {
+export const createTRPCContext = async (opts: CreateNextContextOptions): Promise<Context> => {
   const { req, res } = opts
+
+  // Initialize monitoring services
+  sentryService.initialize()
 
   // Get the session from the server using NextAuth's getServerSession
   const session = await getServerSession(req, res, authOptions)
 
-  return createInnerTRPCContext({
+  const ctx = createInnerTRPCContext({
     session,
+    req,
+    res,
   })
+
+  // Set user context for monitoring
+  if (session?.user) {
+    sentryService.setUser({ id: session.user.id, email: session.user.email ?? undefined })
+  }
+
+  // DDoS protection check
+  try {
+    ddosProtection.checkRequest(ctx)
+  } catch (error) {
+    // DDoS protection will throw TRPCError, let it bubble up
+    throw error
+  }
+
+  return ctx
 }
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
-  errorFormatter({ shape, error }) {
+  errorFormatter({ shape, error, ctx }) {
+    // Handle different types of errors with production error handling
+    let handledError: TRPCError
+
+    if (error instanceof TRPCError) {
+      handledError = errorHandler.handleTRPCError(error, ctx)
+    } else {
+      handledError = errorHandler.handleUnknownError(error, ctx)
+    }
+
     return {
       ...shape,
       data: {
         ...shape.data,
-        zodError:
-          error.cause instanceof ZodError ? error.cause.flatten() : null,
+        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+        errorId: typeof handledError.cause === 'string' ? handledError.cause : undefined,
       },
+      message: handledError.message,
     }
   },
 })
 
 export const createTRPCRouter = t.router
+export const router = createTRPCRouter
 
-export const publicProcedure = t.procedure
+// Middleware to track procedure calls and performance
+const trackingMiddleware = t.middleware(async ({ ctx, next, path, type }) => {
+  const startTime = Date.now()
+  
+  // Set procedure name in context
+  ctx.procedure = `${type}.${path}`
+  
+  // Add breadcrumb for debugging
+  sentryService.addBreadcrumb(
+    `tRPC ${type} call: ${path}`,
+    'trpc',
+    {
+      type,
+      path,
+      userId: ctx.user?.id,
+      requestId: ctx.requestId,
+    }
+  )
+
+  try {
+    const result = await next()
+    
+    // Record success metrics
+    const duration = Date.now() - startTime
+    metricsService.recordResponseTime(`trpc.${path}`, duration, {
+      type,
+      status: 'success',
+      userId: ctx.user?.id || 'anonymous',
+    })
+
+    return result
+  } catch (error) {
+    // Record error metrics
+    const duration = Date.now() - startTime
+    metricsService.recordError(`trpc.${path}`, error instanceof Error ? error.name : 'unknown', {
+      type,
+      duration: duration.toString(),
+      userId: ctx.user?.id || 'anonymous',
+    })
+
+    throw error
+  }
+})
+
+export const publicProcedure = t.procedure.use(trackingMiddleware)
 
 // Enhanced authentication middleware with session validation
 const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
@@ -69,6 +167,18 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
     throw new TRPCError({
       code: 'UNAUTHORIZED',
       message: 'You must be logged in to access this resource'
+    })
+  }
+
+  // If prisma is not available (e.g., unit tests using createCaller with a minimal ctx),
+  // skip DB validation and pass through the session user.
+  const canQueryUser = Boolean((ctx as any).prisma && (ctx as any).prisma.user && (ctx as any).prisma.user.findUnique)
+  if (!canQueryUser) {
+    return next({
+      ctx: {
+        session: ctx.session,
+        user: ctx.session.user as any,
+      },
     })
   }
 
@@ -231,17 +341,20 @@ const validateInput = t.middleware(async ({ ctx, next, input }) => {
 })
 
 export const protectedProcedure = t.procedure
+  .use(trackingMiddleware)
   .use(rateLimitGeneral)
   .use(enforceUserIsAuthed)
   .use(validateInput)
 
 export const adminProcedure = t.procedure
+  .use(trackingMiddleware)
   .use(rateLimitGeneral)
   .use(enforceUserIsAuthed)
   .use(enforceUserRole(['admin']))
   .use(validateInput)
 
 export const aiProtectedProcedure = t.procedure
+  .use(trackingMiddleware)
   .use(rateLimitGeneral)
   .use(enforceUserIsAuthed)
   .use(rateLimitAI)

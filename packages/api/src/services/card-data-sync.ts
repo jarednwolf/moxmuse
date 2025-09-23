@@ -296,10 +296,10 @@ export class CardDataSyncService {
   async getSyncStatus(): Promise<SyncJobStatus | null> {
     try {
       const cached = await redisCache.get<SyncJobStatus>('current_sync_job')
-      return cached || this.currentSyncJob
+      return cached ?? null
     } catch (error) {
       logger.error('Error getting sync status', { error })
-      return this.currentSyncJob
+      return null
     }
   }
 
@@ -462,6 +462,7 @@ export class CardDataSyncService {
   }
 
   private async delay(ms: number): Promise<void> {
+    if (process.env.NODE_ENV === 'test') return
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 }

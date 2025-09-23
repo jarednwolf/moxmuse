@@ -6,16 +6,21 @@
 
 import { BasePlatformAdapter } from './base-adapter'
 import {
-  AdapterCapabilities,
-  ParseOptions,
-  ExportOptions,
-  ParseResult,
-  ExportResult,
-  StandardDeck,
-  StandardCard,
-  DeckMetadata,
-  CSVDeckFormat
-} from '@repo/shared/platform-adapter-types'
+	AdapterCapabilities,
+	ParseOptions,
+	ExportOptions,
+	ParseResult,
+	ExportResult,
+	StandardDeck,
+	StandardCard,
+	DeckMetadata,
+	CSVDeckFormat
+} from '@moxmuse/shared/src/platform-adapter-types'
+
+// Node guard for FileReader availability
+function getFileReader(): typeof FileReader | null {
+	return typeof (globalThis as any).FileReader === 'function' ? (globalThis as any).FileReader : null
+}
 
 export class CSVAdapter extends BasePlatformAdapter {
   readonly name = 'CSV'
@@ -525,8 +530,12 @@ export class CSVAdapter extends BasePlatformAdapter {
    * Read content from file
    */
   private async readFileContent(file: File): Promise<string> {
+    const reader = getFileReader()
+    if (!reader) {
+      throw new Error('FileReader is not available in this environment.')
+    }
+
     return new Promise((resolve, reject) => {
-      const reader = new FileReader()
       reader.onload = () => resolve(reader.result as string)
       reader.onerror = () => reject(new Error('Failed to read file'))
       reader.readAsText(file)
