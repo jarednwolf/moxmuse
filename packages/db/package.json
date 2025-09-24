@@ -8,12 +8,18 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push --skip-generate",
     "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:migrate:status": "prisma migrate status",
+    "db:seed:test": "echo 'No seed script'",
     "db:import-scryfall": "tsx scripts/import-scryfall-bulk.ts",
     "db:manage": "tsx scripts/manage-card-database.ts",
     "lint": "eslint --ext .ts,.tsx src scripts",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:integration": "echo 'No integration tests'",
+    "test:performance": "echo 'No performance tests'",
+    "analyze": "echo 'No analyze script'"
   },
   "dependencies": {
     "@prisma/client": "^5.7.1",

@@ -8,7 +8,10 @@
     "lint": "eslint --ext .ts,.tsx src",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:integration": "echo 'No integration tests'",
+    "test:performance": "echo 'No performance tests'",
+    "analyze": "echo 'No analyze script'"
   },
   "dependencies": {
     "zod": "^3.22.4"
