@@ -37,7 +37,7 @@
     "deployment:verify": "node scripts/deployment/verify.js",
     "deployment:monitor": "node scripts/deployment/monitor.js",
     "deployment:rollback": "node scripts/deployment/rollback.js",
-    "postinstall": "pnpm db:generate"
+    "postinstall": "node scripts/safe-db-generate.js"
   },
   "devDependencies": {
     "@types/node": "^20.10.5",

@@ -1,2 +1,5 @@
-// Temporary minimal entrypoint during incremental type alignment
-export {} 
+// API Package Exports
+export { appRouter } from './root'
+export type { AppRouter } from './root'
+export { createTRPCContext } from './trpc'
+export type { Context } from './trpc' 
