@@ -251,7 +251,7 @@ export class LearningEventTracker {
       return []
     }
 
-    let events = userData.learningEvents as LearningEvent[]
+    let events = userData.learningEvents as unknown as LearningEvent[]
 
     // Filter by time range
     if (timeRange) {

@@ -1,5 +1,9 @@
 import * as Sentry from '@sentry/node'
-import type { User } from '@prisma/client'
+// Minimal user shape local to avoid prisma type import coupling
+type MinimalUser = {
+  id?: string | null
+  email?: string | null
+}
 
 // Optional profiling integration
 let ProfilingIntegration: any = null
@@ -190,13 +194,13 @@ export class SentryService {
 		})
 	}
 
-	setUser(user: Partial<User>): void {
+  setUser(user: MinimalUser): void {
 		if (!this.initialized) return
 
-		Sentry.setUser({
-			id: user.id,
-			email: user.email || undefined,
-		})
+    Sentry.setUser({
+      id: user.id != null ? String(user.id) : undefined,
+      email: user.email || undefined,
+    })
 	}
 
 	addBreadcrumb(message: string, category: string = 'custom', data?: Record<string, any>): void {

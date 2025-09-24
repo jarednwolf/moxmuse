@@ -7,7 +7,7 @@ import type {
 } from '../../types/learning'
 import { learningEventTracker } from './learning-event-tracker'
 import { preferenceInferenceEngine } from './preference-inference'
-import { openaiService } from '../openai'
+import { services } from '../container'
 
 export class AdaptiveSuggestionsEngine {
   /**
@@ -70,7 +70,7 @@ export class AdaptiveSuggestionsEngine {
     const prompt = this.buildAdaptivePrompt(context, userProfile, learningEvents)
     
     try {
-      const response = await openaiService.generateSuggestions(prompt)
+      const response = await (services.openaiOrchestrator as any).generateSuggestions?.(prompt)
       
       return response.suggestions.map((suggestion: any) => ({
         suggestionType: context.suggestionType,

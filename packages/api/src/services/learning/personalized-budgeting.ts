@@ -5,7 +5,7 @@ import type {
   LearningEvent
 } from '../../types/learning'
 import { learningEventTracker } from './learning-event-tracker'
-import { priceTrackingService } from '../price-tracking'
+import { services } from '../container'
 
 export class PersonalizedBudgetingEngine {
   /**
@@ -719,7 +719,7 @@ export class PersonalizedBudgetingEngine {
       where: { userId }
     })
 
-    return userData?.styleProfile as UserStyleProfile || {
+    return (userData?.styleProfile as unknown as UserStyleProfile) || {
       userId,
       preferredStrategies: [],
       avoidedStrategies: [],
@@ -750,7 +750,7 @@ export class PersonalizedBudgetingEngine {
       format: deck.format,
       strategy: deck.strategy,
       cards: deck.cards,
-      powerLevel: deck.analysis?.powerLevel
+      powerLevel: (deck.analysis as any)?.powerLevel
     }))
   }
 
@@ -760,8 +760,8 @@ export class PersonalizedBudgetingEngine {
         where: { userId: budget.userId },
         update: {
           crossDeckInsights: {
-            personalizedBudget: budget
-          },
+            personalizedBudget: budget as unknown as import('@prisma/client').Prisma.JsonObject
+          } as unknown as import('@prisma/client').Prisma.JsonObject,
           lastUpdated: new Date()
         },
         create: {
@@ -773,8 +773,8 @@ export class PersonalizedBudgetingEngine {
           suggestionFeedback: [],
           deckRelationships: {},
           crossDeckInsights: {
-            personalizedBudget: budget
-          },
+            personalizedBudget: budget as unknown as import('@prisma/client').Prisma.JsonObject
+          } as unknown as import('@prisma/client').Prisma.JsonObject,
           lastUpdated: new Date()
         }
       })

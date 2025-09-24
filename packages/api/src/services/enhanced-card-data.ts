@@ -143,15 +143,15 @@ export class EnhancedCardDataService {
       // Fetch from Scryfall and enrich
       const enrichedCard = await this.fetchAndEnrichCard(cardId)
       if (!enrichedCard) {
-        timer.end({ source: 'not_found' })
+      timer.end({ source: 'not_found' })
         return null
       }
 
       // Validate data integrity
       const validatedCard = await this.validateCardData(enrichedCard)
       if (!validatedCard) {
-        logger.error('Card data validation failed', { cardId })
-        timer.end({ source: 'validation_failed' })
+        logger.error('Card data validation failed', new Error('validation_failed'), { cardId })
+      timer.end({ source: 'validation_failed' })
         return null
       }
 
@@ -162,7 +162,7 @@ export class EnhancedCardDataService {
       return validatedCard
 
     } catch (error) {
-      logger.error('Error getting enhanced card data', { cardId, error })
+      logger.error('Error getting enhanced card data', error as Error, { cardId })
       timer.end({ source: 'error' })
       return null
     }
@@ -215,15 +215,15 @@ export class EnhancedCardDataService {
       }
 
       timer.end({ 
-        total_cards: cardIds.length,
-        cached_cards: results.size - toFetch.length,
-        fetched_cards: toFetch.length
+        total_cards: String(cardIds.length),
+        cached_cards: String(results.size - toFetch.length),
+        fetched_cards: String(toFetch.length)
       })
       
       return results
 
     } catch (error) {
-      logger.error('Error in batch card lookup', { cardIds: cardIds.length, error })
+      logger.error('Error in batch card lookup', error as Error, { cardIds: cardIds.length })
       timer.end({ source: 'error' })
       return results
     }
@@ -300,15 +300,15 @@ export class EnhancedCardDataService {
       await redisCache.set(cacheKey, result, 60 * 60)
       
       timer.end({ 
-        query_complexity: Object.keys(validatedQuery).length,
-        results_count: result.cards.length,
-        total_count: result.totalCount
+        query_complexity: String(Object.keys(validatedQuery).length),
+        results_count: String(result.cards.length),
+        total_count: String(result.totalCount)
       })
       
       return result
 
     } catch (error) {
-      logger.error('Error in card search', { query, error })
+      logger.error('Error in card search', error as Error, { query })
       timer.end({ source: 'error' })
       return { cards: [], totalCount: 0, hasMore: false }
     }
@@ -351,7 +351,7 @@ export class EnhancedCardDataService {
       let batch: any[] = []
 
       // Process streaming JSON data
-      response.data.on('data', async (chunk: Buffer) => {
+      ;(response.data as NodeJS.ReadableStream).on('data', async (chunk: Buffer) => {
         const lines = chunk.toString().split('\n')
         
         for (const line of lines) {
@@ -368,7 +368,7 @@ export class EnhancedCardDataService {
               batch = []
             }
           } catch (error) {
-            errors.push(`Failed to parse card data: ${error}`)
+            errors.push(`Failed to parse card data: ${String((error as any)?.message || error)}`)
           }
         }
       })
@@ -390,16 +390,16 @@ export class EnhancedCardDataService {
       })
       
       timer.end({ 
-        cards_updated: cardsUpdated,
-        errors_count: errors.length
+        cards_updated: String(cardsUpdated),
+        errors_count: String(errors.length)
       })
       
       return { success: true, cardsUpdated, errors }
 
     } catch (error) {
-      logger.error('Error in bulk data update', { error })
+      logger.error('Error in bulk data update', error as Error)
       timer.end({ source: 'error' })
-      return { success: false, cardsUpdated: 0, errors: [error.message] }
+      return { success: false, cardsUpdated: 0, errors: [String((error as any)?.message || error)] }
     }
   }
 
@@ -425,8 +425,8 @@ export class EnhancedCardDataService {
       
     } catch (error) {
       logger.warn('Card data validation failed', { 
-        cardId: cardData?.cardId, 
-        error: error.message 
+        cardId: (cardData as any)?.cardId, 
+        error: (error as any)?.message 
       })
       return null
     }
@@ -483,7 +483,7 @@ export class EnhancedCardDataService {
       }
       
     } catch (error) {
-      logger.error('Error tracking card data version', { cardId, error })
+      logger.error('Error tracking card data version', error as Error, { cardId })
     }
   }
 
@@ -518,7 +518,7 @@ export class EnhancedCardDataService {
       return optimizedUrls
       
     } catch (error) {
-      logger.error('Error optimizing card images', { cardId, error })
+      logger.error('Error optimizing card images', error as Error, { cardId })
       return imageUrls // Fallback to original URLs
     }
   }
@@ -562,25 +562,25 @@ export class EnhancedCardDataService {
     const optimizedImages = await this.optimizeCardImages(cardId, scryfallCard.image_uris || {})
     
     // Build enhanced card data
-    const enhancedCard: EnhancedCardData = {
+      const enhancedCard: EnhancedCardData = {
       cardId: scryfallCard.id,
       name: scryfallCard.name,
-      manaCost: scryfallCard.mana_cost || '',
+        manaCost: scryfallCard.mana_cost || undefined,
       cmc: scryfallCard.cmc || 0,
       typeLine: scryfallCard.type_line,
-      oracleText: scryfallCard.oracle_text || '',
-      power: scryfallCard.power,
-      toughness: scryfallCard.toughness,
+        oracleText: scryfallCard.oracle_text || undefined,
+        power: scryfallCard.power || undefined,
+        toughness: scryfallCard.toughness || undefined,
       colors: scryfallCard.colors || [],
       colorIdentity: scryfallCard.color_identity || [],
       legalities: scryfallCard.legalities || {},
       rulings: await this.getRulings(cardId),
       printings: await this.getPrintings(cardId),
       relatedCards: synergyData.relatedCards,
-      edhrecRank: communityData.edhrecRank,
+        edhrecRank: communityData.edhrecRank,
       popularityScore: communityData.popularityScore,
       synergyTags: synergyData.tags,
-      currentPrice: marketData.currentPrice,
+        currentPrice: marketData.currentPrice || undefined,
       priceHistory: marketData.priceHistory,
       availability: marketData.availability,
       imageUrls: optimizedImages,
@@ -602,7 +602,7 @@ export class EnhancedCardDataService {
         popularityScore: Math.random() * 100
       }
     } catch (error) {
-      logger.warn('Failed to get community data', { cardId, error })
+      logger.warn('Failed to get community data', { cardId, error: (error as Error).message })
       return { popularityScore: 0 }
     }
   }
@@ -625,7 +625,7 @@ export class EnhancedCardDataService {
         }
       }
     } catch (error) {
-      logger.warn('Failed to get market data', { cardId, error })
+      logger.warn('Failed to get market data', { cardId, error: (error as Error).message })
       return {
         priceHistory: [],
         availability: {
@@ -654,7 +654,7 @@ export class EnhancedCardDataService {
         tags: []
       }
     } catch (error) {
-      logger.warn('Failed to get synergy data', { cardId, error })
+      logger.warn('Failed to get synergy data', { cardId, error: (error as Error).message })
       return { relatedCards: [], tags: [] }
     }
   }
@@ -675,7 +675,7 @@ export class EnhancedCardDataService {
         source: ruling.source
       }))
     } catch (error) {
-      logger.warn('Failed to get rulings', { cardId, error })
+      logger.warn('Failed to get rulings', { cardId, error: (error as Error).message })
       return []
     }
   }
@@ -702,7 +702,7 @@ export class EnhancedCardDataService {
         imageUrls: printing.image_uris || {}
       }))
     } catch (error) {
-      logger.warn('Failed to get printings', { cardId, error })
+      logger.warn('Failed to get printings', { cardId, error: (error as Error).message })
       return []
     }
   }
@@ -740,7 +740,7 @@ export class EnhancedCardDataService {
         lastUpdated: cached.lastUpdated.toISOString()
       }
     } catch (error) {
-      logger.error('Error getting cached card data', { cardId, error })
+      logger.error('Error getting cached card data', error as Error, { cardId })
       return null
     }
   }
@@ -788,7 +788,7 @@ export class EnhancedCardDataService {
       }
       
     } catch (error) {
-      logger.error('Error getting batch cached card data', { cardIds: cardIds.length, error })
+      logger.error('Error getting batch cached card data', error as Error, { cardIds: cardIds.length })
     }
     
     return results
@@ -858,7 +858,7 @@ export class EnhancedCardDataService {
       await this.trackCardDataVersion(cardData.cardId, existing, cardData)
       
     } catch (error) {
-      logger.error('Error caching card data', { cardId: cardData.cardId, error })
+      logger.error('Error caching card data', error as Error, { cardId: cardData.cardId })
     }
   }
 

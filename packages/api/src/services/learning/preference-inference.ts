@@ -277,7 +277,7 @@ export class PreferenceInferenceEngine {
 
     for (const event of budgetEvents) {
       if (event.eventType === 'suggestion_feedback') {
-        if (event.context.price && event.outcome === 'rejected' && event.reason?.includes('expensive')) {
+        if (event.context.price && event.outcome === 'rejected' && (event.context.reason || (event as any).reason)?.includes('expensive')) {
           sensitivityScore += 1
           eventCount++
         } else if (event.context.price && event.outcome === 'accepted') {
@@ -373,7 +373,7 @@ export class PreferenceInferenceEngine {
       where: { userId }
     })
 
-    return userData?.styleProfile as UserStyleProfile | null
+    return (userData?.styleProfile as unknown as UserStyleProfile) || null
   }
 
   /**
@@ -383,13 +383,13 @@ export class PreferenceInferenceEngine {
     await db.userLearningData.upsert({
       where: { userId: profile.userId },
       update: {
-        styleProfile: profile,
+        styleProfile: profile as unknown as import('@prisma/client').Prisma.JsonObject,
         lastUpdated: new Date()
       },
       create: {
         id: crypto.randomUUID(),
         userId: profile.userId,
-        styleProfile: profile,
+        styleProfile: profile as unknown as import('@prisma/client').Prisma.JsonObject,
         deckPreferences: {},
         learningEvents: [],
         suggestionFeedback: [],

@@ -5,7 +5,7 @@ import { PriceTrackingService } from '../price-tracking'
 import { MetaAnalysisService } from '../meta-analysis'
 import { ProactiveSuggestionsService } from './proactive-suggestions'
 
-interface DeckPortfolio {
+export interface DeckPortfolio {
   userId: string
   decks: PortfolioDeck[]
   totalValue: number
@@ -64,7 +64,7 @@ interface BudgetAllocation {
   emergencyFund: number
 }
 
-interface OptimizationOpportunity {
+export interface OptimizationOpportunity {
   type: 'card_sharing' | 'budget_reallocation' | 'deck_consolidation' | 'strategy_diversification'
   priority: 'high' | 'medium' | 'low'
   title: string
@@ -96,7 +96,7 @@ interface DeckSynergy {
   recommendations: string[]
 }
 
-interface PortfolioMetrics {
+export interface PortfolioMetrics {
   totalDecks: number
   totalCards: number
   totalValue: number

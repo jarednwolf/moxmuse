@@ -118,7 +118,7 @@ export class ReliableAIService {
   }
 
   constructor(config: Partial<ReliableAIConfig> = {}) {
-    const mergedConfig = this.mergeConfig(config)
+    const mergedConfig = this.mergeConfig(config as ReliableAIConfig)
     
     console.log('🔧 Initializing Reliable AI Service...')
     
@@ -129,11 +129,11 @@ export class ReliableAIService {
     })
 
     // Initialize reliability services
-    this.retryService = new RetryService(mergedConfig.retry)
-    this.circuitBreakerService = new CircuitBreakerService('OpenAI', mergedConfig.circuitBreaker)
-    this.timeoutService = new TimeoutService(mergedConfig.timeout)
-    this.queueService = new RequestQueueService('AI-Operations', mergedConfig.queue)
-    this.monitoringService = new MonitoringService('ReliableAI', mergedConfig.monitoring)
+    this.retryService = new RetryService(mergedConfig.retry as RetryConfig)
+    this.circuitBreakerService = new CircuitBreakerService('OpenAI', mergedConfig.circuitBreaker as CircuitBreakerConfig)
+    this.timeoutService = new TimeoutService(mergedConfig.timeout as TimeoutConfig)
+    this.queueService = new RequestQueueService('AI-Operations', mergedConfig.queue as QueueConfig)
+    this.monitoringService = new MonitoringService('ReliableAI', mergedConfig.monitoring as MonitoringConfig)
 
     console.log('✅ Reliable AI Service initialized successfully')
   }

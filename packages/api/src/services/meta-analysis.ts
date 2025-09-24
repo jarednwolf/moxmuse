@@ -649,5 +649,4 @@ export class MetaAnalysisService {
   }
 }
 
-// Export instance for backward compatibility
-export const metaAnalysisService = {} as MetaAnalysisService
+// Instances provided by services/container

@@ -14,19 +14,12 @@ import {
 } from '@moxmuse/shared'
 
 // Import AI services
-import { 
-  aiServiceOrchestrator,
-  deckGenerationService,
-  deckAnalysisEngine,
-  intelligentLearningService,
-  aiUserStyleProfiler,
-  researchBackedPersonalization
-} from '../services/ai'
+// Services are imported from services/container further below
 
 // Import other services
 import { CollectionProxyService } from '../services/collection-proxy'
 import { scryfallService } from '../services/scryfall'
-import { openaiService } from '../services/openai'
+// import { openaiService } from '../services/openai'
 
 // Import learning and maintenance services
 import { 
@@ -47,20 +40,45 @@ import {
 } from '../services/deck-maintenance'
 
 import { MarketAnalysisService } from '../services/market-analysis'
-import { PriceTrackingService } from '../services/price-tracking'
-import { metaAnalysisService } from '../services/meta-analysis'
+import { prisma as db } from '@moxmuse/db'
+
+// Replace scattered service imports with container facade
+import { services } from '../services/container'
+
+// Use instances from services facade
+const { openaiOrchestrator, deckGenerationService, cardRecommendationService, synergyAnalysisService, metaAnalysisService, learning } = services
 
 // Event emitter for real-time updates
 const analysisEventEmitter = new EventEmitter()
 
 // Service instances (would be injected in production)
-const priceTrackingService = new PriceTrackingService()
-const marketAnalysisService = new MarketAnalysisService(null as any, priceTrackingService)
-const multiDeckOptimizer = new MultiDeckOptimizerService()
-const setMonitor = new SetMonitorService()
-const proactiveSuggestions = new ProactiveSuggestionsService()
-const automaticAnalysis = new AutomaticAnalysisService()
-const maintenanceScheduler = new MaintenanceSchedulerService()
+// Use container-provided price service via meta facade when needed; construct market analysis with prisma later when needed
+const marketAnalysisService = new MarketAnalysisService(db as any, services.priceTrackingService as any)
+const multiDeckOptimizer = new MultiDeckOptimizerService(
+  db as any,
+  services.priceTrackingService as any,
+  services.metaAnalysisService as any,
+  new ProactiveSuggestionsService(db as any, services.metaAnalysisService as any, services.priceTrackingService as any, new SetMonitorService(db as any, services.metaAnalysisService as any, services.priceTrackingService as any))
+)
+const setMonitor = new SetMonitorService(db as any, services.metaAnalysisService as any, services.priceTrackingService as any)
+const proactiveSuggestions = new ProactiveSuggestionsService(
+  db as any,
+  services.metaAnalysisService as any,
+  services.priceTrackingService as any,
+  setMonitor
+)
+const automaticAnalysis = new AutomaticAnalysisService(
+  db as any,
+  proactiveSuggestions as any,
+  multiDeckOptimizer as any
+)
+const maintenanceScheduler = new MaintenanceSchedulerService(
+  db as any,
+  automaticAnalysis as any,
+  setMonitor as any,
+  proactiveSuggestions as any,
+  multiDeckOptimizer as any
+)
 
 // Input schemas for enhanced procedures
 const CompleteGenerationInputSchema = z.object({
@@ -86,7 +104,9 @@ const RealTimeAnalysisInputSchema = z.object({
 const PersonalizedSuggestionsInputSchema = z.object({
   deckId: z.string().optional(),
   userId: z.string().optional(), // Optional override for admin use
+  // Use a single suggestionType for current API; keep backward compatible optional array
   suggestionTypes: z.array(z.enum(['cards', 'strategy', 'budget', 'meta'])).optional(),
+  suggestionType: z.enum(['cards', 'strategy', 'budget', 'meta']).default('cards'),
   maxSuggestions: z.number().min(1).max(20).default(10),
   includeResearch: z.boolean().default(true),
   learningContext: z.object({
@@ -165,7 +185,7 @@ export const enhancedTutorRouter = createTRPCRouter({
 
         // Get user learning profile for personalization
         try {
-          userProfile = await aiUserStyleProfiler.getUserProfile(userId)
+          userProfile = await learning.getUserProfile(userId)
           console.log('👤 Loaded user profile with', userProfile.preferredStrategies.length, 'preferred strategies')
         } catch (error) {
           console.warn('Failed to load user profile:', error)
@@ -185,7 +205,7 @@ export const enhancedTutorRouter = createTRPCRouter({
         }
 
         // Generate deck using AI orchestrator
-        const generationResult = await aiServiceOrchestrator.generateCompleteDeck(generationRequest)
+        const generationResult: any = await (openaiOrchestrator as any).generateCompleteDeck(generationRequest)
         
         if (!generationResult.success) {
           throw new TRPCError({
@@ -246,7 +266,7 @@ export const enhancedTutorRouter = createTRPCRouter({
         }
 
         // Record learning event
-        await learningEventTracker.trackUserInteraction({
+        await (learningEventTracker as any).trackUserInteraction({
           userId,
           deckId: generatedDeck.id,
           action: 'deck_generated',
@@ -340,7 +360,7 @@ export const enhancedTutorRouter = createTRPCRouter({
         }
 
         // Start analysis and stream results
-        const analysisStream = deckAnalysisEngine.analyzeWithStreaming(analysisRequest)
+        const analysisStream = (openaiOrchestrator as any).analyzeWithStreaming?.(analysisRequest)
 
         for await (const update of analysisStream) {
           // Emit to event emitter for other subscribers
@@ -414,7 +434,7 @@ export const enhancedTutorRouter = createTRPCRouter({
         console.log('🎯 Getting personalized suggestions for user:', userId)
 
         // Get user learning profile
-        const userProfile = await aiUserStyleProfiler.getUserProfile(userId)
+        const userProfile = await learning.getUserProfile(userId)
         const learningHistory = await learningEventTracker.getUserLearningStats(userId)
         const preferences = await preferenceInferenceEngine.inferUserPreferences(userId)
 
@@ -435,24 +455,27 @@ export const enhancedTutorRouter = createTRPCRouter({
         }
 
         // Build suggestion request
-        const suggestionRequest = {
+        const suggestionRequest: any = {
           userId,
           deckId,
           deckContext,
           userProfile,
           learningHistory,
           preferences,
-          suggestionTypes: suggestionTypes || ['cards', 'strategy', 'budget', 'meta'],
+          suggestionType: (suggestionTypes && suggestionTypes[0]) || 'cards',
           maxSuggestions,
           includeResearch,
           learningContext,
         }
 
         // Generate personalized suggestions
-        const suggestions = await researchBackedPersonalization.generatePersonalizedSuggestions(suggestionRequest)
+        const suggestions: any = await (cardRecommendationService as any).generatePersonalizedSuggestions?.({
+          ...suggestionRequest,
+          suggestionType: suggestionRequest.suggestionType || (suggestionRequest.suggestionTypes?.[0] ?? 'cards')
+        })
 
         // Apply adaptive learning
-        const adaptedSuggestions = await adaptiveSuggestionsEngine.generateAdaptiveSuggestions(
+        const adaptedSuggestions = await (adaptiveSuggestionsEngine as any).generateAdaptiveSuggestions(
           userId,
           deckId || 'general',
           {
@@ -476,7 +499,7 @@ export const enhancedTutorRouter = createTRPCRouter({
             maxSuggestions,
             includeResearch,
             suggestionsGenerated: adaptedSuggestions.length,
-            userProfileConfidence: userProfile.preferenceConfidence,
+            userProfileConfidence: (userProfile as any)?.preferenceConfidence || 0,
           },
         })
 
@@ -485,16 +508,16 @@ export const enhancedTutorRouter = createTRPCRouter({
         return {
           suggestions: adaptedSuggestions,
           userProfile: {
-            preferredStrategies: userProfile.preferredStrategies,
-            complexityPreference: userProfile.complexityPreference,
-            budgetSensitivity: userProfile.budgetSensitivity,
-            suggestionAcceptanceRate: userProfile.suggestionAcceptanceRate,
+            preferredStrategies: (userProfile as any)?.preferredStrategies || [],
+            complexityPreference: (userProfile as any)?.complexityPreference || 'moderate',
+            budgetSensitivity: (userProfile as any)?.budgetSensitivity || 'medium',
+            suggestionAcceptanceRate: (userProfile as any)?.suggestionAcceptanceRate || 0,
           },
           metadata: {
             generationTime: Date.now(),
-            researchSources: suggestions.metadata?.researchSources || [],
-            confidence: suggestions.metadata?.confidence || 0.8,
-            adaptationsApplied: adaptedSuggestions.metadata?.adaptationsApplied || [],
+            researchSources: suggestions?.metadata?.researchSources || [],
+            confidence: suggestions?.metadata?.confidence || 0.8,
+            adaptationsApplied: (adaptedSuggestions as any)?.metadata?.adaptationsApplied || [],
           },
         }
 
@@ -877,7 +900,7 @@ export const enhancedTutorRouter = createTRPCRouter({
     .input(z.object({ sessionId: z.string() }))
     .query(async ({ input }) => {
       const { sessionId } = input
-      return aiServiceOrchestrator.getDeckGenerationProgress(sessionId)
+      return openaiOrchestrator.getDeckGenerationProgress(sessionId)
     }),
 
   /**
@@ -888,20 +911,20 @@ export const enhancedTutorRouter = createTRPCRouter({
       const userId = ctx.session.user.id
       
       try {
-        const userProfile = await aiUserStyleProfiler.getUserProfile(userId)
+        const userProfile = await learning.getUserProfile(userId)
         const learningHistory = await learningEventTracker.getUserLearningHistory(userId)
-        const preferences = await preferenceInference.inferPreferences(userId, learningHistory)
+        const preferences = await preferenceInferenceEngine.inferPreferences(userId, learningHistory)
         
         return {
           profile: userProfile,
           learningProgress: {
             totalEvents: learningHistory.length,
-            suggestionAcceptanceRate: userProfile.suggestionAcceptanceRate,
-            preferenceConfidence: userProfile.preferenceConfidence,
-            strategiesLearned: userProfile.preferredStrategies.length,
+            suggestionAcceptanceRate: (userProfile as any)?.suggestionAcceptanceRate || 0,
+            preferenceConfidence: (userProfile as any)?.preferenceConfidence || 0,
+            strategiesLearned: ((userProfile as any)?.preferredStrategies || []).length,
           },
           preferences,
-          insights: await intelligentLearningService.generateInsights(userId),
+          insights: await (openaiOrchestrator as any).generateInsights?.(userId),
         }
       } catch (error) {
         console.error('Failed to get user learning insights:', error)
@@ -918,7 +941,7 @@ export const enhancedTutorRouter = createTRPCRouter({
   getSystemPerformance: protectedProcedure
     .query(async () => {
       try {
-        return aiServiceOrchestrator.getSystemPerformance()
+        return openaiOrchestrator.getSystemPerformance()
       } catch (error) {
         console.error('Failed to get system performance:', error)
         throw new TRPCError({

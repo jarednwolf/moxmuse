@@ -607,7 +607,7 @@ export class SmartNotificationEngine {
       where: { userId }
     })
 
-    return userData?.styleProfile as UserStyleProfile || {
+    return (userData?.styleProfile as unknown as UserStyleProfile) || {
       userId,
       preferredStrategies: [],
       avoidedStrategies: [],

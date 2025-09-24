@@ -37,11 +37,11 @@ export class SynergyAnalysisService {
           { role: 'user', content: userPrompt }
         ],
         {
-          operationType: 'synergy-analysis',
           priority: 6,
           maxTokens: 2000,
           temperature: 0.3,
           metadata: {
+            operationType: 'synergy-analysis',
             cardCount: cards.length
           }
         }
@@ -116,11 +116,11 @@ export class SynergyAnalysisService {
           { role: 'user', content: userPrompt }
         ],
         {
-          operationType: 'strategy-analysis',
           priority: 6,
           maxTokens: 2500,
           temperature: 0.4,
           metadata: {
+            operationType: 'strategy-analysis',
             deckName: deck.name,
             commander: deck.commander,
             strategy: deck.strategy.name
@@ -190,11 +190,11 @@ export class SynergyAnalysisService {
           { role: 'user', content: userPrompt }
         ],
         {
-          operationType: 'synergy-analysis',
           priority: 6,
           maxTokens: 2000,
           temperature: 0.3,
           metadata: {
+            operationType: 'synergy-analysis',
             cardCount: cardDetails.length
           }
         }

@@ -44,7 +44,7 @@ export const cardSearchRouter = createTRPCRouter({
   saveSearch: protectedProcedure
     .input(SaveSearchInputSchema)
     .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session.user.id
+      const userId = (ctx.session as NonNullable<typeof ctx.session>).user.id
       
       return await cardSearchService.saveSearch(
         userId,
@@ -61,7 +61,7 @@ export const cardSearchRouter = createTRPCRouter({
    */
   getSavedSearches: protectedProcedure
     .query(async ({ ctx }) => {
-      const userId = ctx.session.user.id
+      const userId = (ctx.session as NonNullable<typeof ctx.session>).user.id
       return await cardSearchService.getSavedSearches(userId)
     }),
 
@@ -71,7 +71,7 @@ export const cardSearchRouter = createTRPCRouter({
   deleteSavedSearch: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session.user.id
+      const userId = (ctx.session as NonNullable<typeof ctx.session>).user.id
       
       // Verify ownership
       const savedSearch = await cardSearchService.getSavedSearches(userId)
@@ -174,7 +174,7 @@ export const cardSearchRouter = createTRPCRouter({
   getSearchHistory: protectedProcedure
     .input(z.object({ limit: z.number().optional() }))
     .query(async ({ input, ctx }) => {
-      const userId = ctx.session.user.id
+      const userId = (ctx.session as NonNullable<typeof ctx.session>).user.id
       return await cardSearchService.getSearchHistory(userId, input.limit || 50)
     }),
 
@@ -183,7 +183,7 @@ export const cardSearchRouter = createTRPCRouter({
    */
   clearSearchHistory: protectedProcedure
     .mutation(async ({ ctx }) => {
-      const userId = ctx.session.user.id
+      const userId = (ctx.session as NonNullable<typeof ctx.session>).user.id
       
       await prisma.searchHistory.deleteMany({
         where: { userId }
@@ -236,7 +236,7 @@ export const cardSearchRouter = createTRPCRouter({
     }))
     .query(async ({ input, ctx }) => {
       // TODO: Add admin check
-      const userId = ctx.session.user.id
+      const userId = (ctx.session as NonNullable<typeof ctx.session>).user.id
       
       const whereClause: any = { userId }
       
@@ -277,7 +277,7 @@ export const cardSearchRouter = createTRPCRouter({
       position: z.number()
     }))
     .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session.user.id
+      const userId = (ctx.session as NonNullable<typeof ctx.session>).user.id
       
       // Record the click for analytics
       await prisma.cardClick.create({

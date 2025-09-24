@@ -18,13 +18,14 @@ export const cardSynergyRouter = createTRPCRouter({
   analyzeSynergies: protectedProcedure
     .input(SynergyAnalysisRequestSchema)
     .mutation(async ({ input, ctx }) => {
-      console.log(`🔗 Analyzing synergies for user ${ctx.session.user.id}`)
+      const session = ctx.session as NonNullable<typeof ctx.session>
+      console.log(`🔗 Analyzing synergies for user ${session.user.id}`)
 
       try {
         // Add user context to the request
         const requestWithUser = {
           ...input,
-          userId: ctx.session.user.id,
+          userId: session.user.id,
         }
 
         // Perform comprehensive synergy analysis
@@ -109,13 +110,14 @@ export const cardSynergyRouter = createTRPCRouter({
       format: z.enum(['commander', 'standard', 'modern', 'legacy']).default('commander'),
     }))
     .mutation(async ({ input, ctx }) => {
-      console.log(`⚡ Detecting combos for user ${ctx.session.user.id}`)
+      const session = ctx.session as NonNullable<typeof ctx.session>
+      console.log(`⚡ Detecting combos for user ${session.user.id}`)
 
       try {
         const request = {
           ...input,
           analysisDepth: 'deep' as const,
-          userId: ctx.session.user.id,
+          userId: session.user.id,
         }
 
         const analysis = await cardSynergyDetectionService.analyzeSynergies(request)
@@ -153,14 +155,15 @@ export const cardSynergyRouter = createTRPCRouter({
       }).optional(),
     }))
     .mutation(async ({ input, ctx }) => {
-      console.log(`📈 Getting upgrade recommendations for user ${ctx.session.user.id}`)
+      const session = ctx.session as NonNullable<typeof ctx.session>
+      console.log(`📈 Getting upgrade recommendations for user ${session.user.id}`)
 
       try {
         const request = {
           ...input,
           format: 'commander' as const,
           analysisDepth: 'moderate' as const,
-          userId: ctx.session.user.id,
+          userId: session.user.id,
         }
 
         const analysis = await cardSynergyDetectionService.analyzeSynergies(request)
@@ -235,7 +238,7 @@ export const cardSynergyRouter = createTRPCRouter({
       deckId: z.string(),
       analysisVersion: z.number().optional(),
     }))
-    .query(async ({ input, ctx }) => {
+    .query(async ({ input }) => {
       console.log(`📋 Getting cached synergy analysis for deck ${input.deckId}`)
 
       try {
@@ -287,13 +290,14 @@ export const cardSynergyRouter = createTRPCRouter({
       context: z.record(z.any()).optional(),
     }))
     .mutation(async ({ input, ctx }) => {
-      console.log(`📝 Recording synergy feedback from user ${ctx.session.user.id}`)
+      const session = ctx.session as NonNullable<typeof ctx.session>
+      console.log(`📝 Recording synergy feedback from user ${session.user.id}`)
 
       try {
         if ((prisma as any)?.suggestionFeedback?.create) {
           await (prisma as any).suggestionFeedback.create({
           data: {
-            userId: ctx.session.user.id,
+            userId: session.user.id,
             suggestionId: input.suggestionId,
             deckId: input.deckId,
             feedback: input.feedback,
@@ -320,14 +324,15 @@ export const cardSynergyRouter = createTRPCRouter({
    */
   getSynergyStats: protectedProcedure
     .query(async ({ ctx }) => {
-      console.log(`📊 Getting synergy statistics for user ${ctx.session.user.id}`)
+      const session = ctx.session as NonNullable<typeof ctx.session>
+      console.log(`📊 Getting synergy statistics for user ${session.user.id}`)
 
       try {
         // Get feedback statistics
         const feedbackStats = (prisma as any)?.suggestionFeedback?.groupBy ? await (prisma as any).suggestionFeedback.groupBy({
           by: ['feedback'],
           where: {
-            userId: ctx.session.user.id,
+            userId: session.user.id,
           },
           _count: {
             feedback: true,
@@ -338,7 +343,7 @@ export const cardSynergyRouter = createTRPCRouter({
         const recentAnalyses = (prisma as any)?.aIAnalysisCache?.count ? await (prisma as any).aIAnalysisCache.count({
           where: {
             deck: {
-              userId: ctx.session.user.id,
+              userId: session.user.id,
             },
             createdAt: {
               gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Last 30 days

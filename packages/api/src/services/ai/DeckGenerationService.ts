@@ -90,7 +90,7 @@ export class DeckGenerationService {
           { role: 'user', content: prompt }
         ],
         {
-          operationType: 'deck-generation',
+          // operationType kept only in metadata for logging
           userId: constraints?.userId,
           sessionId: constraints?.sessionId,
           priority: 8, // High priority for deck generation

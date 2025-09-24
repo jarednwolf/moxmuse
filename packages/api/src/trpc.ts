@@ -340,6 +340,7 @@ const validateInput = t.middleware(async ({ ctx, next, input }) => {
   return next({ ctx })
 })
 
+// Protected procedure narrows ctx so session/user are non-null for downstream
 export const protectedProcedure = t.procedure
   .use(trackingMiddleware)
   .use(rateLimitGeneral)

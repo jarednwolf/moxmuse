@@ -5,7 +5,7 @@ import { scryfallService } from '../scryfall'
 import { MetaAnalysisService } from '../meta-analysis'
 import { PriceTrackingService } from '../price-tracking'
 
-interface SetRelease {
+export interface SetRelease {
   setCode: string
   setName: string
   releaseDate: Date
@@ -14,7 +14,7 @@ interface SetRelease {
   setType: 'core' | 'expansion' | 'masters' | 'commander' | 'supplemental'
 }
 
-interface NewCardAnalysis {
+export interface NewCardAnalysis {
   cardId: string
   cardName: string
   setCode: string
@@ -35,7 +35,7 @@ interface DeckRelevance {
   reasoning: string
 }
 
-interface SetImpactAnalysis {
+export interface SetImpactAnalysis {
   setCode: string
   setName: string
   releaseDate: Date

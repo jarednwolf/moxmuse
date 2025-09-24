@@ -67,8 +67,9 @@ export class CardSearchService {
       // Apply pagination
       const paginatedCards = this.applyPagination(sortedCards, query)
       
-      // Generate search suggestions
-      const suggestions = await this.generateSearchSuggestions(query, paginatedCards)
+      // Generate search suggestions (map to simple strings if consumer expects string[])
+      const suggestionObjs = await this.generateSearchSuggestions(query, paginatedCards)
+      const suggestions = suggestionObjs.map(s => s.display || s.value)
       
       const results: SearchResults = {
         cards: paginatedCards,

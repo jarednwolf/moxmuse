@@ -91,7 +91,7 @@ export class StrategyEvolutionDetector {
       )
 
       try {
-        const analysis = await openaiService.analyzeStrategyEvolution(analysisPrompt)
+        const analysis = await (openaiService as any).analyzeStrategyEvolution?.(analysisPrompt)
         
         if (analysis.isMetaAdaptation && analysis.confidence > 0.6) {
           evolutions.push({
@@ -268,7 +268,7 @@ export class StrategyEvolutionDetector {
       if (group.length < 2) continue
 
       // Analyze potential synergies
-      const cards = group.map(e => e.cardId).filter(Boolean)
+      const cards = group.map(e => e.cardId).filter((c): c is string => Boolean(c))
       const synergyAnalysis = await this.analyzePotentialSynergy(cards, currentState)
 
       if (synergyAnalysis.hasSynergy && synergyAnalysis.confidence > 0.7) {
@@ -376,7 +376,7 @@ export class StrategyEvolutionDetector {
     await learningEventTracker.trackStrategyEvolution(
       userId,
       evolution.deckId,
-      evolution.evolutionType,
+      evolution.evolutionType as 'meta_adaptation' | 'power_level_change' | 'budget_adjustment' | 'synergy_discovery',
       {
         previousStrategy: evolution.previousState,
         newStrategy: evolution.newState,
@@ -786,7 +786,7 @@ Return as JSON with: isMetaAdaptation, previousStrategy, newStrategy, previousMe
     }, {} as Record<string, number>)
 
     const mostCommonTriggers = Object.entries(triggerCounts)
-      .sort(([, a], [, b]) => b - a)
+      .sort(([, a], [, b]) => (b as number) - (a as number))
       .slice(0, 5)
       .map(([trigger]) => trigger)
 

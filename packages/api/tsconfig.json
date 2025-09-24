@@ -10,8 +10,8 @@
     "noEmit": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": false,
-    "strictNullChecks": false,
+    "strict": true,
+    "strictNullChecks": true,
     "skipLibCheck": true,
     "types": ["vitest/globals", "node"],
     "downlevelIteration": true

@@ -6,7 +6,7 @@ import { SetMonitorService } from './set-monitor'
 import { ProactiveSuggestionsService } from './proactive-suggestions'
 import { MultiDeckOptimizerService } from './multi-deck-optimizer'
 
-interface ScheduledTask {
+export interface ScheduledTask {
   id: string
   type: 'deck_analysis' | 'portfolio_optimization' | 'set_monitoring' | 'price_updates' | 'meta_analysis'
   userId?: string
@@ -22,7 +22,7 @@ interface ScheduledTask {
   updatedAt: Date
 }
 
-interface MaintenanceJob {
+export interface MaintenanceJob {
   id: string
   taskId: string
   status: 'pending' | 'running' | 'completed' | 'failed'
@@ -45,7 +45,7 @@ interface SchedulerConfiguration {
   }
 }
 
-interface MaintenanceReport {
+export interface MaintenanceReport {
   period: 'daily' | 'weekly' | 'monthly'
   startDate: Date
   endDate: Date

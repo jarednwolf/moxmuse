@@ -53,7 +53,7 @@ export class CardRecommendationService {
           { role: 'user', content: prompt }
         ],
         {
-          operationType: 'card-recommendation',
+          // operationType kept only in metadata for logging
           priority: 7,
           maxTokens: 1000,
           temperature: 0.7,
@@ -242,7 +242,7 @@ export class CardRecommendationService {
           { role: 'user', content: prompt }
         ],
         {
-          operationType: 'card-recommendation',
+          // operationType kept only in metadata for logging
           priority: 6,
           maxTokens: 1000,
           temperature: 0.7,
@@ -356,7 +356,7 @@ export class CardRecommendationService {
           { role: 'user', content: prompt }
         ],
         {
-          operationType: 'card-recommendation',
+          // operationType kept only in metadata for logging
           priority: 6,
           maxTokens: 1500,
           temperature: 0.7,

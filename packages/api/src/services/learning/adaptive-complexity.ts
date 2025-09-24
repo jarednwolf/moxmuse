@@ -151,7 +151,7 @@ export class AdaptiveComplexityEngine {
     const evolutionEvents = strategyEvents.filter(e => e.eventType === 'strategy_evolution')
     if (evolutionEvents.length > 0) {
       const successfulEvolutions = evolutionEvents.filter(e => 
-        e.outcome === 'successful' || e.confidence > 0.7
+        e.outcome === 'successful' || ((e as any).confidence || 0) > 0.7
       )
       
       skillScore += (successfulEvolutions.length / evolutionEvents.length) * 0.4
@@ -221,7 +221,7 @@ export class AdaptiveComplexityEngine {
     )
     
     if (learningEvents.length > 0) {
-      const competitiveRatio = competitiveEvents.length / learningEvents.length
+      const competitiveRatio = competitiveEvents.length / Math.max(learningEvents.length, 1)
       skillScore += Math.min(competitiveRatio * 2, 0.3) // Max 0.3 for high competitive engagement
       assessments++
     }
@@ -629,7 +629,7 @@ export class AdaptiveComplexityEngine {
       where: { userId }
     })
 
-    return userData?.styleProfile as UserStyleProfile || null
+    return (userData?.styleProfile as unknown as UserStyleProfile) || null
   }
 
   /**
@@ -641,8 +641,8 @@ export class AdaptiveComplexityEngine {
         where: { userId: assessment.userId },
         update: {
           crossDeckInsights: {
-            adaptiveComplexity: assessment
-          },
+            adaptiveComplexity: assessment as unknown as import('@prisma/client').Prisma.JsonObject
+          } as unknown as import('@prisma/client').Prisma.JsonObject,
           lastUpdated: new Date()
         },
         create: {
@@ -654,8 +654,8 @@ export class AdaptiveComplexityEngine {
           suggestionFeedback: [],
           deckRelationships: {},
           crossDeckInsights: {
-            adaptiveComplexity: assessment
-          },
+            adaptiveComplexity: assessment as unknown as import('@prisma/client').Prisma.JsonObject
+          } as unknown as import('@prisma/client').Prisma.JsonObject,
           lastUpdated: new Date()
         }
       })

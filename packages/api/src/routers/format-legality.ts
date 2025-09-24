@@ -76,11 +76,10 @@ export const formatLegalityRouter = createTRPCRouter({
           hasSideboard: !!input.sideboard
         })
 
-        const result = await formatLegalityValidator.validateDeck(
-          input.cards,
-          input.format,
-          input.sideboard
-        )
+        // Ensure required shape { cardId: string, quantity: number }
+        const main = input.cards.map(c => ({ cardId: c.cardId, quantity: c.quantity, category: c.category }))
+        const side = input.sideboard?.map(c => ({ cardId: c.cardId, quantity: c.quantity }))
+        const result = await formatLegalityValidator.validateDeck(main, input.format, side)
 
         logger.info('Deck validation completed', {
           format: input.format,
@@ -205,9 +204,10 @@ export const formatLegalityRouter = createTRPCRouter({
   updateBannedLists: protectedProcedure
     .mutation(async ({ ctx }) => {
       try {
+        const session = ctx.session as NonNullable<typeof ctx.session>
         // Check if user has admin permissions
         // This would integrate with your auth system
-        const isAdmin = await checkAdminPermissions(ctx.session.user.id)
+        const isAdmin = await checkAdminPermissions(session.user.id)
         if (!isAdmin) {
           throw new Error('Insufficient permissions')
         }
@@ -215,7 +215,7 @@ export const formatLegalityRouter = createTRPCRouter({
         const result = await formatLegalityValidator.updateBannedLists()
         
         logger.info('Banned lists updated', {
-          userId: ctx.session.user.id,
+          userId: session.user.id,
           updatedFormats: result.updatedFormats.length,
           errors: result.errors.length
         })
@@ -248,8 +248,9 @@ export const formatLegalityRouter = createTRPCRouter({
     .input(CreateCustomFormatInputSchema)
     .mutation(async ({ input, ctx }) => {
       try {
+        const session = ctx.session as NonNullable<typeof ctx.session>
         logger.info('Creating custom format', {
-          userId: ctx.session.user.id,
+          userId: session.user.id,
           formatName: input.name
         })
 
@@ -266,7 +267,7 @@ export const formatLegalityRouter = createTRPCRouter({
         )
 
         logger.info('Custom format created', {
-          userId: ctx.session.user.id,
+          userId: session.user.id,
           formatName: input.name
         })
 

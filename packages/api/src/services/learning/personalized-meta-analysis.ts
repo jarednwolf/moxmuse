@@ -5,7 +5,8 @@ import type {
   LearningEvent
 } from '../../types/learning'
 import { learningEventTracker } from './learning-event-tracker'
-import { metaAnalysisService } from '../meta-analysis'
+import { services } from '../container'
+import { Prisma } from '@prisma/client'
 
 export class PersonalizedMetaAnalyzer {
   /**
@@ -16,7 +17,7 @@ export class PersonalizedMetaAnalyzer {
     const [userProfile, learningEvents, globalMeta] = await Promise.all([
       this.getUserProfile(userId),
       learningEventTracker.getUserLearningEvents(userId),
-      metaAnalysisService.getCurrentMeta('commander')
+      services.metaAnalysisService.getCurrentMeta()
     ])
 
     // Analyze user's local meta from their game history
@@ -289,7 +290,7 @@ export class PersonalizedMetaAnalyzer {
     }
 
     // General meta adaptation suggestions
-    const risingDecks = Object.entries(localMeta.trends || {})
+    const risingDecks = Object.entries((localMeta as any).trends || {})
       .filter(([, trend]) => trend === 'rising')
       .map(([deck]) => deck)
 
@@ -560,8 +561,8 @@ export class PersonalizedMetaAnalyzer {
         where: { userId: analysis.userId },
         update: {
           crossDeckInsights: {
-            personalizedMetaAnalysis: analysis
-          },
+            personalizedMetaAnalysis: analysis as unknown as Prisma.JsonObject
+          } as unknown as Prisma.JsonObject,
           lastUpdated: new Date()
         },
         create: {
@@ -573,8 +574,8 @@ export class PersonalizedMetaAnalyzer {
           suggestionFeedback: [],
           deckRelationships: {},
           crossDeckInsights: {
-            personalizedMetaAnalysis: analysis
-          },
+            personalizedMetaAnalysis: analysis as unknown as Prisma.JsonObject
+          } as unknown as Prisma.JsonObject,
           lastUpdated: new Date()
         }
       })
@@ -591,7 +592,7 @@ export class PersonalizedMetaAnalyzer {
       where: { userId }
     })
 
-    return userData?.styleProfile as UserStyleProfile || {
+    return (userData?.styleProfile as unknown as UserStyleProfile) || {
       userId,
       preferredStrategies: [],
       avoidedStrategies: [],

@@ -487,5 +487,4 @@ export class PriceTrackingService {
   }
 }
 
-// Export instance for backward compatibility
-export const priceTrackingService = {} as PriceTrackingService
+// Note: instances are provided by services/container

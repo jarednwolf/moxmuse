@@ -5,7 +5,7 @@ import { MetaAnalysisService } from '../meta-analysis'
 import { PriceTrackingService } from '../price-tracking'
 import { SetMonitorService } from './set-monitor'
 
-interface ProactiveSuggestion {
+export interface ProactiveSuggestion {
   id: string
   deckId: string
   type: 'meta_adaptation' | 'price_opportunity' | 'new_card' | 'synergy_improvement' | 'budget_optimization'
@@ -22,7 +22,7 @@ interface ProactiveSuggestion {
   expiresAt?: Date
 }
 
-interface SuggestionAction {
+export interface SuggestionAction {
   type: 'add_card' | 'remove_card' | 'replace_card' | 'adjust_quantity' | 'monitor_price'
   cardId: string
   cardName: string
@@ -206,8 +206,8 @@ export class ProactiveSuggestionsService {
 
         // Check for reprint alerts
         const reprintAlerts = await this.priceService.detectReprintAlerts()
-        const relevantReprints = reprintAlerts.filter(alert => 
-          deck.cards.some(c => c.cardId === alert.cardId)
+      const relevantReprints = reprintAlerts.filter((alert: any) => 
+          deck.cards.some((c: any) => c.cardId === alert.cardId)
         )
 
         for (const reprint of relevantReprints) {
@@ -274,7 +274,7 @@ export class ProactiveSuggestionsService {
       const synergyAnalysis = await this.analyzeDeckSynergies(context.deckId)
       
       // Find weak synergy areas
-      const weakAreas = synergyAnalysis.categories.filter(cat => cat.strength < 0.6)
+      const weakAreas = synergyAnalysis.categories.filter((cat: any) => cat.strength < 0.6)
       
       for (const area of weakAreas) {
         const suggestion = await this.createSynergyImprovementSuggestion(area, context)
@@ -318,7 +318,7 @@ export class ProactiveSuggestionsService {
       if (!deck) return suggestions
 
       // Find expensive cards with cheaper alternatives
-      const expensiveCards = deck.cards.filter(card => {
+      const expensiveCards = deck.cards.filter((card: any) => {
         const priceData = context.priceData.get(card.cardId)
         return priceData && priceData.currentPrice > 20
       })
@@ -686,7 +686,7 @@ export class ProactiveSuggestionsService {
             confidence: suggestion.confidence,
             impact: suggestion.impact,
             timeframe: suggestion.timeframe,
-            actions: suggestion.actions,
+            actions: suggestion.actions as unknown as import('@prisma/client').Prisma.JsonObject,
             metadata: suggestion.metadata,
             expiresAt: suggestion.expiresAt
           }

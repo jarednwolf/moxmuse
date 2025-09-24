@@ -20,7 +20,7 @@ export const healthRouter = createTRPCRouter({
         unit: 'count',
         tags: {
           status: result.status,
-          includeNonCritical: input.includeNonCritical.toString(),
+          includeNonCritical: (input.includeNonCritical ?? true).toString(),
         },
       })
 
@@ -169,10 +169,10 @@ export const healthRouter = createTRPCRouter({
         uptime: healthResult.uptime,
         version: healthResult.version,
         services: {
-          total: healthResult.summary.total,
-          healthy: healthResult.summary.healthy,
-          degraded: healthResult.summary.degraded,
-          unhealthy: healthResult.summary.unhealthy,
+          total: healthResult.summary?.total ?? 0,
+          healthy: healthResult.summary?.healthy ?? 0,
+          degraded: healthResult.summary?.degraded ?? 0,
+          unhealthy: healthResult.summary?.unhealthy ?? 0,
         },
         performance: {
           responseTime: systemMetrics.responseTime,

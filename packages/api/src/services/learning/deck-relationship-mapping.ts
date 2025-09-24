@@ -287,7 +287,7 @@ export class DeckRelationshipMapper {
     const cards1 = new Set(deck1.cards?.map((c: any) => c.cardId) || [])
     const cards2 = new Set(deck2.cards?.map((c: any) => c.cardId) || [])
     
-    return [...cards1].filter(cardId => cards2.has(cardId))
+    return [...cards1].filter(cardId => cards2.has(cardId)).filter((c): c is string => typeof c === 'string')
   }
 
   /**
@@ -420,8 +420,8 @@ export class DeckRelationshipMapper {
       commander: deck.commander,
       strategy: deck.strategy,
       cards: deck.cards,
-      powerLevel: deck.analysis?.powerLevel,
-      synergies: deck.analysis?.synergies
+      powerLevel: (deck.analysis as any)?.powerLevel,
+      synergies: (deck.analysis as any)?.synergies
     }))
   }
 
@@ -652,7 +652,7 @@ export class DeckRelationshipMapper {
           deckRelationships: relationships.reduce((acc, rel) => {
             acc[`${rel.deckId1}-${rel.deckId2}`] = rel
             return acc
-          }, {} as Record<string, DeckRelationship>),
+          }, {} as Record<string, DeckRelationship>) as unknown as import('@prisma/client').Prisma.JsonObject,
           lastUpdated: new Date()
         },
         create: {
@@ -665,7 +665,7 @@ export class DeckRelationshipMapper {
           deckRelationships: relationships.reduce((acc, rel) => {
             acc[`${rel.deckId1}-${rel.deckId2}`] = rel
             return acc
-          }, {} as Record<string, DeckRelationship>),
+          }, {} as Record<string, DeckRelationship>) as unknown as import('@prisma/client').Prisma.JsonObject,
           crossDeckInsights: {},
           lastUpdated: new Date()
         }
