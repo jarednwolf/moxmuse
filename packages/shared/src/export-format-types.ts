@@ -452,6 +452,8 @@ export interface TemplateEngine {
 export interface TemplateOptions {
   escapeHtml?: boolean
   allowUnsafe?: boolean
+  // Avoid Function type for better safety
+  // eslint-disable-next-line @typescript-eslint/ban-types
   customHelpers?: Record<string, Function>
 }
 

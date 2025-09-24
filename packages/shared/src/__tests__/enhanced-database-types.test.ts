@@ -121,9 +121,9 @@ describe('Enhanced Database Types', () => {
         synergyStrength: 0.82,
         isAvailable: true,
         alternativeCards: [],
-        getPriceHistory: (days: number) => [],
-        getPopularityTrend: (days: number) => [],
-        getSynergyCards: (limit?: number) => []
+        getPriceHistory: (_days: number) => [],
+        getPopularityTrend: (_days: number) => [],
+        getSynergyCards: (_limit?: number) => []
       }
       
       expect(enhancedCard.priceDirection).toBe('up')

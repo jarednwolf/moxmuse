@@ -25,7 +25,6 @@ export type {
   DeckFolder,
   DeckTemplate,
   ImportJob,
-  ExportJob,
   DeckAnalytics,
   PublicDeck,
   UserProfile,
