@@ -22,11 +22,17 @@
     "bcryptjs": "^3.0.2"
   },
   "devDependencies": {
+    "@rushstack/eslint-patch": "^1.6.1",
+    "@typescript-eslint/eslint-plugin": "^7.16.0",
+    "@typescript-eslint/parser": "^7.16.0",
     "@types/node": "^20.10.5",
     "commander": "^11.1.0",
     "cron": "^3.1.6",
     "dotenv": "^17.2.0",
     "eslint": "^8.56.0",
+    "eslint-config-next": "14.0.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
     "prisma": "^5.7.1",
     "tsx": "^4.20.3",
     "typescript": "^5.3.3",
