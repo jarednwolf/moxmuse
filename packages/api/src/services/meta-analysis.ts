@@ -648,3 +648,6 @@ export class MetaAnalysisService {
     return diffHours < 2 // Cache valid for 2 hours
   }
 }
+
+// Export instance for backward compatibility
+export const metaAnalysisService = {} as MetaAnalysisService

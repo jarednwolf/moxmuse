@@ -9,7 +9,7 @@ import {
   type ComboDetection,
   type UpgradePath
 } from '../services/card-synergy-detection'
-import { db as prisma } from '@repo/db'
+import { db as prisma } from '@moxmuse/db'
 
 export const cardSynergyRouter = createTRPCRouter({
   /**

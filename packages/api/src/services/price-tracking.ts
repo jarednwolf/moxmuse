@@ -486,3 +486,6 @@ export class PriceTrackingService {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 }
+
+// Export instance for backward compatibility
+export const priceTrackingService = {} as PriceTrackingService
