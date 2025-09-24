@@ -23,7 +23,7 @@
     "test:watch": "vitest --config vitest.config.comprehensive.ts",
     "test:ci": "npm run test:comprehensive:run && npm run test:e2e",
     "test:runner": "node -r tsx/register src/__tests__/test-runner.ts",
-    "analyze": "echo 'No analyze script'"
+    "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
     "@moxmuse/api": "workspace:*",
