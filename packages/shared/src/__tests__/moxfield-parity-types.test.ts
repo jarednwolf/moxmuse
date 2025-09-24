@@ -3,14 +3,14 @@ import { describe, it, expect } from 'vitest'
 import {
   // Types
   DeckFolder,
-  DeckTemplate,
+  DeckTemplate as _DeckTemplate,
   EnhancedCardData,
   ImportJob,
-  ExportJob,
-  DeckAnalytics,
+  ExportJob as _ExportJob,
+  DeckAnalytics as _DeckAnalytics,
   PublicDeck,
-  UserProfile,
-  TrendingData,
+  UserProfile as _UserProfile,
+  TrendingData as _TrendingData,
   PerformanceMetric,
   CacheEntry
 } from '../index'
