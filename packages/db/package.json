@@ -10,7 +10,7 @@
     "db:migrate": "prisma migrate dev",
     "db:import-scryfall": "tsx scripts/import-scryfall-bulk.ts",
     "db:manage": "tsx scripts/manage-card-database.ts",
-    "lint": "eslint .",
+    "lint": "eslint --ext .ts,.tsx src scripts prisma",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
