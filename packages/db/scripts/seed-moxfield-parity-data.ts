@@ -128,7 +128,7 @@ async function createSampleFoldersAndTemplates(users: any[]) {
       }
     })
     
-    const casualFolder = await prisma.deckFolder.create({
+    await prisma.deckFolder.create({
       data: {
         userId: user.id,
         name: 'Casual Decks',
@@ -138,7 +138,7 @@ async function createSampleFoldersAndTemplates(users: any[]) {
       }
     })
     
-    const wipFolder = await prisma.deckFolder.create({
+    await prisma.deckFolder.create({
       data: {
         userId: user.id,
         name: 'Work in Progress',

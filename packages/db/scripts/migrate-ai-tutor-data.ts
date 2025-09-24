@@ -11,7 +11,8 @@
  */
 
 import { PrismaClient } from '@prisma/client'
-import { ConsultationData } from '@moxmuse/shared'
+// import { ConsultationData } from '@moxmuse/shared'
+type ConsultationData = any // Temporary type until shared package is available
 
 const prisma = new PrismaClient()
 
@@ -75,7 +76,7 @@ async function createMissingTables(): Promise<void> {
   console.log('✅ All required tables exist')
 }
 
-async function migrateLegacyConsultationData(
+async function _migrateLegacyConsultationData(
   userId: string,
   legacyData: LegacyConsultationData
 ): Promise<ConsultationData> {
@@ -118,7 +119,7 @@ async function migrateLegacyConsultationData(
 }
 
 async function migrateUserConsultations(userId: string): Promise<number> {
-  let migratedCount = 0
+  const migratedCount = 0
   
   try {
     // Find existing consultation sessions (if any legacy format exists)

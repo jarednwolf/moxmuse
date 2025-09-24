@@ -96,7 +96,7 @@ function extractSynergyKeywords(card: ScryfallCard): string[] {
 /**
  * Download Scryfall bulk data
  */
-async function downloadBulkData(): Promise<string> {
+async function _downloadBulkData(): Promise<string> {
   console.log('🔍 Fetching bulk data info from Scryfall...');
   
   const bulkDataResponse = await axios.get('https://api.scryfall.com/bulk-data');
@@ -129,7 +129,7 @@ async function downloadBulkData(): Promise<string> {
 /**
  * Import cards into database
  */
-async function importCards(filePath: string) {
+async function _importCards(filePath: string) {
   console.log('📖 Reading card data...');
   
   const fileContent = fs.readFileSync(filePath, 'utf-8');
@@ -206,7 +206,7 @@ async function importCards(filePath: string) {
 /**
  * Create database indexes for performance
  */
-async function createIndexes() {
+async function _createIndexes() {
   console.log('🔧 Creating database indexes...');
   
   try {
@@ -227,7 +227,7 @@ async function createIndexes() {
 /**
  * Verify import
  */
-async function verifyImport() {
+async function _verifyImport() {
   console.log('\n📊 Verifying import...');
   
   const totalCards = await prisma.enhancedCardData.count();
