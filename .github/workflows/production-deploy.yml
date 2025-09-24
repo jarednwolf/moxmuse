@@ -54,10 +54,10 @@ jobs:
         run: pnpm lint
 
       - name: Unit tests
-        run: pnpm test --run
+        run: pnpm test:run
 
       - name: Integration tests
-        run: pnpm test:integration --run
+        run: pnpm test:integration
         env:
           DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}

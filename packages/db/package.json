@@ -17,6 +17,7 @@
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:unit": "vitest run",
     "test:integration": "echo 'No integration tests'",
     "test:performance": "echo 'No performance tests'",
     "analyze": "echo 'No analyze script'"
