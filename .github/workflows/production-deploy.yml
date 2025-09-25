@@ -79,6 +79,7 @@ jobs:
         run: pnpm analyze
 
       - name: Upload build artifacts
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
@@ -190,7 +191,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Run performance tests
-        run: pnpm test:performance --run
+        run: pnpm test:performance -- --run
         env:
           DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
 
