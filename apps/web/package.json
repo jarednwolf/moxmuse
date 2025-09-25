@@ -12,7 +12,7 @@
     "test:run": "vitest run",
     "test:comprehensive": "vitest --config vitest.config.comprehensive.ts",
     "test:comprehensive:run": "vitest run --config vitest.config.comprehensive.ts",
-    "test:unit": "vitest run --config vitest.config.comprehensive.ts src/**/*.test.{ts,tsx} packages/**/*.test.{ts,tsx}",
+    "test:unit": "vitest run --config vitest.config.comprehensive.ts",
     "test:integration": "vitest run --config vitest.config.comprehensive.ts src/**/*integration*.test.{ts,tsx}",
     "test:performance": "vitest run --config vitest.config.comprehensive.ts src/**/*performance*.test.{ts,tsx}",
     "test:accessibility": "vitest run --config vitest.config.comprehensive.ts src/**/*accessibility*.test.{ts,tsx}",
