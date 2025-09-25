@@ -1,8 +1,22 @@
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
 import { appRouter } from '@moxmuse/api'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@moxmuse/api/src/auth'
-import { prisma } from '@moxmuse/db'
+
+// Lazy-load authOptions and prisma to avoid prisma init during Next build
+let authOptions: any
+let prisma: any
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  authOptions = (0, eval)('require')("@moxmuse/api/src/auth").authOptions
+} catch (_e) {
+  authOptions = undefined
+}
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  prisma = (0, eval)('require')("@moxmuse/db").prisma
+} catch (_e) {
+  prisma = undefined
+}
 
 // Export runtime configuration for extended timeouts
 export const runtime = 'nodejs'
@@ -15,7 +29,7 @@ const handler = (req: Request) =>
     router: appRouter,
     createContext: async () => {
       // Use the same session retrieval logic as the main tRPC context
-      const session = await getServerSession(authOptions)
+      const session = authOptions ? await getServerSession(authOptions) : null
       
       // Add debugging for session state
       console.log('tRPC Route Context:', {
