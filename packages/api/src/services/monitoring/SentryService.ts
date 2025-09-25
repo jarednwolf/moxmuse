@@ -8,10 +8,16 @@ type MinimalUser = {
 // Optional profiling integration
 let ProfilingIntegration: any = null
 try {
-	ProfilingIntegration = require('@sentry/profiling-node').ProfilingIntegration
+  // Avoid bundling native module in Next.js by resolving at runtime only
+  if (process.env.NEXT_RUNTIME !== 'edge' && process.env.NEXT_PUBLIC_ENABLE_SENTRY_PROFILING === 'true') {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // Use indirect require to keep webpack from parsing the native .node file
+    const mod = (0, eval)('require')('@sentry/profiling-node')
+    ProfilingIntegration = mod?.ProfilingIntegration || null
+  }
 } catch (error) {
-	const msg = error instanceof Error ? error.message : String(error)
-	console.warn('Sentry profiling integration not available:', msg)
+  const msg = error instanceof Error ? error.message : String(error)
+  console.warn('Sentry profiling integration not available:', msg)
 }
 
 export interface ErrorContext {
@@ -68,9 +74,9 @@ export class SentryService {
 			environment: process.env.NODE_ENV || 'development',
 			integrations,
 			
-			// Performance monitoring
-			tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
-			profilesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+		// Performance monitoring
+		tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+		profilesSampleRate: process.env.NEXT_PUBLIC_ENABLE_SENTRY_PROFILING === 'true' ? (process.env.NODE_ENV === 'production' ? 0.1 : 1.0) : 0,
 			
 			// Error filtering
 			beforeSend(event, hint) {

@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest'
 import { createTRPCMsw } from 'msw-trpc'
 import { appRouter } from '../../root'
 import { cardSynergyDetectionService } from '../../services/card-synergy-detection'
-import { db } from '@repo/db'
+import { db } from '@moxmuse/db'
 
 // Mock the synergy detection service
 vi.mock('../../services/card-synergy-detection', async (importOriginal) => {
@@ -16,8 +16,8 @@ vi.mock('../../services/card-synergy-detection', async (importOriginal) => {
 })
 
 // Mock the database
-vi.mock('@repo/db', () => ({
-  db: {
+vi.mock('@moxmuse/db', () => {
+  const mockPrisma = {
     aIAnalysisCache: {
       create: vi.fn(),
       findFirst: vi.fn(),
@@ -28,7 +28,8 @@ vi.mock('@repo/db', () => ({
       groupBy: vi.fn()
     }
   }
-}))
+  return { db: mockPrisma, prisma: mockPrisma }
+})
 
 // Mock tRPC context
 const createMockContext = (userId?: string) => ({

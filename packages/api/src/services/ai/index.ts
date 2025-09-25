@@ -6,10 +6,12 @@
  * while maintaining the modular architecture internally.
  */
 
-export { services } from '../container'
+import { services } from '../container'
+export { services }
+
 export const {
   openaiOrchestrator,
   deckGenerationService,
   cardRecommendationService,
   synergyAnalysisService,
-} = require('../container').services
+} = services

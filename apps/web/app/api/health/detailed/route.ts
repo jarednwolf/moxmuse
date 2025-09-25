@@ -1,5 +1,13 @@
 import { NextResponse } from 'next/server'
-import { db } from '@moxmuse/db'
+
+// Lazy-load Prisma to avoid requiring generated client during Next build
+let db: any
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  db = (0, eval)('require')('@moxmuse/db').db
+} catch (_e) {
+  db = undefined
+}
 
 /**
  * Detailed health check endpoint with service status
@@ -11,6 +19,14 @@ export async function GET() {
   try {
     // Check database connectivity
     try {
+      if (!db) {
+        services.push({
+          name: 'database',
+          status: 'degraded',
+          error: 'Prisma client unavailable in build environment',
+          lastCheck: new Date().toISOString()
+        })
+      } else {
       const dbStart = Date.now()
       await db.$queryRaw`SELECT 1`
       const dbTime = Date.now() - dbStart
@@ -21,6 +37,7 @@ export async function GET() {
         responseTime: dbTime,
         lastCheck: new Date().toISOString()
       })
+      }
     } catch (dbError) {
       services.push({
         name: 'database',
