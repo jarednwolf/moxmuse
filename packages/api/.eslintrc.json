@@ -14,7 +14,50 @@
     "import/resolver": { "typescript": { "project": ["./tsconfig.json"] } }
   },
   "ignorePatterns": ["dist/**"],
-  "rules": { "@typescript-eslint/no-explicit-any": "off" }
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_", "caughtErrorsIgnorePattern": "^_" }
+    ],
+    "@typescript-eslint/ban-ts-comment": "warn",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/no-namespace": "off",
+    "import/no-unresolved": "off",
+    "no-case-declarations": "off",
+    "no-control-regex": "off",
+    "no-useless-escape": "off",
+    "no-useless-catch": "off",
+    "no-prototype-builtins": "off",
+    "require-yield": "off",
+    "no-empty": "off",
+    "prefer-const": "off",
+    "import/no-named-as-default": "warn",
+    "import/no-duplicates": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx", "src/routers/__tests__/**", "src/services/**/__tests__/**"],
+      "env": { "jest": true, "node": true },
+      "rules": {
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          { "argsIgnorePattern": ".*", "varsIgnorePattern": ".*", "caughtErrorsIgnorePattern": ".*" }
+        ],
+        "@typescript-eslint/no-var-requires": "off",
+        "import/no-unresolved": "off",
+        "no-empty": "off",
+        "no-case-declarations": "off",
+        "@typescript-eslint/ban-ts-comment": "off"
+      }
+    },
+    {
+      "files": ["src/middleware/**", "src/services/**", "src/routers/**", "src/utils/**", "src/config/**"],
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    }
+  ]
 }
 
 

@@ -212,8 +212,8 @@ describe.skip('AI Generation Workflow Integration Tests (skipped in unit CI)', (
         }
       }
       
-      let deck = await aiService.generateDeck(initialRequest)
-      let qualityReport = await qualityService.validateDeckQuality(deck)
+      const deck = await aiService.generateDeck(initialRequest)
+      const qualityReport = await qualityService.validateDeckQuality(deck)
       
       // If quality is below threshold, attempt improvement
       if (qualityReport.overallScore < 0.8) {

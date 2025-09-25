@@ -507,7 +507,7 @@ export class AIQualityAssuranceService {
     const levelDifference = Math.abs(estimatedPowerLevel - targetPowerLevel)
     const accuracy = Math.max(0, 1 - (levelDifference / 4)) // Scale to 0-1
     
-    let score = accuracy * confidence
+    const score = accuracy * confidence
 
     const analysis = {
       targetPowerLevel,
@@ -827,7 +827,7 @@ export class AIQualityAssuranceService {
     
     const factors: string[] = []
     let powerLevel = 2.0 // Base power level
-    let confidence = 0.8
+    const confidence = 0.8
 
     // Check for high-power indicators
     const expensiveCards = deck.cards.filter(c => this.estimateCardPrice(c.cardId) > 50)

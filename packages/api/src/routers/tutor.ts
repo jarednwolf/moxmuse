@@ -279,7 +279,7 @@ export const tutorRouter = createTRPCRouter({
         
         // Get user's collection for ownership check
         const proxyService = new CollectionProxyService(ctx.prisma)
-        let ownedCardIds = new Set<string>()
+        const ownedCardIds = new Set<string>()
         
         try {
           const collection = await proxyService.fetchCollection(userId)
@@ -363,7 +363,7 @@ export const tutorRouter = createTRPCRouter({
         
         // Get user's collection from external platform
         const proxyService = new CollectionProxyService(ctx.prisma)
-        let ownedCardIds = new Set<string>()
+        const ownedCardIds = new Set<string>()
         
         try {
           const collection = await proxyService.fetchCollection(userId)
@@ -550,7 +550,7 @@ export const tutorRouter = createTRPCRouter({
         
         // Get user's collection for ownership check if needed
         const proxyService = new CollectionProxyService(ctx.prisma)
-        let ownedCardIds = new Set<string>()
+        const ownedCardIds = new Set<string>()
         
         if (constraints?.useCollection) {
           try {
@@ -972,7 +972,7 @@ export const tutorRouter = createTRPCRouter({
 
         // Get user's collection for ownership check
         const proxyService = new CollectionProxyService(ctx.prisma)
-        let ownedCardIds = new Set<string>()
+        const ownedCardIds = new Set<string>()
         
         try {
           const collection = await proxyService.fetchCollection(userId)

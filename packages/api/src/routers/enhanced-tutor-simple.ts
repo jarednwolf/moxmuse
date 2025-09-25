@@ -104,7 +104,7 @@ export const enhancedTutorRouter = createTRPCRouter({
         
         // Get user's collection if requested
         const proxyService = new CollectionProxyService(ctx.prisma)
-        let ownedCardIds = new Set<string>()
+        const ownedCardIds = new Set<string>()
         
         if (constraints?.useCollection) {
           try {

@@ -625,7 +625,7 @@ describe('Accessibility Tests', () => {
       // All interactive elements should be reachable via tab navigation
       const interactiveElements = screen.getAllByRole('button')
       
-      let currentElement = interactiveElements[0]
+      const currentElement = interactiveElements[0]
       currentElement.focus()
       expect(currentElement).toHaveFocus()
 

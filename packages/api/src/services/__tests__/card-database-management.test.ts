@@ -414,7 +414,7 @@ describe('CardDatabaseManagementService', () => {
       const service = cardDatabaseManagementService
       
       // Initially no import running
-      let progress = await service.getImportProgress()
+      const progress = await service.getImportProgress()
       expect(progress).toBeNull()
       
       // Mock an import in progress

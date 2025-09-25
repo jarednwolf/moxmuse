@@ -219,7 +219,7 @@ export class TappedOutAdapter extends BasePlatformAdapter {
     const lines = content.split('\n').map(line => line.trim()).filter(line => line.length > 0)
     
     let deckName = 'Imported Deck'
-    let description = ''
+    const description = ''
     let format = 'commander'
     let user = 'Unknown'
     let url = ''

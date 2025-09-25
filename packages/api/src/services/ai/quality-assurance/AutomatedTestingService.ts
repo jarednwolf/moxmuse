@@ -982,7 +982,7 @@ export class AutomatedTestingService {
 
     // Calculate next run time
     const now = new Date()
-    let nextRun = new Date()
+    const nextRun = new Date()
 
     switch (suite.schedule.frequency) {
       case 'hourly':

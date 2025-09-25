@@ -1,9 +1,8 @@
 import { PrismaClient } from '@prisma/client'
-import { promises as fs } from 'fs'
+import { promises as fs , createReadStream, createWriteStream } from 'fs'
 import { join } from 'path'
 import { createGzip, createGunzip } from 'zlib'
 import { pipeline } from 'stream/promises'
-import { createReadStream, createWriteStream } from 'fs'
 
 export interface BackupConfig {
   backupDirectory: string

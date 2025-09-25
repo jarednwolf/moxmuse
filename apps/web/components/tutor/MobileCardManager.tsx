@@ -16,7 +16,8 @@ import {
   Edit,
   Eye,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  X
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { 
@@ -102,7 +103,7 @@ export function MobileCardManager({
   
   // Filter and sort cards
   const filteredAndSortedCards = React.useMemo(() => {
-    let filtered = cards.filter(card => {
+    const filtered = cards.filter(card => {
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase()

@@ -376,7 +376,7 @@ Provide analysis of:
    * Build deck improvements user prompt
    */
   buildDeckImprovementsUserPrompt(deck: GeneratedDeck, focusArea?: string): string {
-    let prompt = `Suggest improvements for this Commander deck:
+    const prompt = `Suggest improvements for this Commander deck:
 
 Commander: ${deck.commander}
 Strategy: ${deck.strategy.name}
