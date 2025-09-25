@@ -60,10 +60,9 @@ export default defineConfig({
         minThreads: 1,
       },
     },
-    // Test file patterns
+    // Test file patterns - limit to web src only; API/DB run in their own packages
     include: [
       'src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
-      'packages/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
     ],
     exclude: [
       'node_modules/',
@@ -71,6 +70,7 @@ export default defineConfig({
       '.next/',
       'coverage/',
       'e2e/',
+      '../../packages/**',
     ],
     // Reporter configuration
     reporters: ['verbose'],
