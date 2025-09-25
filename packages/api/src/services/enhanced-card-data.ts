@@ -538,11 +538,12 @@ export class EnhancedCardDataService {
       return await this.enrichScryfallCard(scryfallCard)
       
     } catch (error) {
-      if (error.response?.status === 404) {
+      const e = error as any
+      if (e?.response?.status === 404) {
         logger.warn('Card not found', { cardId })
         return null
       }
-      throw error
+      throw (e as Error)
     }
   }
 
@@ -718,22 +719,22 @@ export class EnhancedCardDataService {
       return {
         cardId: cached.cardId,
         name: cached.name,
-        manaCost: cached.manaCost || '',
+        manaCost: cached.manaCost ?? undefined,
         cmc: cached.cmc,
         typeLine: cached.typeLine,
-        oracleText: cached.oracleText || '',
-        power: cached.power,
-        toughness: cached.toughness,
+        oracleText: cached.oracleText ?? undefined,
+        power: cached.power ?? undefined,
+        toughness: cached.toughness ?? undefined,
         colors: cached.colors,
         colorIdentity: cached.colorIdentity,
         legalities: cached.legalities as Record<string, string>,
         rulings: cached.rulings as any[],
         printings: cached.printings as any[],
         relatedCards: cached.relatedCards as any[],
-        edhrecRank: cached.edhrecRank,
-        popularityScore: Number(cached.popularityScore),
+        edhrecRank: cached.edhrecRank ?? undefined,
+        popularityScore: Number(cached.popularityScore ?? 0),
         synergyTags: cached.synergyTags,
-        currentPrice: cached.currentPrice ? Number(cached.currentPrice) : undefined,
+        currentPrice: cached.currentPrice != null ? Number(cached.currentPrice) : undefined,
         priceHistory: cached.priceHistory as any[],
         availability: cached.availability as any,
         imageUrls: cached.imageUrls as Record<string, string>,
@@ -757,22 +758,22 @@ export class EnhancedCardDataService {
         results.set(card.cardId, {
           cardId: card.cardId,
           name: card.name,
-          manaCost: card.manaCost || '',
+          manaCost: card.manaCost ?? undefined,
           cmc: card.cmc,
           typeLine: card.typeLine,
-          oracleText: card.oracleText || '',
-          power: card.power,
-          toughness: card.toughness,
+          oracleText: card.oracleText ?? undefined,
+          power: card.power ?? undefined,
+          toughness: card.toughness ?? undefined,
           colors: card.colors,
           colorIdentity: card.colorIdentity,
           legalities: card.legalities as Record<string, string>,
           rulings: card.rulings as any[],
           printings: card.printings as any[],
           relatedCards: card.relatedCards as any[],
-          edhrecRank: card.edhrecRank,
-          popularityScore: Number(card.popularityScore),
+          edhrecRank: card.edhrecRank ?? undefined,
+          popularityScore: Number(card.popularityScore ?? 0),
           synergyTags: card.synergyTags,
-          currentPrice: card.currentPrice ? Number(card.currentPrice) : undefined,
+          currentPrice: card.currentPrice != null ? Number(card.currentPrice) : undefined,
           priceHistory: card.priceHistory as any[],
           availability: card.availability as any,
           imageUrls: card.imageUrls as Record<string, string>,
@@ -899,11 +900,11 @@ export class EnhancedCardDataService {
             updated++
           }
         } catch (error) {
-          errors.push(`Failed to process card ${cardData.id}: ${error.message}`)
+          errors.push(`Failed to process card ${cardData.id}: ${String((error as any)?.message || error)}`)
         }
       }
     } catch (error) {
-      errors.push(`Batch processing error: ${error.message}`)
+      errors.push(`Batch processing error: ${String((error as any)?.message || error)}`)
     }
     
     return { updated, errors }

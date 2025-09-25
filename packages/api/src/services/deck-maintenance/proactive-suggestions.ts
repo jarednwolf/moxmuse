@@ -366,7 +366,7 @@ export class ProactiveSuggestionsService {
       const deck = await this.getDeckWithCards(deckId)
       if (!deck) return null
       
-      const cardIds = deck.cards.map(c => c.cardId)
+      const cardIds = deck.cards.map((c: any) => c.cardId)
       const priceData = await this.priceService.getCardPrices(cardIds)
       
       // Get recent deck changes

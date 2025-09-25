@@ -128,7 +128,7 @@ export class ReliableAIService {
       timeout: mergedConfig.timeout.defaultTimeoutMs
     })
 
-    // Initialize reliability services
+    // Initialize reliability services with concrete configs
     this.retryService = new RetryService(mergedConfig.retry as RetryConfig)
     this.circuitBreakerService = new CircuitBreakerService('OpenAI', mergedConfig.circuitBreaker as CircuitBreakerConfig)
     this.timeoutService = new TimeoutService(mergedConfig.timeout as TimeoutConfig)

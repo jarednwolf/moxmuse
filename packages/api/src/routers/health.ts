@@ -151,7 +151,7 @@ export const healthRouter = createTRPCRouter({
         },
         errors: {
           total: metricsService.getMetrics('error', windowMinutes).length,
-          byType: this.getErrorsByType(windowMinutes),
+          byType: getErrorsByType(windowMinutes),
         },
         windowMinutes,
       }

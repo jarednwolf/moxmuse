@@ -208,7 +208,7 @@ export class AdaptiveComplexityEngine {
     
     if (adaptationEvents.length > 0) {
       const successfulAdaptations = adaptationEvents.filter(e => 
-        e.outcome === 'successful' || e.confidence > 0.6
+        e.outcome === 'successful' || ((e as any).confidence || 0) > 0.6
       )
       
       skillScore += (successfulAdaptations.length / adaptationEvents.length) * 0.5

@@ -102,7 +102,7 @@ export const cardSearchRouter = createTRPCRouter({
       tags: z.array(z.string()).optional()
     }))
     .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session.user.id
+      const userId = (ctx.session as NonNullable<typeof ctx.session>).user.id
       
       // Verify ownership
       const savedSearch = await cardSearchService.getSavedSearches(userId)
@@ -146,7 +146,7 @@ export const cardSearchRouter = createTRPCRouter({
   useSavedSearch: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session.user.id
+      const userId = (ctx.session as NonNullable<typeof ctx.session>).user.id
       
       // Verify ownership
       const savedSearch = await cardSearchService.getSavedSearches(userId)
