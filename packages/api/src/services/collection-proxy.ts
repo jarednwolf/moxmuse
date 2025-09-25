@@ -430,7 +430,7 @@ export class CollectionProxyService {
     console.log('fetchLocalCollection - Found cards:', cards.length)
 
     return {
-      cards: cards.map(card => ({
+      cards: cards.map((card: any) => ({
         cardId: card.cardId,
         quantity: card.quantity,
         foilQuantity: card.foilQuantity,
