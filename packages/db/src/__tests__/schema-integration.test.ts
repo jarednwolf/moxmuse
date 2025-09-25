@@ -2,28 +2,28 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient()
+let prisma: PrismaClient | null = null
 
 describe.skip('Schema Integration Tests', () => {
   beforeAll(async () => {
-    // Ensure we have a clean test environment
+    prisma = new PrismaClient()
     await prisma.$connect()
   })
 
   afterAll(async () => {
-    await prisma.$disconnect()
+    await prisma?.$disconnect()
   })
 
   describe('Deck Organization Tables', () => {
     it('should create and query deck folders', async () => {
-      const testUser = await prisma.user.create({
+      const testUser = await prisma!.user.create({
         data: {
           email: 'test-folder@example.com',
           name: 'Test User'
         }
       })
 
-      const folder = await prisma.deckFolder.create({
+      const folder = await prisma!.deckFolder.create({
         data: {
           userId: testUser.id,
           name: 'Test Folder',
@@ -36,8 +36,8 @@ describe.skip('Schema Integration Tests', () => {
       expect(folder.userId).toBe(testUser.id)
 
       // Cleanup
-      await prisma.deckFolder.delete({ where: { id: folder.id } })
-      await prisma.user.delete({ where: { id: testUser.id } })
+      await prisma!.deckFolder.delete({ where: { id: folder.id } })
+      await prisma!.user.delete({ where: { id: testUser.id } })
     })
 
     it('should create and query deck templates', async () => {
@@ -48,7 +48,7 @@ describe.skip('Schema Integration Tests', () => {
         }
       })
 
-      const template = await prisma.deckTemplate.create({
+      const template = await prisma!.deckTemplate.create({
         data: {
           userId: testUser.id,
           name: 'Aggro Template',
@@ -66,14 +66,14 @@ describe.skip('Schema Integration Tests', () => {
       expect(template.tags).toEqual(['fast', 'competitive'])
 
       // Cleanup
-      await prisma.deckTemplate.delete({ where: { id: template.id } })
-      await prisma.user.delete({ where: { id: testUser.id } })
+      await prisma!.deckTemplate.delete({ where: { id: template.id } })
+      await prisma!.user.delete({ where: { id: testUser.id } })
     })
   })
 
   describe('Enhanced Card Database Tables', () => {
     it('should create and query enhanced card data', async () => {
-      const cardData = await prisma.enhancedCardData.create({
+      const cardData = await prisma!.enhancedCardData.create({
         data: {
           cardId: '123e4567-e89b-12d3-a456-426614174999',
           name: 'Lightning Bolt',
@@ -91,18 +91,18 @@ describe.skip('Schema Integration Tests', () => {
       expect(Number(cardData.popularityScore)).toBe(85.5)
 
       // Cleanup
-      await prisma.enhancedCardData.delete({ where: { id: cardData.id } })
+      await prisma!.enhancedCardData.delete({ where: { id: cardData.id } })
     })
 
     it('should create and query saved card searches', async () => {
-      const testUser = await prisma.user.create({
+      const testUser = await prisma!.user.create({
         data: {
           email: 'test-search@example.com',
           name: 'Test User'
         }
       })
 
-      const savedSearch = await prisma.savedCardSearch.create({
+      const savedSearch = await prisma!.savedCardSearch.create({
         data: {
           userId: testUser.id,
           name: 'Red Instants',
@@ -122,21 +122,21 @@ describe.skip('Schema Integration Tests', () => {
       })
 
       // Cleanup
-      await prisma.savedCardSearch.delete({ where: { id: savedSearch.id } })
-      await prisma.user.delete({ where: { id: testUser.id } })
+      await prisma!.savedCardSearch.delete({ where: { id: savedSearch.id } })
+      await prisma!.user.delete({ where: { id: testUser.id } })
     })
   })
 
   describe('Import/Export Tables', () => {
     it('should create and query import jobs', async () => {
-      const testUser = await prisma.user.create({
+      const testUser = await prisma!.user.create({
         data: {
           email: 'test-import@example.com',
           name: 'Test User'
         }
       })
 
-      const importJob = await prisma.importJob.create({
+      const importJob = await prisma!.importJob.create({
         data: {
           userId: testUser.id,
           source: 'moxfield',
@@ -152,19 +152,19 @@ describe.skip('Schema Integration Tests', () => {
       expect(importJob.status).toBe('pending')
 
       // Cleanup
-      await prisma.importJob.delete({ where: { id: importJob.id } })
-      await prisma.user.delete({ where: { id: testUser.id } })
+      await prisma!.importJob.delete({ where: { id: importJob.id } })
+      await prisma!.user.delete({ where: { id: testUser.id } })
     })
 
     it('should create and query export jobs', async () => {
-      const testUser = await prisma.user.create({
+      const testUser = await prisma!.user.create({
         data: {
           email: 'test-export@example.com',
           name: 'Test User'
         }
       })
 
-      const exportJob = await prisma.exportJob.create({
+      const exportJob = await prisma!.exportJob.create({
         data: {
           userId: testUser.id,
           deckIds: ['deck1', 'deck2'],
@@ -195,21 +195,21 @@ describe.skip('Schema Integration Tests', () => {
       expect(exportJob.status).toBe('pending')
 
       // Cleanup
-      await prisma.exportJob.delete({ where: { id: exportJob.id } })
-      await prisma.user.delete({ where: { id: testUser.id } })
+      await prisma!.exportJob.delete({ where: { id: exportJob.id } })
+      await prisma!.user.delete({ where: { id: testUser.id } })
     })
   })
 
   describe('Analytics Tables', () => {
     it('should create and query deck analytics', async () => {
-      const testUser = await prisma.user.create({
+      const testUser = await prisma!.user.create({
         data: {
           email: 'test-analytics@example.com',
           name: 'Test User'
         }
       })
 
-      const testDeck = await prisma.deck.create({
+      const testDeck = await prisma!.deck.create({
         data: {
           userId: testUser.id,
           name: 'Test Deck',
@@ -217,7 +217,7 @@ describe.skip('Schema Integration Tests', () => {
         }
       })
 
-      const analytics = await prisma.deckAnalytics.create({
+      const analytics = await prisma!.deckAnalytics.create({
         data: {
           deckId: testDeck.id,
           manaAnalysis: {
@@ -245,20 +245,20 @@ describe.skip('Schema Integration Tests', () => {
       expect(analytics.analysisVersion).toBe('1.0')
 
       // Cleanup
-      await prisma.deckAnalytics.delete({ where: { id: analytics.id } })
-      await prisma.deck.delete({ where: { id: testDeck.id } })
-      await prisma.user.delete({ where: { id: testUser.id } })
+      await prisma!.deckAnalytics.delete({ where: { id: analytics.id } })
+      await prisma!.deck.delete({ where: { id: testDeck.id } })
+      await prisma!.user.delete({ where: { id: testUser.id } })
     })
 
     it('should create and query goldfish simulations', async () => {
-      const testUser = await prisma.user.create({
+      const testUser = await prisma!.user.create({
         data: {
           email: 'test-simulation-unique@example.com',
           name: 'Test User'
         }
       })
 
-      const testDeck = await prisma.deck.create({
+      const testDeck = await prisma!.deck.create({
         data: {
           userId: testUser.id,
           name: 'Test Deck',
@@ -266,7 +266,7 @@ describe.skip('Schema Integration Tests', () => {
         }
       })
 
-      const simulation = await prisma.goldfishSimulation.create({
+      const simulation = await prisma!.goldfishSimulation.create({
         data: {
           deckId: testDeck.id,
           userId: testUser.id,
@@ -296,22 +296,22 @@ describe.skip('Schema Integration Tests', () => {
       expect(Number(simulation.keepableHands)).toBe(0.78)
 
       // Cleanup
-      await prisma.goldfishSimulation.delete({ where: { id: simulation.id } })
-      await prisma.deck.delete({ where: { id: testDeck.id } })
-      await prisma.user.delete({ where: { id: testUser.id } })
+      await prisma!.goldfishSimulation.delete({ where: { id: simulation.id } })
+      await prisma!.deck.delete({ where: { id: testDeck.id } })
+      await prisma!.user.delete({ where: { id: testUser.id } })
     })
   })
 
   describe('Social Tables', () => {
     it('should create and query public decks', async () => {
-      const testUser = await prisma.user.create({
+      const testUser = await prisma!.user.create({
         data: {
           email: 'test-public@example.com',
           name: 'Test User'
         }
       })
 
-      const testDeck = await prisma.deck.create({
+      const testDeck = await prisma!.deck.create({
         data: {
           userId: testUser.id,
           name: 'Public Test Deck',
@@ -320,7 +320,7 @@ describe.skip('Schema Integration Tests', () => {
         }
       })
 
-      const publicDeck = await prisma.publicDeck.create({
+      const publicDeck = await prisma!.publicDeck.create({
         data: {
           deckId: testDeck.id,
           userId: testUser.id,
@@ -341,20 +341,20 @@ describe.skip('Schema Integration Tests', () => {
       expect(publicDeck.commander).toBe('Atraxa, Praetors\' Voice')
 
       // Cleanup
-      await prisma.publicDeck.delete({ where: { id: publicDeck.id } })
-      await prisma.deck.delete({ where: { id: testDeck.id } })
-      await prisma.user.delete({ where: { id: testUser.id } })
+      await prisma!.publicDeck.delete({ where: { id: publicDeck.id } })
+      await prisma!.deck.delete({ where: { id: testDeck.id } })
+      await prisma!.user.delete({ where: { id: testUser.id } })
     })
 
     it('should create and query user profiles', async () => {
-      const testUser = await prisma.user.create({
+      const testUser = await prisma!.user.create({
         data: {
           email: 'test-profile@example.com',
           name: 'Test User'
         }
       })
 
-      const profile = await prisma.userProfile.create({
+      const profile = await prisma!.userProfile.create({
         data: {
           userId: testUser.id,
           username: 'testuser123',
@@ -377,14 +377,14 @@ describe.skip('Schema Integration Tests', () => {
       expect(profile.favoriteFormats).toEqual(['commander'])
 
       // Cleanup
-      await prisma.userProfile.delete({ where: { id: profile.id } })
-      await prisma.user.delete({ where: { id: testUser.id } })
+      await prisma!.userProfile.delete({ where: { id: profile.id } })
+      await prisma!.user.delete({ where: { id: testUser.id } })
     })
   })
 
   describe('Performance Tables', () => {
     it('should create and query performance metrics', async () => {
-      const metric = await prisma.performanceMetric.create({
+      const metric = await prisma!.performanceMetric.create({
         data: {
           operation: 'deck-analysis',
           duration: 1500,
@@ -400,11 +400,11 @@ describe.skip('Schema Integration Tests', () => {
       expect(metric.success).toBe(true)
 
       // Cleanup
-      await prisma.performanceMetric.delete({ where: { id: metric.id } })
+      await prisma!.performanceMetric.delete({ where: { id: metric.id } })
     })
 
     it('should create and query cache entries', async () => {
-      const cacheEntry = await prisma.cacheEntry.create({
+      const cacheEntry = await prisma!.cacheEntry.create({
         data: {
           key: 'test-cache-key',
           value: {
@@ -420,11 +420,11 @@ describe.skip('Schema Integration Tests', () => {
       expect(cacheEntry.tags).toEqual(['test', 'cache'])
 
       // Cleanup
-      await prisma.cacheEntry.delete({ where: { id: cacheEntry.id } })
+      await prisma!.cacheEntry.delete({ where: { id: cacheEntry.id } })
     })
 
     it('should create and query background jobs', async () => {
-      const job = await prisma.backgroundJob.create({
+      const job = await prisma!.backgroundJob.create({
         data: {
           type: 'deck-analysis',
           status: 'pending',
@@ -443,13 +443,13 @@ describe.skip('Schema Integration Tests', () => {
       expect(job.priority).toBe(5)
 
       // Cleanup
-      await prisma.backgroundJob.delete({ where: { id: job.id } })
+      await prisma!.backgroundJob.delete({ where: { id: job.id } })
     })
   })
 
   describe('Relationships and Constraints', () => {
     it('should enforce foreign key relationships', async () => {
-      const testUser = await prisma.user.create({
+      const testUser = await prisma!.user.create({
         data: {
           email: 'test-fk@example.com',
           name: 'Test User'
@@ -457,7 +457,7 @@ describe.skip('Schema Integration Tests', () => {
       })
 
       // Create folder
-      const folder = await prisma.deckFolder.create({
+      const folder = await prisma!.deckFolder.create({
         data: {
           userId: testUser.id,
           name: 'Test Folder',
@@ -467,7 +467,7 @@ describe.skip('Schema Integration Tests', () => {
       })
 
       // Create deck
-      const deck = await prisma.deck.create({
+      const deck = await prisma!.deck.create({
         data: {
           userId: testUser.id,
           name: 'Test Deck',
@@ -476,7 +476,7 @@ describe.skip('Schema Integration Tests', () => {
       })
 
       // Create folder item linking deck to folder
-      const folderItem = await prisma.deckFolderItem.create({
+      const folderItem = await prisma!.deckFolderItem.create({
         data: {
           folderId: folder.id,
           deckId: deck.id,
@@ -488,14 +488,14 @@ describe.skip('Schema Integration Tests', () => {
       expect(folderItem.deckId).toBe(deck.id)
 
       // Cleanup
-      await prisma.deckFolderItem.delete({ where: { id: folderItem.id } })
-      await prisma.deck.delete({ where: { id: deck.id } })
-      await prisma.deckFolder.delete({ where: { id: folder.id } })
-      await prisma.user.delete({ where: { id: testUser.id } })
+      await prisma!.deckFolderItem.delete({ where: { id: folderItem.id } })
+      await prisma!.deck.delete({ where: { id: deck.id } })
+      await prisma!.deckFolder.delete({ where: { id: folder.id } })
+      await prisma!.user.delete({ where: { id: testUser.id } })
     })
 
     it('should enforce unique constraints', async () => {
-      const testUser = await prisma.user.create({
+      const testUser = await prisma!.user.create({
         data: {
           email: 'test-unique@example.com',
           name: 'Test User'
@@ -503,7 +503,7 @@ describe.skip('Schema Integration Tests', () => {
       })
 
       // Create first profile
-      const profile1 = await prisma.userProfile.create({
+      const profile1 = await prisma!.userProfile.create({
         data: {
           userId: testUser.id,
           username: 'uniqueuser',
@@ -524,7 +524,7 @@ describe.skip('Schema Integration Tests', () => {
 
       // Try to create second profile with same username - should fail
       await expect(
-        prisma.userProfile.create({
+        prisma!.userProfile.create({
           data: {
             userId: testUser.id,
             username: 'uniqueuser', // Same username
@@ -545,8 +545,8 @@ describe.skip('Schema Integration Tests', () => {
       ).rejects.toThrow()
 
       // Cleanup
-      await prisma.userProfile.delete({ where: { id: profile1.id } })
-      await prisma.user.delete({ where: { id: testUser.id } })
+      await prisma!.userProfile.delete({ where: { id: profile1.id } })
+      await prisma!.user.delete({ where: { id: testUser.id } })
     })
   })
 })
