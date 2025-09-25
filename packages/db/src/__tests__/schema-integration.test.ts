@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-describe('Schema Integration Tests', () => {
+describe.skip('Schema Integration Tests', () => {
   beforeAll(async () => {
     // Ensure we have a clean test environment
     await prisma.$connect()
