@@ -643,8 +643,8 @@ export class MaintenanceSchedulerService {
       })
 
       const tasksExecuted = jobs.length
-      const tasksSuccessful = jobs.filter(j => j.status === 'completed').length
-      const tasksFailed = jobs.filter(j => j.status === 'failed').length
+      const tasksSuccessful = jobs.filter((j: any) => j.status === 'completed').length
+      const tasksFailed = jobs.filter((j: any) => j.status === 'failed').length
       
       const averageProcessingTime = jobs.length > 0
         ? jobs.reduce((sum: number, j: any) => sum + (j.processingTime || 0), 0) / jobs.length
@@ -674,7 +674,7 @@ export class MaintenanceSchedulerService {
       // Error analysis
       const errorMap = new Map<string, { error: string; count: number }>()
       
-      for (const job of jobs.filter(j => j.status === 'failed')) {
+      for (const job of jobs.filter((j: any) => j.status === 'failed')) {
         const key = `${job.task.type}:${job.error || 'Unknown error'}`
         const existing = errorMap.get(key) || { error: job.error || 'Unknown error', count: 0 }
         existing.count++
