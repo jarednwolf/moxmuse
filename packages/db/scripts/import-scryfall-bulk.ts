@@ -96,6 +96,7 @@ function extractSynergyKeywords(card: ScryfallCard): string[] {
 /**
  * Download Scryfall bulk data
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function _downloadBulkData(): Promise<string> {
   console.log('🔍 Fetching bulk data info from Scryfall...');
   
@@ -129,6 +130,7 @@ async function _downloadBulkData(): Promise<string> {
 /**
  * Import cards into database
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function _importCards(filePath: string) {
   console.log('📖 Reading card data...');
   
@@ -206,6 +208,7 @@ async function _importCards(filePath: string) {
 /**
  * Create database indexes for performance
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function _createIndexes() {
   console.log('🔧 Creating database indexes...');
   
@@ -227,6 +230,7 @@ async function _createIndexes() {
 /**
  * Verify import
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function _verifyImport() {
   console.log('\n📊 Verifying import...');
   

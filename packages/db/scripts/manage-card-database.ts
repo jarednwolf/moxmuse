@@ -19,7 +19,7 @@ program
   .command('import')
   .description('Perform incremental bulk data import')
   .option('--force', 'Force full reimport even if data is up to date')
-  .action(async (_options) => {
+  .action(async () => {
     try {
       console.log('🚀 Starting incremental bulk import...')
       

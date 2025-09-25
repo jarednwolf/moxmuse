@@ -76,6 +76,7 @@ async function createMissingTables(): Promise<void> {
   console.log('✅ All required tables exist')
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function _migrateLegacyConsultationData(
   userId: string,
   legacyData: LegacyConsultationData
