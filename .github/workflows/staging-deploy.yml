@@ -15,6 +15,8 @@ jobs:
   deploy-staging:
     name: Deploy to Staging
     runs-on: ubuntu-latest
+    # Skip entire job if required secrets are not present (e.g., forks)
+    if: ${{ (secrets.VERCEL_TOKEN != '' && secrets.VERCEL_ORG_ID != '' && secrets.VERCEL_PROJECT_ID != '') }}
     environment: staging
     timeout-minutes: 15
 
@@ -47,6 +49,7 @@ jobs:
         run: pnpm build
 
       - name: Deploy to Vercel Preview
+        if: ${{ (secrets.VERCEL_TOKEN != '' && secrets.VERCEL_ORG_ID != '' && secrets.VERCEL_PROJECT_ID != '') }}
         uses: amondnet/vercel-action@v25
         id: vercel-preview
         with:
@@ -63,15 +66,17 @@ jobs:
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
 
       - name: Health check staging deployment
+        if: steps.vercel-preview.outputs.preview-url != ''
         run: |
           sleep 30
           curl -f ${{ steps.vercel-preview.outputs.preview-url }}/api/health || exit 1
 
       - name: Run smoke tests
+        if: steps.vercel-preview.outputs.preview-url != ''
         run: pnpm test:smoke --baseURL=${{ steps.vercel-preview.outputs.preview-url }}
 
       - name: Comment PR with staging URL
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && steps.vercel-preview.outputs.preview-url != ''
         uses: actions/github-script@v7
         with:
           script: |
