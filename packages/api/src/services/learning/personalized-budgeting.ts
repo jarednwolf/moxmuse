@@ -744,7 +744,7 @@ export class PersonalizedBudgetingEngine {
       }
     })
 
-    return decks.map(deck => ({
+    return decks.map((deck: any) => ({
       id: deck.id,
       name: deck.name,
       format: deck.format,

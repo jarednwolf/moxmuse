@@ -671,7 +671,7 @@ export class CollectiveLearningEngine {
         LIMIT 10
       `
 
-      return results.map(row => ({
+      return results.map((row: any) => ({
         insightType: row.insight_type,
         insight: row.insight_data,
         confidence: row.confidence,
