@@ -488,7 +488,7 @@ export class CollectionProxyService {
     const collection = await this.fetchCollection(userId)
     
     const ownership = new Map<string, number>()
-    for (const card of collection.cards) {
+    for (const card of collection.cards as any[]) {
       if (cardIds.includes(card.cardId)) {
         const current = ownership.get(card.cardId) || 0
         ownership.set(card.cardId, current + card.quantity + card.foilQuantity)
@@ -688,7 +688,7 @@ export class CollectionProxyService {
       const collection = await this.fetchCollection(userId)
       ownership = new Map<string, number>()
       
-      for (const card of collection.cards) {
+      for (const card of collection.cards as any[]) {
         const current = ownership.get(card.cardId) || 0
         ownership.set(card.cardId, current + card.quantity + card.foilQuantity)
       }

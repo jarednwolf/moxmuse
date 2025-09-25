@@ -641,8 +641,8 @@ export class AdaptiveComplexityEngine {
         where: { userId: assessment.userId },
         update: {
           crossDeckInsights: {
-            adaptiveComplexity: assessment as unknown as import('@prisma/client').Prisma.JsonObject
-          } as unknown as import('@prisma/client').Prisma.JsonObject,
+            adaptiveComplexity: assessment as unknown as any
+          } as unknown as any,
           lastUpdated: new Date()
         },
         create: {
@@ -654,8 +654,8 @@ export class AdaptiveComplexityEngine {
           suggestionFeedback: [],
           deckRelationships: {},
           crossDeckInsights: {
-            adaptiveComplexity: assessment as unknown as import('@prisma/client').Prisma.JsonObject
-          } as unknown as import('@prisma/client').Prisma.JsonObject,
+            adaptiveComplexity: assessment as unknown as any
+          } as unknown as any,
           lastUpdated: new Date()
         }
       })

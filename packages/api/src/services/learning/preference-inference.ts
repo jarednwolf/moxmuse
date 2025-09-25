@@ -383,13 +383,13 @@ export class PreferenceInferenceEngine {
     await db.userLearningData.upsert({
       where: { userId: profile.userId },
       update: {
-        styleProfile: profile as unknown as import('@prisma/client').Prisma.JsonObject,
+        styleProfile: profile as unknown as any,
         lastUpdated: new Date()
       },
       create: {
         id: crypto.randomUUID(),
         userId: profile.userId,
-        styleProfile: profile as unknown as import('@prisma/client').Prisma.JsonObject,
+        styleProfile: profile as unknown as any,
         deckPreferences: {},
         learningEvents: [],
         suggestionFeedback: [],

@@ -228,7 +228,7 @@ export class SetMonitorService {
       })
 
       // Filter decks based on color identity and strategy compatibility
-      return decks.filter(deck => {
+      return decks.filter((deck: any) => {
         // Check color identity compatibility
         const deckColors = this.getDeckColorIdentity(deck)
         const isColorCompatible = colorIdentity.every((color: string) => 

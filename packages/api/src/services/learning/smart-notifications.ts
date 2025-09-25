@@ -487,7 +487,7 @@ export class SmartNotificationEngine {
         LIMIT 10
       `
 
-      return results.map(row => ({
+      return results.map((row: any) => ({
         id: row.id,
         userId: row.user_id,
         type: row.type,

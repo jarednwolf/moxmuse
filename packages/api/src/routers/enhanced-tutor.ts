@@ -795,7 +795,7 @@ export const enhancedTutorRouter = createTRPCRouter({
             })
           }
 
-          targetCardIds = deck.cards.map(card => card.cardId)
+          targetCardIds = deck.cards.map((card: any) => card.cardId)
         }
 
         if (targetCardIds.length === 0) {

@@ -213,7 +213,7 @@ export class CardSearchService {
       orderBy: { updatedAt: 'desc' }
     })
 
-    return savedSearches.map(search => ({
+    return savedSearches.map((search: any) => ({
       id: search.id,
       userId: search.userId,
       name: search.name,
@@ -242,7 +242,7 @@ export class CardSearchService {
       take: limit
     })
 
-    return history.map(entry => ({
+    return history.map((entry: any) => ({
       id: entry.id,
       userId: entry.userId,
       query: JSON.parse(entry.query),

@@ -152,7 +152,7 @@ export class MarketAnalysisService {
       const collection = await this.getUserCollection(userId)
       
       // Get price data for all cards
-      const cardIds = deck.cards.map(c => c.cardId)
+      const cardIds = deck.cards.map((c: any) => c.cardId)
       const priceData = await this.priceService.getCardPrices(cardIds)
 
       // Calculate values

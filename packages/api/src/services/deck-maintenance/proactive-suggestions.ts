@@ -686,7 +686,7 @@ export class ProactiveSuggestionsService {
             confidence: suggestion.confidence,
             impact: suggestion.impact,
             timeframe: suggestion.timeframe,
-            actions: suggestion.actions as unknown as import('@prisma/client').Prisma.JsonObject,
+            actions: suggestion.actions as unknown as any,
             metadata: suggestion.metadata,
             expiresAt: suggestion.expiresAt
           }

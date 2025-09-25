@@ -760,8 +760,8 @@ export class PersonalizedBudgetingEngine {
         where: { userId: budget.userId },
         update: {
           crossDeckInsights: {
-            personalizedBudget: budget as unknown as import('@prisma/client').Prisma.JsonObject
-          } as unknown as import('@prisma/client').Prisma.JsonObject,
+            personalizedBudget: budget as unknown as any
+          } as unknown as any,
           lastUpdated: new Date()
         },
         create: {
@@ -773,8 +773,8 @@ export class PersonalizedBudgetingEngine {
           suggestionFeedback: [],
           deckRelationships: {},
           crossDeckInsights: {
-            personalizedBudget: budget as unknown as import('@prisma/client').Prisma.JsonObject
-          } as unknown as import('@prisma/client').Prisma.JsonObject,
+            personalizedBudget: budget as unknown as any
+          } as unknown as any,
           lastUpdated: new Date()
         }
       })

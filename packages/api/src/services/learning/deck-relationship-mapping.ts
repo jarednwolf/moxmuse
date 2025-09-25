@@ -652,7 +652,7 @@ export class DeckRelationshipMapper {
           deckRelationships: relationships.reduce((acc, rel) => {
             acc[`${rel.deckId1}-${rel.deckId2}`] = rel
             return acc
-          }, {} as Record<string, DeckRelationship>) as unknown as import('@prisma/client').Prisma.JsonObject,
+          }, {} as Record<string, DeckRelationship>) as unknown as any,
           lastUpdated: new Date()
         },
         create: {
@@ -665,7 +665,7 @@ export class DeckRelationshipMapper {
           deckRelationships: relationships.reduce((acc, rel) => {
             acc[`${rel.deckId1}-${rel.deckId2}`] = rel
             return acc
-          }, {} as Record<string, DeckRelationship>) as unknown as import('@prisma/client').Prisma.JsonObject,
+          }, {} as Record<string, DeckRelationship>) as unknown as any,
           crossDeckInsights: {},
           lastUpdated: new Date()
         }

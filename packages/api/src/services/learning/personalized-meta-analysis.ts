@@ -561,8 +561,8 @@ export class PersonalizedMetaAnalyzer {
         where: { userId: analysis.userId },
         update: {
           crossDeckInsights: {
-            personalizedMetaAnalysis: analysis as unknown as Prisma.JsonObject
-          } as unknown as Prisma.JsonObject,
+            personalizedMetaAnalysis: analysis as unknown as any
+          } as unknown as any,
           lastUpdated: new Date()
         },
         create: {
@@ -574,8 +574,8 @@ export class PersonalizedMetaAnalyzer {
           suggestionFeedback: [],
           deckRelationships: {},
           crossDeckInsights: {
-            personalizedMetaAnalysis: analysis as unknown as Prisma.JsonObject
-          } as unknown as Prisma.JsonObject,
+            personalizedMetaAnalysis: analysis as unknown as any
+          } as unknown as any,
           lastUpdated: new Date()
         }
       })

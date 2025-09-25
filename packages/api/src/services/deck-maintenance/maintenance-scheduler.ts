@@ -272,7 +272,7 @@ export class MaintenanceSchedulerService {
       })
 
       // Filter tasks based on maintenance window
-      const tasksToProcess = pendingTasks.filter(task => {
+      const tasksToProcess = pendingTasks.filter((task: any) => {
         if (this.isHeavyTask(task.type) && !isMaintenanceWindow) {
           return false
         }
@@ -647,7 +647,7 @@ export class MaintenanceSchedulerService {
       const tasksFailed = jobs.filter(j => j.status === 'failed').length
       
       const averageProcessingTime = jobs.length > 0
-        ? jobs.reduce((sum, j) => sum + (j.processingTime || 0), 0) / jobs.length
+        ? jobs.reduce((sum: number, j: any) => sum + (j.processingTime || 0), 0) / jobs.length
         : 0
 
       // Task breakdown
@@ -664,7 +664,7 @@ export class MaintenanceSchedulerService {
         taskTypes.set(type, existing)
       }
 
-      const taskBreakdown = Array.from(taskTypes.entries()).map(([type, stats]) => ({
+      const taskBreakdown = Array.from(taskTypes.entries()).map(([type, stats]: [string, any]) => ({
         type,
         count: stats.count,
         successRate: stats.count > 0 ? stats.successful / stats.count : 0,
@@ -681,7 +681,7 @@ export class MaintenanceSchedulerService {
         errorMap.set(key, existing)
       }
 
-      const errors = Array.from(errorMap.entries()).map(([key, data]) => ({
+      const errors = Array.from(errorMap.entries()).map(([key, data]: [string, any]) => ({
         taskType: key.split(':')[0],
         error: data.error,
         count: data.count
